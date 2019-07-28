@@ -1,0 +1,513 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>nana::listbox::cat_proxy</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" href="page.css" media="all">
+	<link href="fonts/Oswald/Oswald.css" rel="stylesheet">
+	<link href="fonts/Arimo/Arimo.css" rel="stylesheet">
+	<link href="fonts/OxygenMono/OxygenMono.css" rel="stylesheet">
+	<link rel="stylesheet" href="highlight/default.css">
+	<script src="highlight/highlight.pack.js"></script>
+	<script>hljs.configure({ useBR: true }); hljs.initHighlightingOnLoad();</script>
+	<script src="page.js"></script>
+</head>
+
+<body>
+
+	<main>
+		<section>
+			<h1>Class nana::listbox::cat_proxy</h1>
+			<p>
+				The class <code>cat_proxy</code> is a category manipulator based on the concept of <a href="http://stdcxx.apache.org/doc/stdlibug/2-2.html#221">input iterator</a>. It offers functions for manipulating a listbox category, and acts as an iterator for categories. Additionally, it also acts as a container of items, providing functionality for accessing and iterating through the contained items, and for growing/shrinking the container.
+			</p>
+
+			<section>
+				<h2>Member types</h2>
+				<table>
+					<tr><th>Member type</th><th>Description</th></tr>
+					<tr><td>inline_notifier_interface</td><td>interface for the inline widget notifier</td></tr>
+					<tr><td>template&#60;typename Value&#62; using value_translator</td><td>Function to translate cells into <code>Value</code>. Called when the category has a user-set STL sequence container assigned for storage. Template typedef name of <code>std::function&#60;Value(const std::vector&#60;cell&#62;& cells)&#62;</code></td></tr>
+					<tr><td>template&#60;typename Value&#62; using cell_translator</td><td>Function to translate <code>Value</code> into cells. Called when the category has a user-set STL sequence container assigned for storage. Template typedef name of <code>std::function&#60;std::vector&#60;cell&#62;(const Value&)&#62;</code></td></tr>
+				</table>
+			</section>
+
+			<section expanded>
+				<h2>Member functions</h2>
+
+				<table class="functions">
+					<tr>
+						<td>columns</td>
+						<td>returns the number of columns</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>size_type columns() const;</code></pre>
+							<p>
+								This method returns the number of columns in the listbox.
+							</p>
+							<h4>Return value</h4>
+							<p>
+								the number of columns
+							</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>index_cast (Nana 1.5)</td>
+						<td>converts between an absolute item position and a display order position</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>size_type index_cast(size_t from, bool from_disp_order) const;</code></pre>
+							<p>
+								This method performs a conversion between an absolute position (a position in the category's internal container of items), and a display position (a position in the category's item display order, which is affected by sorting).
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>from</th></tr>
+								<tr>
+									<td><p>the position to be converted</p></td>
+								</tr>
+								<tr><th>from_disp_order</th></tr>
+								<tr>
+									<td><p>If this parameter is <code>true</code>, the method converts a display position into an absolute position. If the parameter is <code>false</code>, the method converts an absolute position into a display position.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>the result of the conversion</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>inline_factory (Nana 1.1)</td>
+						<td>sets a factory for inline widgets</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void inline_factory(size_type column, pat::cloneable&#60;pat::abstract_factory&#60;inline_notifier_interface&#62;&#62; factory);</code></pre>
+							<p>
+								Sets an inline widget factory to enable the listbox to create inline widgets for items. An inline widget is a child widget of the listbox, that represents a certain logical operation for the associated item data.
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>column</th></tr>
+								<tr>
+									<td><p>the position of the column which for which to set the factory</p></td>
+								</tr>
+								<tr><th>factory</th></tr>
+								<tr>
+									<td><p>a cloneable factory object</p></td>
+								</tr>
+							</table>
+							<h4>Exception</h4>
+							<p>
+								<code>std::out_of_range</code> if !(column < columns())
+							</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>position</td>
+						<td>returns the position of the category</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>size_type position() const;</code></pre>
+							<p>
+								Returns the position of the category in the listbox's internal container of categories. The order of the categories never changes, so there is no absolute position / display position dichotomy, like there is with items.
+							</p>
+							<h4>Return value</h4>
+							<p>
+								The position of the category. Keep in mind that position zero is always occupied by the default category, which cannot be removed.
+							</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>size</td>
+						<td>returns the number of items</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>size_type size() const;</code></pre>
+							<p>Returns the number of items in the category.</p>
+							<h4>Return value</h4>
+							<p>
+								The number of items in the category.
+							</p>
+						</td>
+					</tr>
+
+					<tr> <th>Element access</th> </tr>
+
+					<tr>
+						<td>at</td>
+						<td>access an item at a specific position, with bounds checking</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>item_proxy at(size_type pos_abs) const;</code></pre>
+							<p>
+								Returns an iterator pointing to the item at the specified absolute position.
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>pos_abs</th></tr>
+								<tr>
+									<td><p>The absolute position of the item to return. An absolute position is a position in the category's container of items (whose order never changes), as opposed to a display position, which is a position in the category's item display order (which is affected by sorting).</p></td>
+								</tr>
+							</table>
+							<h4>Exception</h4>
+							<p>
+								<code>std::out_of_range</code> if !(pos_abs < size())
+							</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>back</td>
+						<td>access the last item</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>item_proxy back() const;</code></pre>
+							<p>Returns an iterator pointing to the last item in the category.</p>
+							<h4>Return value</h4>
+							<p>
+								An <code>item_proxy</code> object pointing to the last item in the category's internal container (which is not necessarily the last item displayed, if the items are sorted).
+							</p>
+						</td>
+					</tr>
+
+					<tr> <th>Iterator operations</th> </tr>
+
+					<tr>
+						<td>begin/cbegin</td>
+						<td>returns an iterator pointing to the first element in the item container</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  item_proxy begin() const;<br>(1)  item_proxy cbegin() const;</code></pre>
+							<p>Returns an iterator pointing to the first item in the category's container. When the container is empty, <code>cat_proxy::begin() == cat_proxy::end()</code>.</p>
+							<h4>Return value</h4>
+							<p>
+								An <code>item_proxy</code> object pointing to the first item in the category's internal container (which is not necessarily the first item displayed, if the items are sorted).
+							</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>end/cend</td>
+						<td>returns the <em>past-the-end</em> iterator for the item container</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  item_proxy begin() const;<br>(1)  item_proxy cbegin() const;</code></pre>
+							<p>Returns the <em>past-the-end</em> iterator for the item container. That is a special kind of iterator which doesn't point to an item, but is instead used to test whether the end of the container has been reached when iterating through its contents. When the container is empty, <code>cat_proxy::begin() == cat_proxy::end()</code>.</p>
+							<h4>Return value</h4>
+							<p>
+								An <code>item_proxy</code> object whose <code>pos()</code> method returns an empty <code>index_pair</code> object. An empty <code>index_pair</code> object is one whose <code>cat</code> and <code>item</code> data members have the value <code>nana::npos</code> (a condition which is easily testable by calling <code>index_pair::empty()</code>).
+							</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>operator++</td>
+						<td>increment operator, advances the iterator to the next category</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  cat_proxy& operator++();<br>(1)  cat_proxy operator++(int);</code></pre>
+							<ol>
+								<li>Prefix increment operator. Moves the iterator to the next category.</li>
+								<li>
+									Postfix increment operator. Returns an iterator pointing to the current category, and this iterator moves to the next category.
+								</li>
+							</ol>
+							<h4>Return value</h4>
+							<div>
+								<ol>
+									<li>a reference to <code>*this</code></li>
+									<li>an iterator pointing to the current category</li>
+								</ol>
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td>operator*</td>
+						<td>dereference operator</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  cat_proxy& operator*();<br>(1)  const cat_proxy& operator*() const;</code></pre>
+							<p>Dereference operator, for the STL iterator syntax.</p>
+							<h4>Return value</h4>
+							<p>a reference to <code>*this</code></p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>operator-></td>
+						<td>member access operator</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  cat_proxy* operator-&#62;();<br>(1)  cat_proxy* operator-&#62;() const;</code></pre>
+							<p>Member access operator, for the STL iterator syntax.</p>
+							<h4>Return value</h4>
+							<p>a pointer to the iterator</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>operator== / operator!=</td>
+						<td>test whether two iterators point to the same category</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  bool operator==(const cat_proxy& other) const;<br>(1)  bool operator!=(const cat_proxy& other) const;</code></pre>
+							<p>Equality and inequality operators, for testing whether the given iterators point to the same category.</p>
+							<h4>Return value</h4>
+							<div>
+								<ol>
+									<li><code>true</code> if the iterators point to the same category, or <code>false</code> otherwise.</li>
+									<li><code>true</code> if the iterators point to the different categories, or <code>false</code> otherwise.</li>
+								</ol>
+							</div>
+						</td>
+					</tr>
+
+					<tr> <th>Model</th> </tr>
+
+					<tr>
+						<td>append_model</td>
+						<td>appends an item by growing the model container</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>template&#60;typename T&#62; void append_model(const T& value);</code></pre>
+							<p>Appends <code>value</code> to the model container. Relevant article: <a href="https://github.com/cnjinhao/nana/wiki/Using-STL-Sequence-Container" target="_blank">Using STL Sequence Container</a>.</p>
+							<h4>Exceptions</h4>
+							<div>
+								<p>
+									<code>std::runtime_error</code> is thrown if the model is not enabled, or if it is immutable
+									<br /><code>std::invalid_argument</code> is thrown if type <code>T</code> does not match the model container's <code>value_type</code>
+								</p>
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td>model / shared_model</td>
+						<td>enables the usage of a user-provided container for item storage</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>template&#60;typename Mutex, typename STLContainer, typename ValueTranslator, typename CellTranslator&#62;&#9;&#9;(0)<br>void model(STLContainer&& container, ValueTranslator vtrans, CellTranslator ctrans);<br><br>template&#60;typename Mutex, typename STLContainer, typename ValueTranslator, typename CellTranslator&#62;&#9;&#9;(1)<br>void shared_model(STLContainer& container, ValueTranslator vtrans, CellTranslator ctrans);<br><br>template&#60;typename Mutex, typename STLContainer, typename CellTranslator&#62;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;(2)<br>void shared_model(const STLContainer& container, CellTranslator ctrans);<br><br>model_guard model();&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;(3)</code></pre>
+							<p>
+								These methods allow the user to set an arbitrary STL sequence container as the item storage container for the category. The name "model" refers to the <a href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93adapter" target="_blank">model-view-adapter</a> concept (also see <a href="https://blog.codinghorror.com/understanding-model-view-controller/" target="_blank">Understanding MVC</a>). In this case, the model is the STL container, the view is the listbox, and the adapter is the pair of functions that translate data between a container element and a listbox item. Relevant article: <a href="https://github.com/cnjinhao/nana/wiki/Using-STL-Sequence-Container" target="_blank">Using STL Sequence Container</a>.
+							</p>
+							<p>(0) Initializes an internal container by moving or copying the user-provided container.</p>
+							<p>(1, 2) Attaches the user-provided container, to be used as the storage container. After attaching, the container should not be destroyed until the listbox is destroyed.</p>
+							<p>(3) Accesses the model container.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>container</th></tr>
+								<tr>
+									<td><p>an STL sequence container</p></td>
+								</tr>
+								<tr><th>vtrans</th></tr>
+								<tr>
+									<td><p>function that translates the textual data of the item cells into the data type of the container elements</p></td>
+								</tr>
+								<tr><th>ctrans</th></tr>
+								<tr>
+									<td><p>function that translates the data type of the container elements into textual data for the item cells</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>
+								(3) a <code>model_guard</code> to access the listbox's model container
+							</p>
+						</td>
+					</tr>
+
+					<tr> <th>Modifiers</th> </tr>
+
+					<tr>
+						<td>append</td>
+						<td>appends an item</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  template&#60;typename T&#62; item_proxy append(T&& t, bool set_value = false);<br>(1)  void append(std::initializer_list&#60;std::string&#62; u8texts);<br>(2)  void append(std::initializer_list&#60;std::wstring&#62; texts);</code></pre>
+							<p>Appends a new item to the category.</p>
+							<p>(0) appends a new item through a resolveable object</p>
+							<p>(1, 2) appends a new item using an initializer list; each element of the initializer list corresponds to a  cell</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>t</th></tr>
+								<tr>
+									<td><p>a user object that can be resolved by <code>listbox::oresolver</code>, used for appending a new item</p></td>
+								</tr>
+								<tr><th>set_value</th></tr>
+								<tr>
+									<td><p>determines whether to set the object as the value associated with the new item</p></td>
+								</tr>
+								<tr><th>u8texts</th></tr>
+								<tr>
+									<td><p>a list of UTF-8 encoded strings to initialize the cells with</p></td>
+								</tr>
+								<tr><th>texts</th></tr>
+								<tr>
+									<td><p>a list of wide character strings to initialize the cells with</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr>
+						<td>display_number (Nana 1.5.4)</td>
+						<td>shows/hides the item count diplayed next to the category name</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>cat_proxy& display_number(bool display);</code></pre>
+							<p>Shows or hides the number of contained items diplayed next to the category name.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>display</th></tr>
+								<tr>
+									<td><p>flag that indicates whether to display the number or not</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>
+								a reference to <code>*this</code>
+							</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>expanded (Nana 1.5.4)</td>
+						<td>expands/collapses the category, or returns the expanded status</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  bool expanded() const;<br>(1)  cat_proxy& expanded(bool expand);</code></pre>
+							<p>Expands/collapses the category, or returns the expanded status.</p>
+							<ol>
+								<li>Determines whether the category is expanded.</li>
+								<li>Expands/collapses the category.</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>expand</th></tr>
+								<tr>
+									<td><p>This flag indicates whether to expand or collapse the category. <code>true</code> means expand, <code>false</code> means collapse.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div>
+								<ol>
+									<li><code>true</code> if the category is expanded, <code>false</code> otherwise</li>
+									<li>a reference to <code>*this</code></li>
+								</ol>
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td>push_back</td>
+						<td>adds an item to the back of the container</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void push_back(std::string u8str);</code></pre>
+							<p>Adds an item to the back of the container, and sets the text of the item's first cell to the specified string. If the listbox has multiple columns, the rest of the corresponding cells are initialized with empty strings.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>u8str</th></tr>
+								<tr>
+									<td><p>a UTF-8 encoded string, for the text in the first cell of the item</p></td>
+								</tr>
+							</table>
+							<h4>Exception</h4>
+							<p>
+								<code>std::out_of_range</code> is thrown if <code>u8str</code> is not UTF-8 encoded
+							</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>select / selected</td>
+						<td>select the category</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  cat_proxy& select(bool selected);<br>(1)  bool selected() const;</code></pre>
+							<p>Selects this category. When the category is selected, all the items in it are automatically selected as well. When the category is deselected, all the items in it are also deselected.</p>
+							<ol>
+								<li>Selects/deselects the category.</li>
+								<li>Determines whether the category is selected.</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>selected</th></tr>
+								<tr>
+									<td><p>Idicates whether to select or deselect the category.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div>
+								<ol>
+									<li>a reference to <code>*this</code></li>
+									<li><code>true</code> if the category is selected, or <code>false</code> otherwise</li>
+								</ol>
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td>text</td>
+						<td>gets/sets the name of the category</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  cat_proxy& text(std::string u8str);<br>(1)  cat_proxy& text(std::wstring str);<br>(2)  std::string text() const;</code></pre>
+							<p>Gets or sets the name of the category.</p>
+							<p>(0, 1) sets the name<br />(2) returns the name</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>u8str</th></tr>
+								<tr>
+									<td><p>the new name, as a UTF-8 encoded string</p></td>
+								</tr>
+								<tr><th>str</th></tr>
+								<tr>
+									<td><p>the new name, as a wide character string</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div>
+								<p>(0, 1) a reference to <code>*this</code></p>
+								<p>(2) the name of the category</p>
+							</div>
+							<h4>Exception</h4>
+							<p>
+								<code>std::out_of_range</code> is thrown if <code>u8str</code> is not UTF-8 encoded
+							</p>
+						</td>
+					</tr>
+
+				</table>
+
+			</section>
+		</section>
+	</main>
+
+</body>
+</html>

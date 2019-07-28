@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>nana::listbox::item_proxy</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" href="page.css" media="all">
+	<link href="fonts/Oswald/Oswald.css" rel="stylesheet">
+	<link href="fonts/Arimo/Arimo.css" rel="stylesheet">
+	<link href="fonts/OxygenMono/OxygenMono.css" rel="stylesheet">
+	<link rel="stylesheet" href="highlight/default.css">
+	<script src="highlight/highlight.pack.js"></script>
+	<script>hljs.configure({ useBR: true }); hljs.initHighlightingOnLoad();</script>
+	<script src="page.js"></script>
+</head>
+
+<body>
+
+	<main>
+		<section>
+			<h1>Class nana::listbox::item_proxy</h1>
+			<p>
+				The class <code>item_proxy</code> is an item manipulator based on the concept of <a href="http://stdcxx.apache.org/doc/stdlibug/2-2.html#221">input iterator</a>. It offers functions for changing item properties, and acts as an item iterator.
+			</p>
+
+			<section expanded>
+				<h2>Member functions</h2>
+
+				<table class="functions">
+					<tr>
+						<td>check / checked (Nana 1.5)</td>
+						<td>checks the item / returns the checked status</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  item_proxy& check(bool checked, bool scroll_view = false);<br>(1)  bool checked() const;</code></pre>
+							<ol>
+								<li>Checks/unchecks the item. Only has effect if the listbox is checkable (see <code>listbox::checkable</code>).</li>
+								<li>Determines whether the item is checked.</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>checked</th></tr>
+								<tr>
+									<td><p>Indicates whether to check or uncheck the item. <code>true</code> means check, <code>false</code> means uncheck.</p></td>
+								</tr>
+								<tr><th>scroll_view</th></tr>
+								<tr>
+									<td><p>Indicates whether to scroll the listbox viewport until the item is displayed on screen. If the item is already visible, this parameter is ignored.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div>
+								<ol>
+									<li>a reference to <code>*this</code></li>
+									<li><code>true</code> if the item is checked, <code>false</code> otherwise</li>
+								</ol>
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td>column_cast (Nana 1.5)</td>
+						<td>converts between an absolute column position and a display order position</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>size_type column_cast(size_type col, bool disp_order) const;</code></pre>
+							<p>
+								The order in which the columns are displayed can be changed, either by the user dragging the columns, or programmatically (by calling <code>listbox::reorder_columns</code>). However, the listbox's internal container of columns is never reordered, and neither is an item's internal container of cells.
+							</p>
+							<p>
+								While columns can be addressed by either type of position, cells can only be addressed by their "absolute" positions that were assigned to them at creation. This method performs a conversion between these two types of positions (display and absolute).
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>col</th></tr>
+								<tr>
+									<td><p>The column position to convert.</p></td>
+								</tr>
+								<tr><th>disp_order</th></tr>
+								<tr>
+									<td><p>Flag that indicates which type of position <code>col</code> should be treated as. If this flag is <code>true</code>, then <code>col</code> is a display position. If the flag is <code>false</code>, then <code>col</code> is an absolute position.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>An absolute position if <code>disp_order</code> is <code>true</code>, or a display position otherwise.</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>columns</td>
+						<td>returns the number of columns</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>size_type columns() const;</code></pre>
+							<p>
+								This method returns the number of columns in the listbox.
+							</p>
+							<h4>Return value</h4>
+							<p>
+								the number of columns
+							</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>displayed (Nana 1.5)</td>
+						<td>determines whether the item is displayed on screen</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>bool displayed() const;</code></pre>
+							<p>
+								This method determines whether the item is displayed on screen, or in other words, whether the item is currently visible in the listbox's viewport.
+							</p>
+							<h4>Return value</h4>
+							<p>
+								<code>true</code> if the item is displayed, or <code>false</code> otherwise
+							</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>empty</td>
+						<td>determines whether the iterator is valid</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>bool empty() const;</code></pre>
+							<p>
+								Tests whether the iterator points to a valid item.
+							</p>
+							<h4>Return value</h4>
+							<p>
+								<code>true</code> if the iterator is invalid, or <code>false</code> otherwise
+							</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>from_display</td>
+						<td>returns an iterator to the item at a display position</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>item_proxy from_display(const index_pair& disp_pos) const;</code></pre>
+							<p>
+								Obtains an iterator pointing to the item located at the display position specified by the <code>index_pair</code> parameter.
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>disp_pos</th></tr>
+								<tr>
+									<td>
+										<p>The display position of the requested item. A display position is a position in a category's item	display order, which is affected by sorting. That is different from an absolute position, which is a	position in a category's internal container of items (which always maintains the order in which the	items were added to it).</p>
+										<p>The <code>index_pair</code> structure is used as an "address" that locates an item in the listbox. Its <code>cat</code> data member represents the position of the category containing the item, and its <code>item</code> data member represents the position of the item in the category (absolute or display).</p>
+									</td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>
+								an iterator pointing to the requested item
+							</p>
+							<h4>Exception</h4>
+							<p>
+								<code>std::out_of_range</code> is thrown if <code>disp_pos.cat</code> is invalid
+							</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>pos</td>
+						<td>returns the absolute position of the item</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>index_pair pos() const;</code></pre>
+							<p>
+								Returns the absolute position of the item that the iterator points to. An absolute position is a position in a category's container of items (whose order never changes), as opposed to a display position, which is a position in a category's item display order (which is affected by sorting).
+							</p>
+							<h4>Return value</h4>
+							<div>
+								<p>
+									The absolute position of the item, as an <code>index_pair</code> object.
+								</p>
+								<p>
+									The <code>index_pair</code> structure is used as an "address" that locates an item in the listbox. Its <code>cat</code> data member represents the position of the category containing the item, and its <code>item</code> data member represents the position of the item in the category (absolute or display).
+								</p>
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td>select / selected (Nana 1.5)</td>
+						<td>selects the item / returns the selected status</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  item_proxy& select(bool selected, bool scroll_view = false);<br>(1)  bool selected() const;</code></pre>
+							<ol>
+								<li>Selects/deselects the item.</li>
+								<li>Determines whether the item is selected.</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>selected</th></tr>
+								<tr>
+									<td><p>Idicates whether to select or deselect the item (<code>true</code> means <em>select</em>, <code>false</code> means <em>deselect</em>).</p></td>
+								</tr>
+								<tr><th>scroll_view</th></tr>
+								<tr>
+									<td><p>Indicates whether to scroll the listbox viewport until the item is visible. If the item is already visible, this parameter is ignored.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div>
+								<ol>
+									<li>a reference to <code>*this</code></li>
+									<li><code>true</code> if the item is selected, or <code>false</code> otherwise</li>
+								</ol>
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td>to_display</td>
+						<td>returns the display position of the item</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>index_pair to_display() const;</code></pre>
+							<p>
+								Returns the display position of the item that the iterator points to. A display position is a position in a category's item	display order, which is affected by sorting. That is different from an absolute position, which is a position in a category's internal container of items (which always maintains the order in which the	items were added to it).
+							</p>
+							<h4>Return value</h4>
+							<div>
+								<p>
+									The display position of the item, as an <code>index_pair</code> object.
+								</p>
+								<p>
+									The <code>index_pair</code> structure is used as an "address" that locates an item in the listbox. Its <code>cat</code> data member represents the position of the category containing the item, and its <code>item</code> data member represents the position of the item in the category (absolute or display).
+								</p>
+							</div>
+						</td>
+					</tr>
+
+					<tr> <th>Appearance</th> </tr>
+
+					<tr>
+						<td>bgcolor</td>
+						<td>get or set the background color of the item</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  item_proxy & bgcolor(const nana::color &clr);<br>(1)  nana::color bgcolor() const;</code></pre>
+							<ol>
+								<li>sets the background color of the item</li>
+								<li>returns the background color of the item</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>clr</th></tr>
+								<tr>
+									<td><p>a reference to a <a href="index.html#color" target="_blank">nana::color</a> object representing the color desired for the background</td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div><p>(0)  a reference to <code>*this</code><br />(1) a <a href="index.html#color" target="_blank">nana::color</a> object representing the background color of the item</p></div>
+						</td>
+					</tr>
+
+					<tr>
+						<td>fgcolor</td>
+						<td>get or set the foreground color of the item</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  item_proxy & fgcolor(const nana::color &clr);<br>(1)  nana::color fgcolor() const;</code></pre>
+							<ol>
+								<li>sets the foreground color of the item</li>
+								<li>returns the foreground color of the item</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>clr</th></tr>
+								<tr>
+									<td><p>a reference to a <a href="index.html#color" target="_blank">nana::color</a> object representing the color desired for the foreground</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div><p>(0)  a reference to <code>*this</code><br />(1) a <a href="index.html#color" target="_blank">nana::color</a> object representing the foreground color of the item</p></div>
+						</td>
+					</tr>
+
+					<tr> <th>Iterator operations</th> </tr>
+
+					<tr>
+						<td>operator++</td>
+						<td>increment operator, advances the iterator to the next item</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  item_proxy& operator++();<br>(1)  item_proxy operator++(int);</code></pre>
+							<ol>
+								<li>Prefix increment operator. Moves the iterator to the next item.</li>
+								<li>
+									Postfix increment operator. Returns an iterator pointing to the current item, and this iterator moves to the next item.
+								</li>
+							</ol>
+							<h4>Return value</h4>
+							<div>
+								<ol>
+									<li>a reference to <code>*this</code></li>
+									<li>an iterator pointing to the current item</li>
+								</ol>
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td>operator*</td>
+						<td>dereference operator</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  item_proxy& operator*();<br>(1)  const item_proxy& operator*() const;</code></pre>
+							<p>Dereference operator, for the STL iterator syntax.</p>
+							<h4>Return value</h4>
+							<p>a reference to <code>*this</code></p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>operator-></td>
+						<td>member access operator</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  item_proxy* operator-&#62;();<br>(1)  item_proxy* operator-&#62;() const;</code></pre>
+							<p>Member access operator, for the STL iterator syntax.</p>
+							<h4>Return value</h4>
+							<p>a pointer to the iterator</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>operator== / operator!=</td>
+						<td>test whether two iterators point to the same item</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  bool operator==(const item_proxy& other) const;<br>(1)  bool operator!=(const item_proxy& other) const;</code></pre>
+							<p>Equality and inequality operators, for testing whether the given iterators point to the same item.</p>
+							<h4>Return value</h4>
+							<div>
+								<ol>
+									<li><code>true</code> if the iterators point to the same item, or <code>false</code> otherwise.</li>
+									<li><code>true</code> if the iterators point to the different items, or <code>false</code> otherwise.</li>
+								</ol>
+							</div>
+						</td>
+					</tr>
+
+					<tr> <th>Access content</th> </tr>
+
+					<tr>
+						<td>icon</td>
+						<td>sets an icon to be displayed to the left of the item</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void icon(const paint::image& img);</code></pre>
+							<p>Sets an icon that is displayed in the leftmost cell, after the checkbox (if the listbox has the <code>checkable</code> mode enabled), and before the cell text.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>img</th></tr>
+								<tr>
+									<td><p>the image to set</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr>
+						<td>text (Nana 1.5)</td>
+						<td>access cell text / set custom cell colors</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  item_proxy& text(size_type abs_col, cell cl);<br>(1)  item_proxy& text(size_type abs_col, std::string u8str);<br>(2)  item_proxy& text(size_type abs_col, const std::wstring& str);<br>(3)  std::string text(size_type abs_col) const;<br></code></pre>
+							<p>(0) sets the text of a cell using a <code>listbox::cell</code> object, optionally applying custom cell colors<br />(1, 2) sets the text of a cell using a string<br />(3) gets the text of a cell</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>abs_col</th></tr>
+								<tr>
+									<td><p>The absolute position of the column that corresponds to the desired cell. "Absolute position" means the position that a column had when it was added to the listbox, as opposed to the position it has in the display order (which can change, for example if the user drags a column into a different display position).</p></td>
+								</tr>
+								<tr><th>cl</th></tr>
+								<tr>
+									<td><div><p>A <code>nana::listbox::cell</code> object, which is the listbox's internal representation of a cell. Contains data members that represent the text, foreground <a href="index.html#color" target="_blank">color</a>, and background <a href="index.html#color" target="_blank">color</a> of a cell. Here's an example of how to create a <code>cell</code> object and set all its properties:</p><pre><code>nana::listbox::cell cell;<br><br>// must allocate memory for the custom format if we intend to use custom cell colors<br>cell.custom_format = std::make_unique&#60;nana::listbox::cell::format&#62;();<br><br>cell.custom_format-&#62;bgcolor = nana::colors::beige; // custom background color<br>cell.custom_format-&#62;fgcolor = nana::colors::dark_red; // custom foreground color<br>cell.text = "cell text";</code></pre></div></td>
+								</tr>
+								<tr><th>u8str</th></tr>
+								<tr>
+									<td><p>a UTF-8 encoded string to set as the new cell text</p></td>
+								</tr>
+								<tr><th>str</th></tr>
+								<tr>
+									<td><p>a wide character string to set as the new cell text</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>(0, 1, 2) a reference to <code>*this</code><br />(3) a UTF-8 encoded string that holds the requested text</p>
+							<h4>Exception</h4>
+							<p><code>std::out_of_range</code> is thrown if <code>u8str</code> is not UTF-8 encoded<br /><code>std::runtime_error</code> is thrown if the listbox has an immutable model container</p>
+						</td>
+					</tr>
+				</table>
+
+			</section>
+		</section>
+	</main>
+
+</body>
+</html>

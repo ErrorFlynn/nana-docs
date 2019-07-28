@@ -1,0 +1,102 @@
+body
+{
+	margin : 0;
+	background-color : #f7f6f5;
+}
+
+#toc
+{
+	opacity : .2;
+	transition : opacity .08s ease-out;
+	background-color : #eee;
+	flex-basis : 300px;
+	/*flex-grow : 0;*/
+}
+
+#toc:hover {
+	opacity : 1;
+}
+
+#toc-ul {
+	
+}
+
+#frame
+{
+	flex-grow : 1;
+}
+
+#flex
+{
+	display : flex;
+}
+
+iframe
+{
+	display : block;
+	width : 100%;
+	height : 100vh;
+	border : none; 
+	overflow-y : auto; 
+	overflow-x : hidden;
+
+}
+
+main
+{
+	width : 100%;
+	min-width : 1200px;
+	/*top right bottom left*/
+	margin : /*top*/0 /*right*/0 /*bottom*/0 /*left*/0;
+}
+
+
+/**** TOC ****/
+
+/* Remove default bullets */
+ul, #myUL {
+  list-style-type: none;
+}
+
+/* Remove margins and padding from the parent ul */
+#myUL {
+  margin: 0;
+  padding: 0;
+}
+
+/* Style the caret/arrow */
+.caret {
+  cursor: pointer;
+  user-select: none; /* Prevent text selection */
+}
+
+/* Create the caret/arrow with a unicode, and style it */
+.caret::before {
+  content: "\25B6";
+  color: black;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+/* Rotate the caret/arrow icon when clicked on (using JavaScript) */
+.caret-down::before {
+  transform: rotate(90deg);
+}
+
+/* Hide the nested list */
+.nested {
+  display: none;
+}
+
+/* Show the nested list when the user clicks on the caret/arrow (with JavaScript) */
+.active {
+  display: block;
+}
+
+ul *
+{
+	-moz-user-select : none;
+	-webkit-user-select : none;
+	-ms-user-select : none;
+	user-select : none;
+}
