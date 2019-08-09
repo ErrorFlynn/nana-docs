@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -20,7 +20,7 @@
 		<section>
 			<h1>Class nana::listbox::item_proxy</h1>
 			<p>
-				The class <code>item_proxy</code> is an item manipulator based on the concept of <a href="http://stdcxx.apache.org/doc/stdlibug/2-2.html#221">input iterator</a>. It offers functions for changing item properties, and acts as an item iterator.
+				The class <code>item_proxy</code> is an item manipulator based on the concept of <a href="http://stdcxx.apache.org/doc/stdlibug/2-2.html#221" target="_blank">input iterator</a>. It offers functions for changing item properties, and acts as an item iterator.
 			</p>
 
 			<section expanded>
@@ -147,7 +147,7 @@
 						<td>
 							<pre><code>item_proxy from_display(const index_pair& disp_pos) const;</code></pre>
 							<p>
-								Obtains an iterator pointing to the item located at the display position specified by the <code>index_pair</code> parameter.
+								Returns an iterator pointing to the item located at the display position specified by the <code>index_pair</code> parameter.
 							</p>
 							<h4>Parameters</h4>
 							<table>
@@ -414,6 +414,63 @@
 							<p>(0, 1, 2) a reference to <code>*this</code><br />(3) a UTF-8 encoded string that holds the requested text</p>
 							<h4>Exception</h4>
 							<p><code>std::out_of_range</code> is thrown if <code>u8str</code> is not UTF-8 encoded<br /><code>std::runtime_error</code> is thrown if the listbox has an immutable model container</p>
+						</td>
+					</tr>
+
+					<tr> <th>Resolver</th> </tr>
+
+					<tr>
+						<td>resolve_from / resolve_to</td>
+						<td>writes data from user object to item / writes data from item to user object</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  template&#60;typename T&#62; item_proxy& resolve_from(const T& obj_from);<br>(1)  template&#60;typename T&#62; void resolve_to(T& obj_to) const;</code></pre>
+							<ol>
+								<li>Resolves the specified object and assigns the resolved content to the item.</li>
+								<li>Resolves the specified object and assigns the item content to the resoved object.</li>
+							</ol>
+							<p>Each of these functions depends on a "resolver" function (overloaded bitshift operator) for the type <code>T</code>. See the example below.</p>
+							<h4>Return value</h4>
+							<p>a reference to <code>*this</code></p>
+							<h4>Example</h4>
+							<div><pre><code>#include &#60;nana/gui.hpp&#62;<br>#include &#60;nana/gui/widgets/listbox.hpp&#62;<br><br>struct person<br>{<br>&#9;std::string name;<br>&#9;int age {0};<br>};<br><br>// this output resolver writes data from a `person` object to a listbox item<br>nana::listbox::oresolver& operator&#60;&#60;(nana::listbox::oresolver &ores, const person &p)<br>{<br>&#9;return ores &#60;&#60; p.name &#60;&#60; p.age; // output object data to item<br>}<br><br>// this input resolver writes data from a listbox item to a `person` object<br>nana::listbox::iresolver& operator&#62;&#62;(nana::listbox::iresolver &ires, person &p)<br>{<br>&#9;return ires &#62;&#62; p.name &#62;&#62; p.age; // input data from item into object<br>}<br><br><br>int main()<br>{<br>&#9;nana::form fm {nana::API::make_center(300, 234)};<br>&#9;fm.div("vert margin=15 &#60;listbox&#62;");<br><br>&#9;nana::listbox lb {fm};<br>&#9;fm["listbox"] &#60;&#60; lb;<br>&#9;lb.append_header("Name");<br>&#9;lb.append_header("Age");<br><br>&#9;auto cat {lb.at(0)};&#9;<br>&#9;cat.append( {"Steve", "24"} ); // append item 0 the normal way<br><br>&#9;// an output resolver for `person` has been defined,<br>&#9;// so we can pass a `person` object to cat_proxy::append<br>&#9;person stan {"Stan", 58};<br>&#9;cat.append(stan);<br><br>&#9;// overwrite the content of item 0 with {"Stan", "58"}<br>&#9;cat.at(0).resolve_from(stan);<br><br>&#9;// write {"Stan", 58} to object `p`<br>&#9;person p;<br>&#9;cat.at(0).resolve_to(p);<br>&#9;printf("object p: {%s, %d}\n", p.name.data(), p.age);<br><br>&#9;fm.collocate();<br>&#9;fm.show();<br>&#9;nana::exec();<br>}</code></pre></div>
+						</td>
+					</tr>
+
+					<tr> <th>Associated value</th> </tr>
+
+					<tr>
+						<td>value_ptr</td>
+						<td>returns a pointer to the value associated with the item</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>template<typename T> T* value_ptr() const;</code></pre>
+							<p>This method returns a pointer to the value associated with the item.</p>
+							<h4>Return value</h4>
+							<p>a pointer to the associated value, or <code>nullptr</code> if the item has no value associated with it</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>value</td>
+						<td>set or access the value associated with the item</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  template&#60;typename T&#62; T& value() const;<br>(1)  template&#60;typename T&#62; T& value();<br>(2)  template&#60;typename T&#62; item_proxy& value(T&& t);</code></pre>
+							<p>Each listbox item can have a value associated with it. This is essentially a feature that allows the listbox to store data of arbitrary types for each item, in addition to the textual data contained by the item cells.</p>
+							<p>(0, 1) returns a reference to the associated value<br />(2) sets the associated value</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>t</th></tr>
+								<tr>
+									<td><p>the value to set, which can be an rvalue or an lvalue (the argument is either moved or copied, accordingly)</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div><p>(0, 1) a reference to the stored value<br />(2) a reference to <code>*this</code></p></div>
 						</td>
 					</tr>
 				</table>

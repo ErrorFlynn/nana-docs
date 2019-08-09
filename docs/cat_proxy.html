@@ -20,7 +20,7 @@
 		<section>
 			<h1>Class nana::listbox::cat_proxy</h1>
 			<p>
-				The class <code>cat_proxy</code> is a category manipulator based on the concept of <a href="http://stdcxx.apache.org/doc/stdlibug/2-2.html#221">input iterator</a>. It offers functions for manipulating a listbox category, and acts as an iterator for categories. Additionally, it also acts as a container of items, providing functionality for accessing and iterating through the contained items, and for growing/shrinking the container.
+				The class <code>cat_proxy</code> is a category manipulator based on the concept of <a href="http://stdcxx.apache.org/doc/stdlibug/2-2.html#221" target="_blank">input iterator</a>. It offers functions for manipulating a listbox category, and acts as an iterator for categories. Additionally, it also acts as a container of items, providing functionality for accessing and iterating through the contained items, and for growing/shrinking the container.
 			</p>
 
 			<section>
@@ -88,7 +88,7 @@
 						<td>
 							<pre><code>void inline_factory(size_type column, pat::cloneable&#60;pat::abstract_factory&#60;inline_notifier_interface&#62;&#62; factory);</code></pre>
 							<p>
-								Sets an inline widget factory to enable the listbox to create inline widgets for items. An inline widget is a child widget of the listbox, that represents a certain logical operation for the associated item data.
+								Sets an inline widget factory to enable the listbox to create inline widgets for items. An inline widget is a child widget of the listbox, that represents a certain logical operation for the associated item data. Relevant article: <a href="https://github.com/cnjinhao/nana/wiki/Creating-Inline-Widgets-for-Listbox" target="_blank">Creating Inline Widgets for Listbox</a>.
 							</p>
 							<h4>Parameters</h4>
 							<table>
@@ -205,7 +205,7 @@
 					<tr>
 						<td>
 							<pre><code>(0)  item_proxy begin() const;<br>(1)  item_proxy cbegin() const;</code></pre>
-							<p>Returns the <em>past-the-end</em> iterator for the item container. That is a special kind of iterator which doesn't point to an item, but is instead used to test whether the end of the container has been reached when iterating through its contents. When the container is empty, <code>cat_proxy::begin() == cat_proxy::end()</code>.</p>
+							<p>Returns the <em>past-the-end</em> iterator for the item container. That is a special kind of iterator which doesn't point to an item, but is instead used to test whether the end of the container has been reached when iterating through its content. When the container is empty, <code>cat_proxy::begin() == cat_proxy::end()</code>.</p>
 							<h4>Return value</h4>
 							<p>
 								An <code>item_proxy</code> object whose <code>pos()</code> method returns an empty <code>index_pair</code> object. An empty <code>index_pair</code> object is one whose <code>cat</code> and <code>item</code> data members have the value <code>nana::npos</code> (a condition which is easily testable by calling <code>index_pair::empty()</code>).
@@ -345,7 +345,7 @@
 						<td>
 							<pre><code>(0)  template&#60;typename T&#62; item_proxy append(T&& t, bool set_value = false);<br>(1)  void append(std::initializer_list&#60;std::string&#62; u8texts);<br>(2)  void append(std::initializer_list&#60;std::wstring&#62; texts);</code></pre>
 							<p>Appends a new item to the category.</p>
-							<p>(0) appends a new item through a resolveable object</p>
+							<p>(0) appends a new item through a <a href="index.html#item_proxy::resolve_from" target="_blank">resolvable</a> object</p>
 							<p>(1, 2) appends a new item using an initializer list; each element of the initializer list corresponds to a  cell</p>
 							<h4>Parameters</h4>
 							<table>
@@ -506,6 +506,14 @@
 				</table>
 
 			</section>
+		</section>
+
+		<section>
+			<h1>Example</h1>
+			<p>
+				The following example shows how to add categories to a listbox, how to populate them with items, and how to iterate through the items.
+			</p>
+			<pre><code>#include &#60;nana/gui.hpp&#62;<br>#include &#60;nana/gui/widgets/listbox.hpp&#62;<br>#include &#60;iostream&#62;<br><br>int main()<br>{<br>&#9;nana::form fm {nana::API::make_center(300, 500)};<br>&#9;fm.div("vert margin=15 &#60;listbox&#62;");<br><br>&#9;nana::listbox list_box {fm};<br>&#9;fm["listbox"] &#60;&#60; list_box;<br>&#9;list_box.append_header("Column 0");<br><br>&#9;// add three categories using an initializer list<br>&#9;list_box.append({"category one", "category two", "category three"});<br><br>&#9;// add another category using a wide character string<br>&#9;list_box.append(L"четвертая категория");<br><br>&#9;// add three items to each category<br>&#9;for(unsigned cat_count = 0; cat_count &#60; list_box.size_categ(); cat_count++)<br>&#9;{<br>&#9;&#9;for(unsigned item_count = 0; item_count &#60; 3; item_count++)<br>&#9;&#9;{<br>&#9;&#9;&#9;// `push_back` can be used instead of `append` when adding items that only have one cell<br>&#9;&#9;&#9;list_box.at(cat_count).push_back("item " + std::to_string(item_count) + " of category " +<br>&#9;&#9;&#9;&#9;std::to_string(cat_count));<br>&#9;&#9;}<br>&#9;}<br><br>&#9;// iterate through the items in each category, and print the text in cell 0<br>&#9;for(unsigned cat_count = 0; cat_count &#60; list_box.size_categ(); cat_count++)<br>&#9;{<br>&#9;&#9;for(auto item : list_box.at(cat_count))<br>&#9;&#9;&#9;std::cout &#60;&#60; item.text(0) &#60;&#60; std::endl;<br>&#9;&#9;std::cout &#60;&#60; std::endl;<br>&#9;}<br><br>&#9;fm.collocate();<br>&#9;list_box.column_at(0).width(list_box.size().width-16);<br>&#9;fm.show();<br>&#9;nana::exec();<br>}</code></pre>
 		</section>
 	</main>
 

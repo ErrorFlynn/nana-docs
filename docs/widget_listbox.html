@@ -383,35 +383,39 @@
 							</tr>
 						</table>
 						<h4>Return value</h4>
-						<p>The absolute position of the column (the position that the column had at creation), or <code>nana::npos</code> otherwise.</p>
+						<p>The absolute position of the column (the position that the column had at creation), or <code>nana::npos</code> on failure.</p>
 					</td>
 				</tr>
 
 				<tr>
 					<td>column_movable (Nana 1.7)</td>
-					<td>when a column is not movable, the user can't move it column by dragging it</td>
+					<td>allows or disallows the repositioning of columns by the user</td>
 				</tr>
 				<tr>
 					<td>
-						<pre><code>void column_movable(bool movable);<br>bool column_movable() const;</code></pre>
+						<pre><code>(0)  void column_movable(bool movable);<br>(1)  bool column_movable() const;</code></pre>
 						<p>
-							When a column is not movable, the user can't move it by dragging it.
+							When columns are movable, the user can drag them into new positions (that is the default state).
 						</p>
+						<ol>
+							<li>allows or disallows the moving of columns</li>
+							<li>determines whether columns are movable</li>
+						</ol>
 						<h4>Parameters</h4>
 						<table>
 							<tr><th>movable</th></tr>
 							<tr>
-								<td><p>Indicates whether the column can be moved.</p></td>
+								<td><p>Indicates whether to allow columns to be moved. If this parameter is <code>false</code>, the user will not be able to drag columns into new positions (although they can still be repositioned programmatically, by calling <a href="index.html#widget_listbox::reorder_columns" target="_blank">listbox::reorder_columns</a>).</p></td>
 							</tr>
 						</table>
 						<h4>Return value</h4>
-						<p><code>true</code> if the column can be moved, or <code>false</code> otherwise.</p>
+						<p>(1) <code>true</code> if columns can be moved, or <code>false</code> otherwise.</p>
 					</td>
 				</tr>
 
 				<tr>
 					<td>column_resizable (Nana 1.7)</td>
-					<td>enables/disables the resizability of the column</td>
+					<td>enables / disables the resizability of the column</td>
 				</tr>
 				<tr>
 					<td>
@@ -448,7 +452,7 @@
 
 				<tr>
 					<td>move_column (Nana 1.7)</td>
-					<td>moves column to the view position</td>
+					<td>moves a column to a new position</td>
 				</tr>
 				<tr>
 					<td>
@@ -478,9 +482,10 @@
 					<td>
 						<pre><code>void reorder_columns(size_type first_col,<br>						size_type last_col,<br>						index_pair row, bool reverse,<br>						std::function&#60;bool(const std::string &cell1, size_type col1,<br>										const std::string &cell2, size_type col2,<br>										const nana::any *rowval,<br>										bool reverse)&#62; comp);</code></pre>
 						<p>
-							This function reorders the columns in the range [first_col, last_col], using a row.
-							More specifically, it sorts the group of cells at the intersection of the column range
-							and the row, and repositions the columns in accordance with the new order of the cells.
+							This function reorders the columns in the range [first_col, last_col], using a row. More specifically, it sorts the group of cells at the intersection of the column range and the row, and repositions the columns in accordance with the new order of the cells.
+						</p>
+						<p>
+							Repositioning the columns does not affect the order they have in the internal column container (which is the order they were added in). The columns are simply <em>displayed</em> in a new order, which creates the dichotomy between <em>display positions</em> and <em>absolute positions</em>. That is why <a href="index.html#widget_listbox::column_at" target="_blank">listbox::column_at</a> has the <code>disp_order</code> parameter.
 						</p>
 						<h4>Parameters</h4>
 						<table>
@@ -504,7 +509,7 @@
 							<tr>
 								<td>
 									<p>
-										A <a href="https://en.wikipedia.org/wiki/Weak_ordering">weak ordering</a>
+										A <a href="https://en.wikipedia.org/wiki/Weak_ordering" target="_blank">weak ordering</a>
 										comparer function. Here's an example of what it could look like:
 									</p>
 									<pre><code>using size_type = nana::listbox::size_type;<br>auto comparer = [](const std::string &cell1, size_type col1, <br>					const std::string &cell2, size_type col2, <br>					const nana::any *rowval, bool reverse)<br>{<br>	return reverse ? cell1 &#62; cell2 : cell1 &#60; cell2;<br>};</code></pre>
@@ -538,7 +543,7 @@
 							<table>
 								<tr><th>abs_pos</th></tr>
 								<tr>
-									<td><p>The absolute position of the item to access. "Absolute position" means the position that the item had at creation, as opposed to the position it is displayed at after sorting (for details, see <code>sort_col</code> in the "Ordering" section below).</p></td>
+									<td><p>The absolute position of the item to access. "Absolute position" means the position that the item had at creation, as opposed to the position it is displayed at after sorting (for details, see the <em>"Remarks"</em> section of <a href="index.html#widget_listbox::sort_col" target="_blank">listbox::sort_col</a>).</p></td>
 								</tr>
 							</table>
 							<h4>Return value</h4>
@@ -570,7 +575,7 @@
 							<table>
 								<tr><th>abs_pos</th></tr>
 								<tr>
-									<td><p>The absolute position of the item to access. "Absolute position" means the position that the item had at creation, as opposed to the position it is displayed at after sorting (for details, see <code>sort_col</code> in the "Ordering" section below).</p></td>
+									<td><p>The absolute position of the item to access. "Absolute position" means the position that the item had at creation, as opposed to the position it is displayed at after sorting (for details, the <em>"Remarks"</em> section of <a href="index.html#widget_listbox::sort_col" target="_blank">listbox::sort_col</a>).</p></td>
 								</tr>
 							</table>
 							<h4>Return value</h4>
@@ -584,9 +589,9 @@
 				<tr>
 					<td>
 						<pre><code>index_pairs checked() const;</code></pre>
-						<p>Returns the indexes of all checked items in all categories. A checked item is an item whose associated checkbox is checked (see <code>checkable</code> below).</p>
+						<p>Returns the indexes of all checked items in all categories. A checked item is an item whose associated checkbox is checked (see <a href="index.html#widget_listbox::checkable" target="_blank">listbox::checkable</a>).</p>
 						<h4>Return value</h4>
-						<p>An std container that contains a set of <code>index_pair</code> objects which point to checked items. As of Nana v1.7, <code>index_pairs</code> is an alias for <code>std::vector&#60;index_pair&#62;</code>.</p>
+						<p>An std container that contains a set of <code>index_pair</code> objects which indicate the checked items (using their absolute positions within categories). As of Nana v1.7, <code>index_pairs</code> is an alias for <code>std::vector&#60;index_pair&#62;</code>.</p>
 					</td>
 				</tr>
 
@@ -700,7 +705,7 @@
 							</tr>
 						</table>
 						<h4>Return value</h4>
-						<div><p>An <code>index_pair</code> object representing an item or a category, or an empty object if the coordinates don't "hit" an item or a category.</p><p>The object is "empty" when both <code>index_pair::item</code> and <code>index_pair::cat</code> have the value <code>nana::npos</code>. To easily test whether the object is empty, call <code>index_pair::empty()</code>.</p><p>If the returned object represents an item, a <em>display position</em> is used to identify the item. See <code>sort_col</code> for an explanation of the difference between a <em>display postition</em> and an <em>absolute position</em>.</p></div>
+						<div><p>An <code>index_pair</code> object representing an item or a category, or an empty object if the coordinates don't "hit" an item or a category.</p><p>The object is "empty" when both <code>index_pair::item</code> and <code>index_pair::cat</code> have the value <code>nana::npos</code>. To easily test whether the object is empty, call <code>index_pair::empty()</code>.</p><p>If the returned object represents an item, a <em>display position</em> is used to identify the item. See the <em>"Remarks"</em> section of <a href="index.html#widget_listbox::sort_col" target="_blank">listbox::sort_col</a> for an explanation of the difference between a <em>display postition</em> and an <em>absolute position</em>.</p></div>
 					</td>
 				</tr>
 
@@ -779,7 +784,7 @@
 							</tr>
 						</table>
 						<h4>Return value</h4>
-						<p>An <code>index_pair</code> object that indicates the <em>display position</em> of the hovered item. If no item is hovered and  <code>return_end</code> is <code>true</code>, the position returned is that of the last item in the last category. See <code>sort_col</code> for an explanation of the difference between a <em>display postition</em> and an <em>absolute position</em>.</p>
+						<p>An <code>index_pair</code> object that indicates the <em>display position</em> of the hovered item. If no item is hovered and  <code>return_end</code> is <code>true</code>, the position returned is that of the last item in the last category. See the <em>"Remarks"</em> section of <a href="index.html#widget_listbox::sort_col" target="_blank">listbox::sort_col</a> for an explanation of the difference between a <em>display postition</em> and an <em>absolute position</em>.</p>
 						<h4>Remarks</h4>
 						<div>
 							<p>
@@ -1098,10 +1103,7 @@
 						<h4>Remarks</h4>
 						<div>
 							<p>It is important to understand that a listbox category doesn't actually reorder its internal item container when the items are sorted. Instead, each category maintains an index of display positions for the sorted order. When sorting is enabled, the listbox simply <em>displays</em> the items in the sorted order, while continuing to address them using their absolute (unsorted) positions assigned to them at creation.</p>
-							<p>This can result in a mismatch between the display position and the absolute position of an item, when the items are sorted. This is important, because all methods that take an <code>index_pair</code> argument expect an absolute position, while some methods (like <code>listbox::hovered</code>) return a display position. To resolve this issue, the <code>cat_proxy</code> class has a method that converts one type of position into the other:</p>
-							<pre><code>size_type index_cast(size_type pos, bool from_display_order) const;</code></pre>
-							<p>If the <code>bool</code> parameter is <code>true</code>, this method converts a display position into an absolute position. If the parameter is <code>false</code>, the method converts an absolute position into a display position.</p>
-							<p>You can also obtain an item's display position by calling <code>item_proxy::to_display()</code>.</p>
+							<p>This can result in a mismatch between the display position and the absolute position of an item, when the items are sorted. This is important, because all methods that take an <code>index_pair</code> argument expect an absolute position, while some methods (like <a href="index.html#widget_listbox::hovered" target="_blank">listbox::hovered</a>) return a display position. To resolve this issue, the <a href="index.html#cat_proxy::index_cast" target="_blank">cat_proxy::index_cast</a> method should be used to convert one type of position into the other.</p>
 						</div>
 					</td>
 				</tr>
@@ -1123,7 +1125,7 @@
 						<pre><code>index_pair first_visible() const;</code></pre>
 						<p>Returns the index of the first visible item or category. To test whether the returned <code>index_pair</code> represents a category or an item, call <code>index_pair::is_category()</code>. If the listbox doesn't have any items, the returned object is empty (test by calling <code>index_pair::empty()</code>).</p>
 						<h4>Return value</h4>
-						<p>the index of first visible element</p>
+						<p>The display position of first visible element (for an explanation of the term <em>"display position"</em>, see the "Remarks" section of <a href="index.html#widget_listbox::sort_col" target="_blank">listbox::sort_col</a>).</p>
 					</td>
 				</tr>
 
@@ -1198,7 +1200,7 @@
 			<hr />
 
 			<p>Finally, here are the code fragments that were discussed above, coalesced into a compilable example:</p>
-			<pre><code>#include &#60;nana/gui.hpp&#62;<br>#include &#60;nana/gui/widgets/listbox.hpp&#62;<br>#include &#60;iostream&#62;<br><br>int main()<br>{<br>	nana::form fm;<br>	fm.div("vert margin=15 &#60;lb&#62;");<br><br>	nana::listbox list_box{fm};<br>	fm["lb"] &#60;&#60; list_box;<br>	list_box.append_header("Column 0");<br>	list_box.at(0).append("cell 0 of item 0"); // append new item to category 0<br><br>	// get the text from (category 0)-&#62;(item 0)-&#62;(cell 0)<br>	std::cout &#60;&#60; list_box.at(0).at(0).text(0) &#60;&#60; std::endl;<br><br>	list_box.append_header("Column 1");<br>	list_box.at(0).append({"cell 0 of item 1", "cell 1 of item 1"});<br>	list_box.at(0).at(0).text(1, "cell 1 of item 0");<br><br>	// change the background color of the second item<br>	list_box.at(0).at(1).bgcolor(nana::colors::light_salmon);<br><br>	// change the bg color of the second cell of the first item<br>	nana::color cellbg {"#bbeebb"}; // green bg color<br>	nana::color cellfg {list_box.at(0).at(0).fgcolor()}; // keep the same foreground<br>	std::string cellstr {list_box.at(0).at(0).text(1)}; // copy the existing text<br>	nana::listbox::cell cell {cellstr, {cellbg, cellfg}}; // construct a new cell<br>	list_box.at(0).at(0).text(1, cell); // set the new cell using item_proxy::text<br><br>	fm.collocate();<br>	fm.show();<br>	nana::exec();<br>}</code></pre>
+			<pre><code>#include &#60;nana/gui.hpp&#62;<br>#include &#60;nana/gui/widgets/listbox.hpp&#62;<br>#include &#60;iostream&#62;<br><br>int main()<br>{<br>	nana::form fm;<br>	fm.div("vert margin=15 &#60;lb&#62;");<br><br>	nana::listbox list_box {fm};<br>	fm["lb"] &#60;&#60; list_box;<br>	list_box.append_header("Column 0");<br>	list_box.at(0).append("cell 0 of item 0"); // append new item to category 0<br><br>	// get the text from (category 0)-&#62;(item 0)-&#62;(cell 0)<br>	std::cout &#60;&#60; list_box.at(0).at(0).text(0) &#60;&#60; std::endl;<br><br>	list_box.append_header("Column 1");<br>	list_box.at(0).append({"cell 0 of item 1", "cell 1 of item 1"});<br>	list_box.at(0).at(0).text(1, "cell 1 of item 0");<br><br>	// change the background color of the second item<br>	list_box.at(0).at(1).bgcolor(nana::colors::light_salmon);<br><br>	// change the bg color of the second cell of the first item<br>	nana::color cellbg {"#bbeebb"}; // green bg color<br>	nana::color cellfg {list_box.at(0).at(0).fgcolor()}; // keep the same foreground<br>	std::string cellstr {list_box.at(0).at(0).text(1)}; // copy the existing text<br>	nana::listbox::cell cell {cellstr, {cellbg, cellfg}}; // construct a new cell<br>	list_box.at(0).at(0).text(1, cell); // set the new cell using item_proxy::text<br><br>	fm.collocate();<br>	fm.show();<br>	nana::exec();<br>}</code></pre>
 		</section>
 
 	</section>
