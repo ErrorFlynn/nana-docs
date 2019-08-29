@@ -60,7 +60,7 @@ function onTOCLink(e)
 		}
 		else if(e.which == 2) // middle button
 		{
-			open('#' + href, '_blank');
+			open('index.html#' + href, '_blank');
 		}
 	}
 };
