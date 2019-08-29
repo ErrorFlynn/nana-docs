@@ -38,7 +38,7 @@
 				<tr> <th>Type</th> <th>Description</th> </tr>
 				<tr>
 					<td>index_pair</td>
-					<td>a category index and an item index, acts as an "address" for individual listbox items</td>
+					<td>a category position and an item position, acts as an "address" for individual listbox items</td>
 				</tr>
 				<tr>
 					<td>index_pairs</td>
@@ -58,7 +58,7 @@
 					<td>category iterator and manipulator</td>
 				</tr>
 				<tr>
-					<td>item_proxy</td>
+					<td><a href="index.html#item_proxy" target="_blank">item_proxy</a></td>
 					<td>item iterator and manipulator</td>
 				</tr>
 				<tr>
@@ -210,18 +210,7 @@
 						<table>
 							<tr><th>handle</th></tr>
 							<tr>
-								<td>
-									<p>
-										A handle to a parent widget, which is usually a <code>nana::form</code> or a
-										<code>nana::panel</code>. Keep in mind that all widgets have a <a href="
-									https://en.cppreference.com/w/cpp/language/cast_operator">
-											conversion
-											operator
-										</a> that returns a <code>nana::window</code>, so you can pass a
-										widget object directly to these constructors, instead of having to call
-										<code>handle()</code> on the widget object.
-									</p>
-								</td>
+								<td><p>A handle to a parent widget, which is usually a <code>nana::form</code> or a <code>nana::panel</code>. Keep in mind that all widgets have a <a href="https://en.cppreference.com/w/cpp/language/cast_operator" target="_blank">conversion operator</a> that returns a <code>nana::window</code>, so you can pass a widget object directly to these constructors, instead of having to call <code>handle()</code> on the widget object.</p></td>
 							</tr>
 							<tr><th>visible</th></tr>
 							<tr>
@@ -575,7 +564,7 @@
 							<table>
 								<tr><th>abs_pos</th></tr>
 								<tr>
-									<td><p>The absolute position of the item to access. "Absolute position" means the position that the item had at creation, as opposed to the position it is displayed at after sorting (for details, the <em>"Remarks"</em> section of <a href="index.html#widget_listbox::sort_col" target="_blank">listbox::sort_col</a>).</p></td>
+									<td><p>The absolute position of the item to access. "Absolute position" means the position that the item had at creation, as opposed to the position it is displayed at after sorting (for details, see the <em>"Remarks"</em> section of <a href="index.html#widget_listbox::sort_col" target="_blank">listbox::sort_col</a>).</p></td>
 								</tr>
 							</table>
 							<h4>Return value</h4>
@@ -585,23 +574,23 @@
 				</tr>
 
 				<tr><th>Observers</th></tr>
-				<tr><td>checked</td><td>returns the indexes of all checked items</td></tr>
+				<tr><td>checked</td><td>returns the set of all checked items</td></tr>
 				<tr>
 					<td>
 						<pre><code>index_pairs checked() const;</code></pre>
-						<p>Returns the indexes of all checked items in all categories. A checked item is an item whose associated checkbox is checked (see <a href="index.html#widget_listbox::checkable" target="_blank">listbox::checkable</a>).</p>
+						<p>Returns a sequence container with the locations of all checked items. A checked item is an item whose associated checkbox is checked (see <a href="index.html#widget_listbox::checkable" target="_blank">listbox::checkable</a>).</p>
 						<h4>Return value</h4>
 						<p>An std container that contains a set of <code>index_pair</code> objects which indicate the checked items (using their absolute positions within categories). As of Nana v1.7, <code>index_pairs</code> is an alias for <code>std::vector&#60;index_pair&#62;</code>.</p>
 					</td>
 				</tr>
 
-				<tr><td>selected</td><td>returns the indexes of all selected items</td></tr>
+				<tr><td>selected</td><td>returns the set of all selected items</td></tr>
 				<tr>
 					<td>
 						<pre><code>index_pairs selected() const;</code></pre>
-						<p>Returns the indexes of all selected items in all the categories.</p>
+						<p>Returns a sequence container with the locations of all selected items.</p>
 						<h4>Return value</h4>
-						<p>An std container that contains a set of <code>index_pair</code> objects which point to checked items. As of Nana v1.7, <code>index_pairs</code> is an alias for <code>std::vector&#60;index_pair&#62;</code>.</p>
+						<p>An std container that contains a set of <code>index_pair</code> objects which point to the selected items. As of Nana v1.7, <code>index_pairs</code> is an alias for <code>std::vector&#60;index_pair&#62;</code>.</p>
 					</td>
 				</tr>
 
@@ -662,7 +651,7 @@
 				<tr>
 					<td>
 						<pre><code>void auto_draw(bool enable);</code></pre>
-						<p>This function enables or disables automatic drawing. If auto drawing is disabled, the listbox no longer automatically redraws when its contents changes. This is useful to avoid inefficiency and save CPU time when performing many operations in a row, like when appending a large number of items, for example.</p><p>In such a case, the listbox redrawing each time an item is appended is redundant and needlessly slows down operation. To prevent that, you would typically first disable auto drawing, then append the items, then call <code>API::refresh_window</code> to update the listbox display, and finally re-enable auto drawing.</p>
+						<p>This function enables or disables automatic drawing. If auto drawing is disabled, the listbox no longer automatically redraws when its contents changes. This is useful to avoid inefficiency and save CPU time when performing many operations in a row, like when appending a large number of items, for example.</p><p>In such a case, the listbox redrawing each time an item is appended is redundant and needlessly slows down operation. To prevent that, you would typically first disable auto drawing, then append the items, and finally re-enable auto drawing.</p>
 
 						<h4>Parameters</h4>
 						<table>
@@ -1160,14 +1149,14 @@
 		<h1>Usage details and functionality</h1>
 		<p>This section discusses usage details, and tries to explain the major features and functionality of the widget.</p>
 		
-		<section expanded>
+		<section>
 			<h2>Adding items and accessing cells</h2>
 			<p>
 				As mentioned in the introduction to the class, the listbox widget is a container of categories, and each category is a container of items. Every item that is added to the listbox must belong to a category. If it's not desired to have any "visible" categories (which have a name and can be clicked on), then the items must be added to the default category, which has the position 0 in the category index.
 			</p>
 			<p>But before any items can be added, first a column must be added to the listbox:</p>
 			<pre><code>list_box.append_header("Column 0");</code></pre>
-			<p>The listbox is created without columns, and will throw a <code>std::out_of_range</code> exception if items are added without a column present.</p>
+			<p>The listbox is created without columns, and will throw an <code>std::out_of_range</code> exception if items are added without a column present.</p>
 			<hr />
 
 			<p>In order to add an item to a category, a <a href="index.html#cat_proxy" target="_blank">cat_proxy</a> category iterator must be obtained:</p>
@@ -1201,6 +1190,20 @@
 
 			<p>Finally, here are the code fragments that were discussed above, coalesced into a compilable example:</p>
 			<pre><code>#include &#60;nana/gui.hpp&#62;<br>#include &#60;nana/gui/widgets/listbox.hpp&#62;<br>#include &#60;iostream&#62;<br><br>int main()<br>{<br>	nana::form fm;<br>	fm.div("vert margin=15 &#60;lb&#62;");<br><br>	nana::listbox list_box {fm};<br>	fm["lb"] &#60;&#60; list_box;<br>	list_box.append_header("Column 0");<br>	list_box.at(0).append("cell 0 of item 0"); // append new item to category 0<br><br>	// get the text from (category 0)-&#62;(item 0)-&#62;(cell 0)<br>	std::cout &#60;&#60; list_box.at(0).at(0).text(0) &#60;&#60; std::endl;<br><br>	list_box.append_header("Column 1");<br>	list_box.at(0).append({"cell 0 of item 1", "cell 1 of item 1"});<br>	list_box.at(0).at(0).text(1, "cell 1 of item 0");<br><br>	// change the background color of the second item<br>	list_box.at(0).at(1).bgcolor(nana::colors::light_salmon);<br><br>	// change the bg color of the second cell of the first item<br>	nana::color cellbg {"#bbeebb"}; // green bg color<br>	nana::color cellfg {list_box.at(0).at(0).fgcolor()}; // keep the same foreground<br>	std::string cellstr {list_box.at(0).at(0).text(1)}; // copy the existing text<br>	nana::listbox::cell cell {cellstr, {cellbg, cellfg}}; // construct a new cell<br>	list_box.at(0).at(0).text(1, cell); // set the new cell using item_proxy::text<br><br>	fm.collocate();<br>	fm.show();<br>	nana::exec();<br>}</code></pre>
+		</section>
+
+        <section expanded>
+			<h2>Accessing the selected items</h2>
+			<p>
+				The previous section showed how to access arbitrary items, but what about accessing the set of currently selected items? The listbox makes that very easy, by providing the <a href="index.html#widget_listbox::selected" target="_blank">selected</a> method. This method returns a sequence container with the "addresses" of all selected items.
+			</p>
+			<p>
+                Such an "address" is an <code>index_pair</code> object, which represents a pair of positions that locates the item (a position in the listbox's index of categories, and a position in a category's index of items). An <code>index_pair</code> object can be passed to <a href="index.html#widget_listbox::at" target="_blank">listbox::at</a> to access the item it identifies.
+			</p>
+			<p>
+                Since <a href="index.html#widget_listbox::selected" target="_blank">listbox::selected</a> returns a sequence container, it's very easy to iterate through it using a range-based <code>for</code> loop. This is illustrated in the following example, which changes the color of all selected items when a button is pressed:
+			</p>
+            <pre><code>#include &#60;nana/gui.hpp&#62;<br>#include &#60;nana/gui/widgets/button.hpp&#62;<br>#include &#60;nana/gui/widgets/listbox.hpp&#62;<br>#include &#60;random&#62;<br><br>int main()<br>{<br>&#9;nana::form fm {nana::API::make_center(300, 420)};<br>&#9;fm.div("vert margin=15 &#60;listbox&#62;&#60;weight=15&#62;&#60;button weight=30&#62;");<br><br>&#9;nana::listbox list_box {fm};<br>&#9;fm["listbox"] &#60;&#60; list_box;<br><br>&#9;// add two columns and three categories<br>&#9;list_box.append_header("column zero");<br>&#9;list_box.append_header("column one");<br>&#9;list_box.append({"category one", "category two", "category three"});<br><br>&#9;// add three items to each category<br>&#9;for(unsigned cat_count = 0; cat_count &#60; list_box.size_categ(); cat_count++)<br>&#9;{<br>&#9;&#9;for(unsigned item_count = 0; item_count &#60; 3; item_count++)<br>&#9;&#9;{<br>&#9;&#9;&#9;auto str {"item " + std::to_string(item_count)};<br>&#9;&#9;&#9;list_box.at(cat_count).append({str + " cell zero", str + " cell one"});<br>&#9;&#9;}<br>&#9;}<br><br>&#9;nana::button btn {fm, "Change the color of selected items"};<br>&#9;fm["button"] &#60;&#60; btn;<br><br>&#9;btn.events().click([&]<br>&#9;{<br>&#9;&#9;// generate a random color to apply to each selected item<br>&#9;&#9;std::mt19937 eng {std::random_device {}()};<br>&#9;&#9;std::uniform_int_distribution&#60;unsigned&#62; distr {0, 0xffffff};<br>&#9;&#9;nana::color_rgb clr {distr(eng)};<br><br>&#9;&#9;// iterate though all selected items using a range-based for loop<br>&#9;&#9;for(const auto &cat_item : list_box.selected()) // `cat_item` is of type listbox::index_pair<br>&#9;&#9;&#9;list_box.at(cat_item).fgcolor(clr); // change the color of each selected item<br>&#9;});<br><br>&#9;fm.collocate();<br>&#9;fm.show();<br>&#9;nana::exec();<br>}</code></pre>
 		</section>
 
 	</section>

@@ -6,6 +6,7 @@ body
 
 #toc
 {
+	border-right : 1px solid transparent;
 	opacity : .2;
 	transition : opacity .08s ease-out;
 	background-color : #eee;
@@ -15,6 +16,7 @@ body
 
 #toc:hover {
 	opacity : 1;
+	border-right : 1px solid #abc;
 }
 
 #toc-ul {
@@ -53,44 +55,96 @@ main
 
 /**** TOC ****/
 
-/* Remove default bullets */
-ul, #myUL {
-  list-style-type: none;
+ul
+{
+	list-style-type : none;
 }
 
-/* Remove margins and padding from the parent ul */
-#myUL {
-  margin: 0;
-  padding: 0;
+#toc-ul
+{
+	margin : 15px;
+	padding : 0;
 }
 
-/* Style the caret/arrow */
-.caret {
-  cursor: pointer;
-  user-select: none; /* Prevent text selection */
+.caret
+{
+	cursor : pointer;
+	user-select : none;
+	color : #777;
+	font-family : 'Lato', sans-serif;
+	font-size : 0.9375rem;
+	font-weight : bold;
+	letter-spacing : .03em;
 }
 
-/* Create the caret/arrow with a unicode, and style it */
-.caret::before {
-  content: "\25B6";
-  color: black;
-  display: inline-block;
-  margin-right: 6px;
+ul#toc-ul>li>span.caret
+{
+	font-family : 'Oswald', sans-serif;
+	font-size : 1.125rem;
+	font-weight : normal;
 }
 
-/* Rotate the caret/arrow icon when clicked on (using JavaScript) */
-.caret-down::before {
-  transform: rotate(90deg);
+.caret:hover
+{
+	color : darkgoldenrod;
 }
 
-/* Hide the nested list */
-.nested {
-  display: none;
+.caret::before
+{
+	margin-right : 6px;
+	margin-bottom : 1px;
+	display : inline-block;
+	content : '';
+	width: 0; 
+	height: 0;
+	border-top: 0.32rem solid transparent;
+	border-bottom: 0.32rem solid transparent;
+	border-left: 0.5rem solid darkgoldenrod;
 }
 
-/* Show the nested list when the user clicks on the caret/arrow (with JavaScript) */
-.active {
-  display: block;
+.caret-down::before
+{
+	transform : rotate(90deg);
+	/*content : "\25BC";*/
+}
+
+.nested
+{
+	display : none;
+	padding-left : 2.2em;
+}
+
+.active
+{
+	display : block;
+	font-family : 'Lato', sans-serif;
+	font-size : 0.8125rem;
+	color : #444;
+}
+
+.active li
+{
+	margin : 5px 0 5px 0;
+}
+
+.active li>span:only-child
+{
+	padding : 2px 7px 2px 7px;
+}
+
+.selected
+{
+	color : #8094c7;
+	background-color : white;
+	outline : 1px solid #a0b4e7;
+	font-weight : bold;
+	letter-spacing : .1em;
+}
+
+.active li>span:only-child:hover:not(.selected)
+{
+	color : #57d;
+	cursor : pointer;
 }
 
 ul *
