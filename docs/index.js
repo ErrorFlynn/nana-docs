@@ -18,15 +18,8 @@ onload = function()
 	var TOCLinks = document.querySelectorAll('[data-href]');
 	for(let link of TOCLinks)
 	{
-		link.onclick = function()
-		{
-			if(!link.classList.contains('selected'))
-			{
-				onPopState.skip = true;
-				let href = this.getAttribute('data-href');
-				frames[0].location.replace(href);
-			}
-		};
+		link.onclick = onTOCLink;
+		link.onauxclick = onTOCLink;
 	}
 
 	var startDoc = 'widget_listbox.html';
@@ -53,6 +46,23 @@ onload = function()
 	
 	onresize = onResize;
 	onResize();
+};
+
+function onTOCLink(e)
+{
+	if(!this.classList.contains('selected'))
+	{
+		let href = this.getAttribute('data-href');
+		if(e.which == 1) // left button
+		{
+			onPopState.skip = true;
+			frames[0].location.replace(href);
+		}
+		else if(e.which == 2) // middle button
+		{
+			open('index.html#' + href, '_blank');
+		}
+	}
 };
 
 function onResize()
