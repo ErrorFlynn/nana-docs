@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Code formatter</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<script type="text/javascript">
+		function format(text)
+		{
+			var out = document.getElementById('out');
+			if(text.length) out.textContent = '<pre><code>' + text.replace(/</g, '&#60;').replace(/>/g, '&#62;').replace(/\n/g, '<br>').replace(/\t/g, '&#9;') + '</code></pre>';
+			else out.textContent = '';
+		}
+	</script>
+</head>
+
+<body>
+
+	<textarea id="in" oninput="format(this.value);" spellcheck="false" placeholder="paste your code here" 
+			  style="width:44%; height:800px;"></textarea>
+
+	<textarea id="out" spellcheck="false" placeholder="collect your formatted code here" 
+			  style="width:44%; height:800px;"></textarea>
+
+</body>
+
+</html>

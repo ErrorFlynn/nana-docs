@@ -1,0 +1,313 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>nana::treebox</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" href="page.css" media="all">
+	<link href="fonts/Oswald/Oswald.css" rel="stylesheet">
+	<link href="fonts/Arimo/Arimo.css" rel="stylesheet">
+	<link href="fonts/OxygenMono/OxygenMono.css" rel="stylesheet">
+	<link rel="stylesheet" href="highlight/default.css">
+	<script src="highlight/highlight.pack.js"></script>
+	<script>hljs.configure({ useBR: true }); hljs.initHighlightingOnLoad();</script>
+	<script src="page.js"></script>
+</head>
+
+<body>
+
+	<main>
+
+		<section>
+			<h1>Class nana::treebox</h1>
+			<p>
+				The <code>nana::treebox</code> class provides the functionality of a tree view widget that displays a hierarchical list of items, such as the directory structure of a file system. This page will use the terms "item" and "node" interchangeably.
+			</p>
+
+			<img src="img/treebox.png" alt="treebox screenshot">
+
+			<section>
+				<h2>Member types</h2>
+				<table>
+					<tr> <th>Type</th> <th>Description</th> </tr>
+					<tr>
+						<td>item_proxy</td>
+						<td>item iterator and manipulator</td>
+					</tr>
+					<tr>
+						<td>node_image_type</td>
+						<td>state image for the node</td>
+					</tr>
+					<tr>
+						<td>renderer_interface</td>
+						<td>interface for a user-defined node (item) renderer</td>
+					</tr>
+					<tr>
+						<td>compset_placer_interface</td>
+						<td>interface for a user-defined placer that positions the components of a node</td>
+					</tr>
+				</table>
+			</section> <!--member types-->
+
+
+			<section>
+				<h2>Scheme</h2>
+				<table>
+					<tr> <th>Property</th> <th>Description</th> </tr>
+					<tr>
+						<td>item_bg_selected</td>
+						<td>the background color of selected items</td>
+					</tr>
+					<tr>
+						<td>item_fg_selected</td>
+						<td>the foreground color of selected items</td>
+					</tr>
+					<tr>
+						<td>item_bg_highlighted</td>
+						<td>the background color of highlighted (hovered) items</td>
+					</tr>
+					<tr>
+						<td>item_fg_highlighted</td>
+						<td>the foreground color of highlighted (hovered) items</td>
+					</tr>
+					<tr>
+						<td>item_bg_selected_and_highlighted</td>
+						<td>the background color of items that are both selected and hovered over</td>
+					</tr>
+					<tr>
+						<td>item_fg_selected_and_highlighted</td>
+						<td>the foreground color of items that are both selected and hovered over</td>
+					</tr>
+					<tr>
+						<td>item_offset</td>
+						<td>item displacement relative to the left side of the rendering area, in pixels</td>
+					</tr>
+					<tr>
+						<td>text_offset</td>
+						<td>text displacement relative to the left edge of the item, in pixels</td>
+					</tr>
+					<tr>
+						<td>icon_size</td>
+						<td>the size of the node operator icon (expander/collapser), in pixels</td>
+					</tr>
+					<tr>
+						<td>crook_size</td>
+						<td>the size of the checkbox (as of v1.7.2, the library doesn't scale the rendering of the checkbox to fit this size value, but that can be done with a custom renderer)</td>
+					</tr>
+					<tr>
+						<td>indent_displacement</td>
+						<td>indentation size for child nodes, in pixels</td>
+					</tr>
+				</table>
+			</section> <!--scheme-->
+
+			<section>
+				<h2>Events</h2>
+				<p>
+					In addition to the <a href="http://nanapro.org/en-us/documentation/core/events.htm">general events</a>
+					that most widgets have, the treebox also has the following:
+				</p>
+				<table>
+					<tr> <th>Event</th> <th>Description</th> </tr>
+					<tr>
+						<td>expanded(const arg_treebox&)</td>
+						<td>occurs when a node is expanded or contracted</td>
+					</tr>
+					<tr>
+						<td>checked(const arg_treebox&)</td>
+						<td>occurs when a node is checked or unchecked</td>
+					</tr>
+					<tr>
+						<td>selected(const arg_treebox&)</td>
+						<td>occurs when a node is selected or deselected</td>
+					</tr>
+					<tr>
+						<td>hovered(const arg_treebox&)</td>
+						<td>occurs when the user moves the mouse cursor over a node</td>
+					</tr>
+				</table>
+			</section> <!--events-->
+
+			<section expanded>
+				<h2>Member functions</h2>
+
+				<table class="functions">
+					<tr>
+						<td>(constructors)</td>
+						<td>construct a <code>nana::treebox</code> instance</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  treebox();<br>(1)  treebox(window parent, bool visible);<br>(2)  treebox(window parent, const rectangle& r, bool visible = true);</code></pre>
+							<p>
+								(0) Default constructor, constructs an "empty" <code>treebox</code> object. Does not create a UI element;
+								<code>treebox.create(...)</code> must be subsequently called before the object can be used
+								as a widget.<br /><br />(1, 2) Construct and initialize a <code>treebox</code> object, making it usable as a widget.
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>parent</th></tr>
+								<tr>
+									<td><p>A handle to a parent widget, which is usually a <code>nana::form</code> or a <code>nana::panel</code>. Keep in mind that all widgets have a <a href="https://en.cppreference.com/w/cpp/language/cast_operator" target="_blank"> conversion operator </a> that returns a <code>nana::window</code>, so you can pass a widget object directly to these constructors, instead of having to call <code>handle()</code> on the widget object.</p></td>
+								</tr>
+								<tr><th>visible</th></tr>
+								<tr>
+									<td><p>A boolean flag that specifies whether the treebox should be hidden (<code>false</code>) or visible (<code>true</code>).</p></td>
+								</tr>
+								<tr><th>r</th></tr>
+								<tr>
+									<td><p>A rectangle that represents the size and position of the treebox in the parent widget's coordinate system.</p></td>
+								</tr>
+							</table>
+							<h4>Exception</h4>
+							<div><p><code>std::invalid_argument</code> is thrown if the parent handle is invalid</p></div>
+						</td>
+					</tr>
+					<tr>
+						<td>auto_draw</td>
+						<td>enables/disables automatic drawing mode</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void auto_draw(bool enable);</code></pre>
+							<p>
+								When certain operations are performed, the treebox automatically redraws to reflect the updated state, which serves to always keep the widget in the latest display state.
+							</p>
+							<p>
+								But in some situations, this automatic redrawing can be rendundant and inefficient, for example when inserting many items in a loop. In such a situation, it would be beneficial to disable automatic drawing before entering the loop, to improve performance, and then re-enable it after the loop finishes.
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>enable</th></tr>
+								<tr>
+									<td><p>indicates whether to enable or disable the auto-draw mode</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>avoid_drawing (Nana 1.7)</td>
+						<td>temporarily suspends automatic drawing and executes a function</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>template&#60;typename Function&#62; void avoid_drawing(Function fn);</code></pre>
+							<p>This is a helper function that disables automatic drawing before calling a user function, and then re-enables automatic drawing when the user function returns. Implementation as of Nana v1.7:</p>
+							<pre><code>template&#60;typename Function&#62;<br>void avoid_drawing(Function fn)<br>{<br>&#9;this-&#62;auto_draw(false);<br>&#9;try<br>&#9;{<br>&#9;&#9;fn();<br>&#9;}<br>&#9;catch (...)<br>&#9;{<br>&#9;&#9;this-&#62;auto_draw(true);<br>&#9;&#9;throw;<br>&#9;}<br>&#9;this-&#62;auto_draw(true);<br>}</code></pre>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>fn</th></tr>
+								<tr>
+									<td><p>the function to call</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr><td>checkable</td><td>enables/disables a mode whereby each item has a checkbox</td></tr>
+					<tr>
+						<td>
+							<pre><code>(0)  treebox& checkable(bool enable);<br>(1)  bool checkable() const;</code></pre>
+							<p>This function enables or disables the <em>checkable</em> mode of the treebox. When this mode is enabled, each node (item) displays a checkbox immediately after the operator icon (if any), to the left of the item text.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>enable</th></tr>
+								<tr>
+									<td><p>indicates whether to enable or disable checkable mode</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div><p>(0) a reference to <code>*this</code><br />(1) a flag that indicates whether the checkable mode is enabled (<code>true</code>) or disabled (<code>false</code>)</p></div>
+						</td>
+					</tr>
+
+					<tr><td>placer</td><td>gets or sets the placer object used for positioning the components of a node</td></tr>
+					<tr>
+						<td>
+							<pre><code>(0)  template&#60;typename Placer&#62; treebox& placer(const Placer& p);<br>(1)  const pat::cloneable&#60;compset_placer_interface&#62;& placer() const;</code></pre>
+							<p>This method allows the setting of a custom placer object, which the library uses to determine the positions and dimensions of the components of a tree item when rendering the items. The object must be an instance of a class derived from the abstract class <code>compset_placer_interface</code>.</p>
+							<p>There is normally no need to set a custom placer, but it might be needed when using a custom renderer. For a better understanding, see the example at the bottom of this page, and also take a look at the library's <a href="https://github.com/cnjinhao/nana/blob/3cb7dfae0245d364bc46851195622727b2c68aeb/source/gui/widgets/treebox.cpp#L1335" target="_blank">internal implementation</a> (as of v1.7.2).</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>p</th></tr>
+								<tr>
+									<td><p>a reference to the node component placer to set</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div><p>(0) a reference to <code>*this</code><br />(1) a reference to the  current node component placer</p></div>
+						</td>
+					</tr>
+
+					<tr><td>renderer</td><td>gets or sets the renderer object used for rendering a node</td></tr>
+					<tr>
+						<td>
+							<pre><code>(0)  template&#60;typename ItemRenderer&#62; treebox& renderer(const ItemRenderer& rd);<br>(1)  const pat::cloneable&#60;renderer_interface&#62;& renderer() const;</code></pre>
+							<p>This method allows the setting of a custom renderer object, which the library uses to render the tree items. The object must be an instance of a class derived from the abstract class <code>renderer_interface</code>. For a better understanding, see the example at the bottom of this page, and also take a look at the library's <a href="https://github.com/cnjinhao/nana/blob/3cb7dfae0245d364bc46851195622727b2c68aeb/source/gui/widgets/treebox.cpp#L1442" target="_blank">internal implementation</a> (as of v1.7.2).</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>rd</th></tr>
+								<tr>
+									<td><p>a reference to a user-defined node renderer to be copied for the treebox</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div><p>(0) a reference to <code>*this</code><br />(1) a reference to the  current node renderer</p></div>
+						</td>
+					</tr>
+
+					<tr> <th>Node access</th> </tr>
+					<tr>
+						<td>find</td>
+						<td>finds a node</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>item_proxy find(const std::string& path_key);</code></pre>
+							<p>
+								This method finds a node using its path, and returns an iterator to it.
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>path_key</th></tr>
+								<tr>
+									<td><p>the node path</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>
+								An iterator to the found node.
+							</p>
+						</td>
+					</tr>
+
+				</table>
+
+			</section> <!--member functions-->
+
+		</section>
+
+
+		<section>
+			<h1>Usage details and examples</h1>
+			<p>This section discusses usage details, and tries to explain the major features and functionality of the widget.</p>
+
+			<section expanded>
+				<h2>Using a custom renderer and placer</h2>
+				<p>
+					The following example shows how to implement a custom renderer that changes the graphics of the node operator (expander/collapser) to the <code>[+][-]</code> style, and displays all parent nodes with a bold font and a different foreground color:
+				</p>
+				<pre><code>class my_tree_renderer : public nana::treebox::renderer_interface<br>{<br>&#9;using clonable_renderer = nana::pat::cloneable&#60;renderer_interface&#62;;<br>&#9;clonable_renderer renderer_; // wraps a pointer to the library's internal renderer<br><br>public:<br>&#9;my_tree_renderer(const clonable_renderer &rd) : renderer_(rd) {}<br><br>private:<br><br>&#9;nana::window htree_ {nullptr}; // treebox window handle<br><br>&#9;// this function is called whenever a paint operation begins<br>&#9;void begin_paint(nana::widget &wdg) override<br>&#9;{<br>&#9;&#9;htree_ = wdg.handle();<br>&#9;&#9;renderer_-&#62;begin_paint(wdg);<br>&#9;}<br><br>&#9;// paints the background for each item<br>&#9;void bground(graph_reference graph, const compset_interface *compset) const override<br>&#9;{<br>&#9;&#9;renderer_-&#62;bground(graph, compset);<br>&#9;}<br><br>&#9;// paints the node operator for each item<br>&#9;void expander(graph_reference graph, const compset_interface *compset) const override<br>&#9;{<br>&#9;&#9;comp_attribute_t attr;<br>&#9;&#9;if(compset-&#62;comp_attribute(component::expander, attr))<br>&#9;&#9;{<br>&#9;&#9;&#9;auto clr = attr.mouse_pointed ? nana::colors::deep_sky_blue : nana::colors::black;<br>&#9;&#9;&#9;auto r = attr.area;<br><br>&#9;&#9;&#9;graph.frame_rectangle(nana::rectangle {{r.x+4, r.y+6}, {11, 11}}, clr, 0);<br><br>&#9;&#9;&#9;if(compset-&#62;item_attribute().expended)<br>&#9;&#9;&#9;{<br>&#9;&#9;&#9;&#9;graph.line({r.x+7, r.y+11}, {r.x+11, r.y+11});<br>&#9;&#9;&#9;}<br>&#9;&#9;&#9;else<br>&#9;&#9;&#9;{<br>&#9;&#9;&#9;&#9;graph.line({r.x+7, r.y+11}, {r.x+11, r.y+11});<br>&#9;&#9;&#9;&#9;graph.line({r.x+9, r.y+9}, {r.x+9, r.y+13});<br>&#9;&#9;&#9;}<br>&#9;&#9;}<br>&#9;}<br><br>&#9;// paints the checkbox for each item (if the checkable mode is enabled)<br>&#9;void crook(graph_reference graph, const compset_interface *compset) const override<br>&#9;{<br>&#9;&#9;renderer_-&#62;crook(graph, compset);<br>&#9;}<br><br>&#9;// paints the icon for each item (if the node has an icon scheme set)<br>&#9;virtual void icon(graph_reference graph, const compset_interface *compset) const override<br>&#9;{<br>&#9;&#9;renderer_-&#62;icon(graph, compset);<br>&#9;}<br><br>&#9;// paints the text for each item<br>&#9;virtual void text(graph_reference graph, const compset_interface *compset) const override<br>&#9;{<br>&#9;&#9;auto iattr {compset-&#62;item_attribute()};<br>&#9;&#9;if(iattr.has_children)<br>&#9;&#9;{<br>&#9;&#9;&#9;comp_attribute_t cattr;<br>&#9;&#9;&#9;compset-&#62;comp_attribute(component::text, cattr);<br>&#9;&#9;&#9;auto tf {graph.typeface()};<br>&#9;&#9;&#9;graph.typeface({tf.name(), tf.size(), {800}}); // bold font<br><br>&#9;&#9;&#9;auto tsize {graph.text_extent_size(iattr.text)};<br>&#9;&#9;&#9;auto gsize {cattr.area.dimension()};<br>&#9;&#9;&#9;nana::point pos {cattr.area.position()};<br>&#9;&#9;&#9;if(tsize.height &#60; gsize.height)<br>&#9;&#9;&#9;&#9;pos.y += gsize.height/2 - tsize.height/2; // center text vertically<br><br>&#9;&#9;&#9;graph.string(pos, iattr.text, nana::API::fgcolor(htree_).blend(nana::color {"#47f"}, .7));<br>&#9;&#9;&#9;graph.typeface(tf); // restore original font<br>&#9;&#9;}<br>&#9;&#9;else renderer_-&#62;text(graph, compset);<br>&#9;}<br>};</code></pre>
+				<p>
+					Since this renderer draws the text of some items with a bold font, a custom placer is necessary to calculate the width of those items:
+				</p>
+				<pre><code>class my_tree_placer : public nana::treebox::compset_placer_interface<br>{<br>&#9;using clonable_placer = nana::pat::cloneable&#60;nana::treebox::compset_placer_interface&#62;;<br>&#9;clonable_placer placer_; // wraps a pointer to the library's internal placer<br><br>public:<br>&#9;my_tree_placer(const clonable_placer &r) : placer_(r) {}<br><br>private:<br><br>&#9;// called when certain features are toggled:<br>&#9;// - when the checkable mode is toggled (treebox::checkable())<br>&#9;// - when an icon scheme is added or erased (treebox::icon() and treebox::icon_erase())<br>&#9;virtual void enable(component_t comp, bool enabled) override<br>&#9;{<br>&#9;&#9;if(comp == component_t::icon) // an icon scheme is being added or erased<br>&#9;&#9;{<br>&#9;&#9;&#9;// the bool parameter indicates which is the case<br>&#9;&#9;}<br>&#9;&#9;else if(comp == component_t::crook) // the checkable mode is being toggled<br>&#9;&#9;{<br>&#9;&#9;&#9;// the bool parameter indicates whether it's toggled on or off<br>&#9;&#9;}<br><br>&#9;&#9;// the library's placer must be called, otherwise the toggling won't work<br>&#9;&#9;placer_-&#62;enable(comp, enabled);<br>&#9;}<br><br>&#9;// returns whether a feature is on or off<br>&#9;virtual bool enabled(component_t comp) const override<br>&#9;{<br>&#9;&#9;return placer_-&#62;enabled(comp);<br>&#9;}<br><br>&#9;// returns the height of an item, which is dependent on the size of<br>&#9;// the font used by the `graph` object, and the size of the checkbox<br>&#9;virtual unsigned item_height(graph_reference graph) const override<br>&#9;{<br>&#9;&#9;return placer_-&#62;item_height(graph);<br>&#9;}<br><br>&#9;// returns the width of an item, which is dependent of font size, <br>&#9;// checkbox and icon presence, checkbox and icon size, and text offset<br>&#9;virtual unsigned item_width(graph_reference graph, const item_attribute_t &attr) const override<br>&#9;{<br>&#9;&#9;if(attr.has_children) // if the item has children, calc width using bold font<br>&#9;&#9;{<br>&#9;&#9;&#9;auto tf {graph.typeface()};<br>&#9;&#9;&#9;graph.typeface({tf.name(), tf.size(), {800}}); // bold font<br>&#9;&#9;&#9;auto result {placer_-&#62;item_width(graph, attr)};<br>&#9;&#9;&#9;graph.typeface(tf); // restore original font<br>&#9;&#9;&#9;return result;<br>&#9;&#9;}<br>&#9;&#9;return placer_-&#62;item_width(graph, attr);<br>&#9;}<br><br>&#9;// locates a component (returns true if the component is present, and writes the position<br>&#9;// and dimensions of the component to the rectangle object pointed to by the `r` parameter)<br>&#9;virtual bool locate(component_t comp, const item_attribute_t &attr, nana::rectangle *r) const override<br>&#9;{<br>&#9;&#9;return placer_-&#62;locate(comp, attr, r);<br>&#9;}<br>};</code></pre>
+				<p>Finally, here's how to use instances of the above classes to set a new placer and a new renderer for a <code>treebox</code> widget:</p>
+				<pre><code>nana::form fm;<br>nana::treebox tree {fm};<br>tree.placer(my_tree_placer{tree.placer()});<br>tree.renderer(my_tree_renderer{tree.renderer()});</code></pre>
+			</section>
+
+		</section>
+	</main>
+
+</body>
+</html>
