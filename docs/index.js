@@ -1,5 +1,6 @@
 onload = function()
 {
+	//alert(devicePixelRatio);
 	var toggler = document.getElementsByClassName('caret');
 	var i;
 
@@ -70,23 +71,30 @@ function onResize()
 	var fdoc = frames[0].document;
 	var main = fdoc.getElementsByTagName('main')[0];
 	var nav = fdoc.getElementsByTagName('nav')[0];
-
-	if(typeof onResize.navHidden == 'undefined')
-		onResize.navHidden = false;
-	if(document.getElementById('frame').clientWidth < 1325)
+	if(nav)
 	{
-		if(!onResize.navHidden)
+		if(typeof onResize.navHidden == 'undefined')
+			onResize.navHidden = false;
+		if(document.getElementById('frame').clientWidth < remToPix(82.81)/*1325*/)
 		{
-			onResize.navHidden = true;
-			nav.style.display = 'none';
-			main.style.paddingRight = '0';
+			if(!onResize.navHidden)
+			{
+				onResize.navHidden = true;
+				nav.style.display = 'none';
+				main.style.paddingRight = '0';
+			}
 		}
-	}
-	else if(onResize.navHidden)
-	{
-		onResize.navHidden = false;
-		nav.style.display = 'table';
-		main.style.paddingRight = '300px';
+		else if(onResize.navHidden)
+		{
+			onResize.navHidden = false;
+			nav.style.display = 'table';
+			main.style.paddingRight = '300px';
+		}
+	
+		nav.classList.add('scroll');
+		if(nav.scrollHeight > nav.clientHeight)
+			nav.classList.add('scroll');
+		else nav.classList.remove('scroll');
 	}
 }
 
@@ -245,4 +253,9 @@ function scrollToFunction(name)
 			return;
 		}
 	}
+}
+
+function remToPix(rem)
+{
+	return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
 }

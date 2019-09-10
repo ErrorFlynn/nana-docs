@@ -231,7 +231,7 @@ table.functions h3 {
 
 table.functions pre > code {
 	padding-left : 10px;
-	font-size : .8125rem/*13px*/;
+	font-size : /*.8125rem*/13px;
 }
 
 table.functions > tbody > tr > th {
@@ -362,6 +362,12 @@ nav {
 	opacity : .2;
 	transition : opacity .08s ease-out;
 	border-left : 1px solid transparent;
+}
+
+nav.scroll
+{	
+	display : block;
+	overflow-y : scroll;
 }
 
 nav:hover {

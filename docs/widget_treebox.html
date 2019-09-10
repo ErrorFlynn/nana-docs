@@ -265,7 +265,7 @@
 						<td>
 							<pre><code>item_proxy find(const std::string& path_key);</code></pre>
 							<p>
-								This method finds a node using its path, and returns an iterator to it.
+								This method finds a node using its path, and returns an iterator to it. For details about the node path key, see <a href="#widget_treebox::insert" target="_blank">treebox::insert</a>.
 							</p>
 							<h4>Parameters</h4>
 							<table>
@@ -276,11 +276,134 @@
 							</table>
 							<h4>Return value</h4>
 							<p>
-								An iterator to the found node.
+								An iterator to the found node. If no node is found, the returned <code>item_proxy</code> object is empty (test by calling <code>item_proxy::empty()</code>).
 							</p>
 						</td>
 					</tr>
 
+					<tr>
+						<td>make_key_path</td>
+						<td>returns the key path of a specified node</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>std::string make_key_path(item_proxy node, const std::string& delimiter) const;</code></pre>
+							<p>
+								This method returns the key path of a specified node, using a custom string as the delimiter that separates the nodes in the returned path. For details about the node key path, see <a href="#widget_treebox::insert" target="_blank">treebox::insert</a>.
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>node</th></tr>
+								<tr>
+									<td><p>an iterator pointing to the node the returned path should represent</p></td>
+								</tr>
+								<tr><th>delimiter</th></tr>
+								<tr>
+									<td><p>a string to be used as the delimiter that separates the nodes in the returned path</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>
+								The key path string.
+							</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>hovered (Nana 1.7.1)</td>
+						<td>returns the node that the mouse cursor is hovering over</td>
+					</tr>
+					<tr>
+						<td>
+							<p>Returns the node that the mouse cursor is hovering over.</p>
+							<pre><code>item_proxy hovered(bool exclude_expander) const;</code></pre>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>exclude_expander</th></tr>
+								<tr>
+									<td><p>Indicates whether to consider the node operator (the expander/contractor element) as being a part of the item, or whether to exclude it. If this parameter is <code>true</code>, the method only returns a valid iterator if the text of an item is hovered.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>
+								An iterator pointing to the hovered node, or an empty <code>item_proxy</code> object if no node is hovered (test by calling <code>item_proxy::empty()</code>).
+							</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>selected</td>
+						<td>returns the selected node</td>
+					</tr>
+					<tr>
+						<td>
+							<p>This method returns the selected node.</p>
+							<pre><code>item_proxy selected() const;</code></pre>
+							<h4>Return value</h4>
+							<p>
+								An iterator pointing to the selected node, or an empty <code>item_proxy</code> object if no node is selected (test by calling <code>item_proxy::empty()</code>).
+							</p>
+						</td>
+					</tr>
+
+					<tr> <th>Modifiers</th> </tr>
+					<tr>
+						<td>erase</td>
+						<td>erases a node</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  item_proxy erase(item_proxy node);<br>(1)  void erase(const std::string& path_key);</code></pre>
+							<ol>
+								<li>Removes the node pointed to by the specified iterator.</li>
+								<li>Removes the node identified by the specified path key.</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>node</th></tr>
+								<tr>
+									<td><p>An iterator pointing to the node to be erased.</td>
+								</tr>
+								<tr><th>path_key</th></tr>
+								<tr>
+									<td><p>A path key that identifies the node to be erased. For details about the node path key, see <a href="#widget_treebox::insert" target="_blank">treebox::insert</a>.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>
+								An iterator pointing to the sibling node following the erased node. If the erased node doesn't have a sibling following it, the returned iterator object is empty (test by calling <code>item_proxy::empty()</code>).
+							</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>icon</td>
+						<td>creates an icon scheme that can be used for one or more nodes</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>node_image_type& icon(const std::string& name);</code></pre>
+							<p>
+								Each tree node can have an icon displayed between the expander element and the text. This method creates an icon scheme that can be used for setting such an icon for one or more nodes. The icon scheme is represented by a <code>node_image_type</code> object that the treebox creates and manages, this method returning a reference to it.
+							</p>
+							<p>
+								The icon scheme contains three images for three node states: <em>normal</em>, <em>hovered</em>, and <em>expanded</em>. The user can assign a different image for each state, or alternatively, only the <em>normal</em> state could be assigned an image, in which case the other two states would also use that same image.
+							</p>
+							<p>The following example shows how the icon scheme can be used:</p>
+							<pre><code>//treebox tree;<br>//Sets the images<br>auto &img = tree.icon("ID1");<br>img.normal.open("normal1.png");<br>img.hovered.open("hovered1.png");<br>img.expanded.open("expanded1.png");<br><br>auto prx = tree.insert("root", "ROOT");<br>prx.icon("ID1"); //Sets the scheme for this node.<br><br>auto &img2 = tree.icon("ID2");<br>img2.normal.open("normal2.png");<br>img2.hovered.open("hovered2.png");<br>img2.expanded.open("expanded2.png");<br>//If hovered or expanded is not set, it uses normal image for these 2 states.<br><br>prx = tree.insert("root/abc", "abc");<br>prx.icon("ID2");<br>tree.insert("root/def", "def").icon("ID2");<br>//images ID2 are shared for item "abc" and "def".<br></code></pre>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>name</th></tr>
+								<tr>
+									<td><p>The name of the icon scheme, which is used to identify the scheme when setting it for a node. If the name provided identifies a scheme that already exists, the method just returns a reference to that scheme. Otherwise, a new scheme is created.</td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>
+								A reference to a newly created icon scheme object, or a reference to an already existing icon scheme (depending on whether the <code>name</code> parameter identifies an already existing scheme or not).
+							</p>
+						</td>
+					</tr>
 				</table>
 
 			</section> <!--member functions-->
@@ -295,7 +418,7 @@
 			<section expanded>
 				<h2>Using a custom renderer and placer</h2>
 				<p>
-					The following example shows how to implement a custom renderer that changes the graphics of the node operator (expander/collapser) to the <code>[+][-]</code> style, and displays all parent nodes with a bold font and a different foreground color:
+					The following example shows how to implement a custom renderer that changes the graphics of the node operator (the expander/collapser element) to the <code>[+][-]</code> style, and displays all parent nodes with a bold font and a different foreground color:
 				</p>
 				<pre><code>class my_tree_renderer : public nana::treebox::renderer_interface<br>{<br>&#9;using clonable_renderer = nana::pat::cloneable&#60;renderer_interface&#62;;<br>&#9;clonable_renderer renderer_; // wraps a pointer to the library's internal renderer<br><br>public:<br>&#9;my_tree_renderer(const clonable_renderer &rd) : renderer_(rd) {}<br><br>private:<br><br>&#9;nana::window htree_ {nullptr}; // treebox window handle<br><br>&#9;// this function is called whenever a paint operation begins<br>&#9;void begin_paint(nana::widget &wdg) override<br>&#9;{<br>&#9;&#9;htree_ = wdg.handle();<br>&#9;&#9;renderer_-&#62;begin_paint(wdg);<br>&#9;}<br><br>&#9;// paints the background for each item<br>&#9;void bground(graph_reference graph, const compset_interface *compset) const override<br>&#9;{<br>&#9;&#9;renderer_-&#62;bground(graph, compset);<br>&#9;}<br><br>&#9;// paints the node operator for each item<br>&#9;void expander(graph_reference graph, const compset_interface *compset) const override<br>&#9;{<br>&#9;&#9;comp_attribute_t attr;<br>&#9;&#9;if(compset-&#62;comp_attribute(component::expander, attr))<br>&#9;&#9;{<br>&#9;&#9;&#9;auto clr = attr.mouse_pointed ? nana::colors::deep_sky_blue : nana::colors::black;<br>&#9;&#9;&#9;auto r = attr.area;<br><br>&#9;&#9;&#9;graph.frame_rectangle(nana::rectangle {{r.x+4, r.y+6}, {11, 11}}, clr, 0);<br><br>&#9;&#9;&#9;if(compset-&#62;item_attribute().expended)<br>&#9;&#9;&#9;{<br>&#9;&#9;&#9;&#9;graph.line({r.x+7, r.y+11}, {r.x+11, r.y+11});<br>&#9;&#9;&#9;}<br>&#9;&#9;&#9;else<br>&#9;&#9;&#9;{<br>&#9;&#9;&#9;&#9;graph.line({r.x+7, r.y+11}, {r.x+11, r.y+11});<br>&#9;&#9;&#9;&#9;graph.line({r.x+9, r.y+9}, {r.x+9, r.y+13});<br>&#9;&#9;&#9;}<br>&#9;&#9;}<br>&#9;}<br><br>&#9;// paints the checkbox for each item (if the checkable mode is enabled)<br>&#9;void crook(graph_reference graph, const compset_interface *compset) const override<br>&#9;{<br>&#9;&#9;renderer_-&#62;crook(graph, compset);<br>&#9;}<br><br>&#9;// paints the icon for each item (if the node has an icon scheme set)<br>&#9;virtual void icon(graph_reference graph, const compset_interface *compset) const override<br>&#9;{<br>&#9;&#9;renderer_-&#62;icon(graph, compset);<br>&#9;}<br><br>&#9;// paints the text for each item<br>&#9;virtual void text(graph_reference graph, const compset_interface *compset) const override<br>&#9;{<br>&#9;&#9;auto iattr {compset-&#62;item_attribute()};<br>&#9;&#9;if(iattr.has_children)<br>&#9;&#9;{<br>&#9;&#9;&#9;comp_attribute_t cattr;<br>&#9;&#9;&#9;compset-&#62;comp_attribute(component::text, cattr);<br>&#9;&#9;&#9;auto tf {graph.typeface()};<br>&#9;&#9;&#9;graph.typeface({tf.name(), tf.size(), {800}}); // bold font<br><br>&#9;&#9;&#9;auto tsize {graph.text_extent_size(iattr.text)};<br>&#9;&#9;&#9;auto gsize {cattr.area.dimension()};<br>&#9;&#9;&#9;nana::point pos {cattr.area.position()};<br>&#9;&#9;&#9;if(tsize.height &#60; gsize.height)<br>&#9;&#9;&#9;&#9;pos.y += gsize.height/2 - tsize.height/2; // center text vertically<br><br>&#9;&#9;&#9;graph.string(pos, iattr.text, nana::API::fgcolor(htree_).blend(nana::color {"#47f"}, .7));<br>&#9;&#9;&#9;graph.typeface(tf); // restore original font<br>&#9;&#9;}<br>&#9;&#9;else renderer_-&#62;text(graph, compset);<br>&#9;}<br>};</code></pre>
 				<p>

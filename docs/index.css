@@ -14,13 +14,15 @@ body
 	/*flex-grow : 0;*/
 }
 
-#toc:hover {
+#toc:hover
+{
 	opacity : 1;
 	border-right : 1px solid #abc;
 }
 
-#toc-ul {
-	
+#toc-ul
+{
+	/*overflow-y : scroll;*/
 }
 
 #frame
@@ -129,16 +131,18 @@ ul#toc-ul>li>span.caret
 
 .active li>span:only-child
 {
-	padding : 2px 7px 2px 7px;
+	padding : 4px 10px 6px 10px;
 }
 
 .selected
 {
 	color : #8094c7;
 	background-color : white;
-	outline : 1px solid #a0b4e7;
+	/*border : 0px solid #eee;*/
+	border-radius : 10px;
 	font-weight : bold;
 	letter-spacing : .1em;
+	box-shadow : 0 0 3px 3px #eee inset;
 }
 
 .active li>span:only-child:hover:not(.selected)

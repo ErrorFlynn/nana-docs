@@ -14,10 +14,8 @@ window.onload = function()
 function makeCollapsableRows()
 {
 	var tables = document.querySelectorAll('section > table');
-	//var t = 0;
 	tables.forEach(table =>
 	{
-		//t++;
 		if(table.className.length == 0)
 			table.className = 'normal';
 		var rows = table.querySelectorAll('tr');
@@ -31,7 +29,7 @@ function makeCollapsableRows()
 				{
 					rows[n-1].className = 'clickable-row';
 					hiddenCell.setAttribute('colspan', '2');
-					rows[n].setAttribute('hidden', '');
+					rows[n].toggleAttribute('hidden');
 					let span = document.createElement('span');
 					span.className = 'clickable-cell';
 					let linkText = linkCell.textContent;
@@ -65,24 +63,6 @@ function makeCollapsableRows()
 						}
 						else hiddenRow.setAttribute('hidden', '');
 					});
-
-					// wrap cell contents in a `div` to enable size transition
-					/*var oldCell = rows[n].querySelector('td');
-					oldCell.id = 'oldCell';
-					var oldCellContents = oldCell.querySelectorAll('td#oldCell > *');
-					var newCell = document.createElement('td');
-					newCell.setAttribute('colspan', '2');
-					var div = document.createElement('div');
-					div.id = 'div-' + id;
-					div.className = 'size-transition';
-					div.style['height'] = '0px';
-					newCell.appendChild(div);
-					oldCellContents.forEach(el =>
-					{
-						div.appendChild(el.cloneNode(true));
-					});
-					rows[n].removeChild(oldCell);
-					rows[n].appendChild(newCell);*/
 				}
 			}
 		}
