@@ -382,11 +382,7 @@ nav.scroll
 nav.scroll>ul#nav-list {
 	top : 0;
 	transform : none;
-}
-
-nav.scroll>ul {
-	transform : none!important;
-	top : 0;
+	-ms-transform : none;
 }
 
 nav:hover {
