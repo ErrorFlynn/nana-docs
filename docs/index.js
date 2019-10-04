@@ -87,14 +87,23 @@ function onResize()
 		else if(onResize.navHidden)
 		{
 			onResize.navHidden = false;
-			nav.style.display = 'table';
-			main.style.paddingRight = '300px';
+			nav.style.display = 'block';
+			main.style.paddingRight = '256px';
 		}
 	
-		nav.classList.add('scroll');
-		if(nav.scrollHeight > nav.clientHeight)
+		nav.style.overflowY = "scroll";
+		nav.style.top = '0';
+		nav.style.transform = 'none';
+		let sh = nav.scrollHeight;
+		nav.style.overflowY = "auto";
+		if(sh > nav.clientHeight)
+		{
 			nav.classList.add('scroll');
-		else nav.classList.remove('scroll');
+		}
+		else
+		{
+			nav.classList.remove('scroll');
+		}
 	}
 }
 
@@ -174,17 +183,25 @@ function setTOCCursor(docName)
 
 function makeSideBar()
 {
+	makeSideBar.hovered = false;
 	var fdoc = frames[0].document;
 	var rows = fdoc.querySelectorAll('tr.clickable-row');
 	if(rows.length)
 	{
 		let main = fdoc.getElementsByTagName('main')[0];
-		main.style.paddingRight = '300px';
+		main.style.paddingRight = '256px';
 		let nav = fdoc.createElement('nav');
 		fdoc.body.appendChild(nav);
+
 		let ul = fdoc.createElement('ul');
 		nav.appendChild(ul);
 		ul.id = 'nav-list';
+		//ul.hovered = false; // CSS `li:hovered` doesn't work well in Chrome, must use JS mechanism
+		//ul.addEventListener('mouseenter', function()
+		//{
+		//	this.parentElement.style.cursor = 'pointer';
+		//});
+
 		let items = new Array();
 		for(let n=0; n<rows.length; n++)
 		{
@@ -216,6 +233,20 @@ function makeSideBar()
 					hiddenRow.removeAttribute('hidden');
 				hiddenRow.scrollIntoView({/*behavior: 'smooth', */block: 'center'});
 			});
+
+			// CSS `li:hovered` doesn't work well in Chrome, must use JS mechanism
+			li.addEventListener('mouseenter', function(evt)
+			{
+				//evt.stopPropagation();
+				//this.parentElement.lastItemHovered = this;
+				//this.parentElement.style.cursor = 'pointer';
+			});
+			li.addEventListener('mouseleave', function()
+			{
+				//let hovered = document.querySelector(':hover');
+				//alert(hovered.nodeName);
+				//this.parentElement.style.cursor = 'default';
+			});
 		}
 	}
 }
@@ -237,20 +268,23 @@ function expandSection(section)
 
 function scrollToFunction(name)
 {
-	var fdoc = frames[0].document;
-	var spans = fdoc.querySelectorAll('span.clickable-cell');
-	
-	for(let span of spans)
+	if(name.length)
 	{
-		if(span.textContent === name)
+		let fdoc = frames[0].document;
+		let spans = fdoc.querySelectorAll('span.clickable-cell');
+	
+		for(let span of spans)
 		{
-			let section = span.parentElement.parentElement.parentElement.parentElement.parentElement;
-			expandSection(section);
-			let hiddenRow = span.parentElement.parentElement.nextElementSibling;
-			if(hiddenRow.hasAttribute('hidden'))
-				hiddenRow.removeAttribute('hidden');
-			hiddenRow.scrollIntoView({block: 'center'});
-			return;
+			if(span.textContent == name || (span.textContent.indexOf(name) == 0 && span.textContent.indexOf('/') != -1))
+			{			
+				let section = span.parentElement.parentElement.parentElement.parentElement.parentElement;
+				expandSection(section);
+				let hiddenRow = span.parentElement.parentElement.nextElementSibling;
+				if(hiddenRow.hasAttribute('hidden'))
+					hiddenRow.removeAttribute('hidden');
+				hiddenRow.scrollIntoView({block: 'center'});
+				return;
+			}
 		}
 	}
 }

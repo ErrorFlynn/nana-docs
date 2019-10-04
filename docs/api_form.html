@@ -1,0 +1,422 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>nana::API form-centric functions</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" href="page.css" media="all">
+	<link href="fonts/Oswald/Oswald.css" rel="stylesheet">
+	<link href="fonts/Arimo/Arimo.css" rel="stylesheet">
+	<link href="fonts/OxygenMono/OxygenMono.css" rel="stylesheet">
+	<link rel="stylesheet" href="highlight/default.css">
+	<script src="highlight/highlight.pack.js"></script>
+	<script>hljs.configure({ useBR: true }); hljs.initHighlightingOnLoad();</script>
+	<script src="page.js"></script>
+</head>
+
+<body>
+
+	<main>
+		<section>
+			<h1>nana::API form-centric functions</h1>
+			<p>
+				The namespace <code>nana::API</code> contains many utility functions that perform various operations on widgets. This page documents the subset of these functions which focuses on <code>nana::form</code> widgets.
+			</p>
+			<p>
+				I have tested the "native window state" functions on Windows 10 only, so I can't guarantee that the description of their behaviors is 100% accurate for X11 platforms (Linux), or older versions of Windows.
+			</p>
+
+			<section expanded>
+				<h2>Functions</h2>
+
+				<table class="functions">
+
+					<tr>
+						<td>close_window</td>
+						<td>closes a <code>nana::form</code> or a <code>nana::nested_form</code> window</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void close_window(window wd);</code></pre>
+							<p>
+								This function is equivalent to <code>widget::close</code>. It can be used not just with form handles, but any valid GUI widget handle (if the handle identifies a GUI widget, the form containing the widget is closed). Before the form is closed, an <code>unload</code> event is emitted.
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>wd</th></tr>
+								<tr>
+									<td><p>The handle of the <code>nana::form</code> or <code>nana::nested_form</code> widget to close. Keep in mind that <code>nana::form</code> and <code>nana::nested_form</code> objects are <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code>, so they can be used as arguments for this function.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr>
+						<td>get_owner_window</td>
+						<td>gets the handle of the <code>nana::form</code> that is the owner of a given <code>nana::form</code></td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>window get_owner_window(window wd);</code></pre>
+							<p>
+								When a <code>nana::form</code> object is constructed, an owner can be designated using the appropriate constructor. An owner window always stays under the window it owns, in the z-order. This function determines which <code>nana::form</code> owns the <code>nana::form</code> identified by the parameter.
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>wd</th></tr>
+								<tr>
+									<td><p>The handle of the <code>nana::form</code> widget whose owner to get. Keep in mind that a <code>nana::form</code> object is <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code>, so it can be used as an argument for this function.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div>
+								<p>A handle that identifies the requested owner, or <code>nullptr</code> if there is no owner or if the parameter doesn't identify a valid <code>nana::form</code> widget.</p>
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td>get_parent_window</td>
+						<td>gets the handle of the <code>nana::form</code> that is the parent of a given <code>nana::nested_form</code></td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>window get_parent_window(window wd);</code></pre>
+							<p>
+								This function determines which <code>nana::form</code> is the parent of the <code>nana::nested_form</code> identified by the parameter.
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>wd</th></tr>
+								<tr>
+									<td><p>The handle of the <code>nana::nested_form</code> widget whose parent to get. Keep in mind that a <code>nana::nested_form</code> object is <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code>, so it can be used as an argument for this function.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div>
+								<p>A handle that identifies the requested parent, or <code>nullptr</code> if there is no parent or if the parameter doesn't identify a valid <code>nana::nested_form</code> widget.</p>
+							</div>
+						</td>
+					</tr>
+
+					<tr> <th>Native window state</th> </tr>
+
+					<tr>
+						<td>activate_window</td>
+						<td><a href="https://docs.microsoft.com/en-us/windows/win32/winmsg/window-features#active-window" target="_blank">activates</a> a <code>nana::form</code> window</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void activate_window(window wd);</code></pre>
+							<p>This function only has effect on the Windows platform, and is equivalent to calling the following WinAPI functions in sequence: <a href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enablewindow" target="_blank">EnableWindow</a>, <a href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setactivewindow" target="_blank">SetActiveWindow</a>, <a href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setforegroundwindow" target="_blank">SetForegroundWindow</a>. It is meant to be used for activating one of several <code>nana::form</code> windows belonging to the same application, while the application is in the foreground. The window will not be activated if the application is in the background; its  taskbar button will be flashed instead (the function will not steal focus from windows belonging to other processes).</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>wd</th></tr>
+								<tr>
+									<td><p>The handle of the <code>nana::form</code> widget whose native window should be activated. Keep in mind that a <code>nana::form</code> object is <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code>, so it can be used as an argument for this function.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr>
+						<td>bring_top</td>
+						<td>brings a <code>nana::form</code> window to the top of the global z-order</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void bring_top(window wd, bool activated);</code></pre>
+							<p>
+								This function brings the specified <code>nana::form</code> window to the top of the z-order, optionally activating it. Unlike <code>API::activate_window</code> and <code>API::set_window_z_order</code>, this function can steal the focus from other applications, putting the specified window above all non-topmost windows belonging to other processes.
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>wd</th></tr>
+								<tr>
+									<td><p>The handle of the <code>nana::form</code> widget whose native window should be brought to the top of the z-order. Keep in mind that a <code>nana::form</code> object is <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code>, so it can be used as an argument for this function.</p></td>
+								</tr>
+								<tr><th>activated</th></tr>
+								<tr>
+									<td><p>If this parameter is <code>true</code>, the window is also activated.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr>
+						<td>is_window_zoomed</td>
+						<td>determines whether a window is minimized or maximized</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>bool is_window_zoomed(window wd, bool ask_for_max);</code></pre>
+							<p>
+								This function tests whether a <code>nana::form</code> window is minimized or maximized.
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>wd</th></tr>
+								<tr>
+									<td><p>The handle of the <code>nana::form</code> widget whose native window should be tested for minimized/maximized status. Keep in mind that a <code>nana::form</code> object is <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code>, so it can be used as an argument for this function.</p></td>
+								</tr>
+								<tr><th>ask_for_max</th></tr>
+								<tr>
+									<td><p>Indicates whether to test if the window is maximized (<code>true</code>) or minimized (<code>false</code>).</p></td>
+								</tr>
+							</table> <!--parameters-->
+
+							<h4>Return value</h4>
+							<p><code>true</code> if the window has the status tested for, or <code>false</code> otherwise.</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>restore_window</td>
+						<td>restores the window to normal state (from minimized or maximized state)</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void restore_window(window wd);</code></pre>
+							<p>
+								If a <code>nana::form</code> window is minimized or maximized, this function can be called to restore it to normal state.
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>wd</th></tr>
+								<tr>
+									<td><p>The handle of the <code>nana::form</code> widget whose native window should be restored. Keep in mind that a <code>nana::form</code> object is <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code>, so it can be used as an argument for this function.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr>
+						<td>set_window_z_order</td>
+						<td>changes the z-order of a window belonging to the application</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>bool set_window_z_order(window wd, window wd_after, z_order_action action_if_no_wd_after);</code></pre>
+							<p>
+								This function changes the z-order of a <code>nana::form</code> window belonging to the application. The z-order change is relative to other windows belonging to the application, not to windows belonging to other processes (with the single exception of the <code>topmost</code> status).
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>wd</th></tr>
+								<tr>
+									<td><p>The handle of the <code>nana::form</code> widget whose native window should have its z-order changed. Keep in mind that a <code>nana::form</code> object is <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code>, so it can be used as an argument for this function.</p></td>
+								</tr>
+								<tr><th>wd_after</th></tr>
+								<tr>
+									<td><p>The handle of the <code>nana::form</code> widget whose native window should precede <code>wd</code> in the z-order. Can be <code>nullptr</code>.</p></td>
+								</tr>
+								<tr><th>action_if_no_wd_after</th></tr>
+								<tr>
+									<td>
+										<p>
+											The action to take if <code>wd_after</code> is <code>nullptr</code>. Can be one of the following values:
+										</p>
+										<div>
+											<table class="normal">
+												<tr>
+													<td>z_order_action::bottom</td>
+													<td>brings the window to the bottom of the z-order</td>
+												</tr>
+												<tr>
+													<td>z_order_action::top</td>
+													<td>brings the window to the top of the z-order</td>
+												</tr>
+												<tr>
+													<td>z_order_action::topmost</td>
+													<td>the window stays above all non-topmost windows while having topmost status</td>
+												</tr>
+												<tr>
+													<td>z_order_action::bottom</td>
+													<td>brings the window to the bottom of the z-order</td>
+												</tr>
+											</table>
+										</div>
+										<p>
+											If <code>wd_after</code> is not <code>nullptr</code>, then this parameter is ignored (can be set to <code>z_order_action::none</code>).
+										</p>
+									</td>
+								</tr>
+							</table> <!--parameters-->
+
+							<h4>Return value</h4>
+							<p><code>true</code> if successful, or <code>false</code> otherwise. The function will fail if the <code>nana::window</code> parameters don't represent valid <code>nana::form</code> widgets.</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>window_enabled</td>
+						<td>enables / disables a window, or retrieves the enabled status</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  void window_enabled(window wd, bool enable);<br>(1)  bool window_enabled(window w);</code></pre>
+							<p>When a window is disabled, the user can't interact with it.</p>
+							<ol>
+								<li>enables or disables the window of the specified <code>nana::form</code> or <code>nana::nested_form</code> widget</li>
+								<li>determines whether the specified window is enabled</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>wd</th></tr>
+								<tr>
+									<td><p>The handle of the <code>nana::form</code> or <code>nana::nested_form</code> widget whose enabled state to get or set. Keep in mind that <code>nana::form</code> and <code>nana::nested_form</code> objects are <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code>, so they can be used as arguments for this function.</p></td>
+								</tr>
+								<tr><th>enable</th></tr>
+								<tr>
+									<td><p>If <code>true</code>, the window gets enabled; otherwise it gets disabled.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div>
+								<p>(1) <code>true</code> if the window is enabled, or <code>false</code> otherwise.</p>
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td>zoom_window</td>
+						<td>minimizes or maximizes the window</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void zoom_window(window wd, bool ask_for_max);</code></pre>
+							<p>This function either maximizes or minimizes the window, depending of the value of the <code>bool</code> parameter.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>wd</th></tr>
+								<tr>
+									<td><p>The handle of the <code>nana::form</code> widget to maximize or minimize. Keep in mind that a <code>nana::form</code> object is <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code>, so it can be used as an argument for this function.</p></td>
+								</tr>
+								<tr><th>ask_for_max</th></tr>
+								<tr>
+									<td><p><code>true</code> means <em>maximize</em>, <code>false</code> means <em>minimize</em></p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr> <th>Native window size and position</th> </tr>
+
+					<tr>
+						<td>track_window_size</td>
+						<td>sets the minimum or maximum size of a window</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>bool track_window_size(window wd, const size &s, bool true_for_max);</code></pre>
+							<p>This function sets limits to much a window can be resized by the user.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>wd</th></tr>
+								<tr>
+									<td><p>The handle of the <code>nana::form</code> or <code>nana::nested_form</code> widget whose size limit to set. Keep in mind that <code>nana::form</code> and <code>nana::nested_form</code> objects are <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code>, so they can be used as arguments for this function.</p></td>
+								</tr>
+								<tr><th>s</th></tr>
+								<tr>
+									<td><p>The desired size limit, as a <code>nana::size</code> structure (which has the data members <code>width</code> and <code>height</code> of type <code>unsigned</code>).</p></td>
+								</tr>
+								<tr><th>true_for_max</th></tr>
+								<tr>
+									<td><p><code>true</code> to set the maximum size, or <code>false</code> to set the minimum size.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div>
+								<p><code>true</code> if successful, or <code>false</code> otherwise. The function will fail if the <code>nana::window</code> parameter doesn't represent a valid <code>nana::form</code> or <code>nana::nested_form</code> widget, or if the requested limit violates the existing opposite limit (for example, if the requested max size is smaller than the existing min size).</p>
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td>window_outline_size</td>
+						<td>gets / sets the size of the frame of a <code>nana::form</code> or <code>nana::nested_form</code> window</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  size window_outline_size(window wd);<br>(1)  void window_outline_size(window w, const size &s);</code></pre>
+							<ol>
+								<li>gets the frame size of the specified window</li>
+								<li>sets the frame size of the specified window</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>wd</th></tr>
+								<tr>
+									<td><p>The handle of the <code>nana::form</code> or <code>nana::nested_form</code> widget whose window frame size to get or set. Keep in mind that <code>nana::form</code> and <code>nana::nested_form</code> objects are <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code>, so they can be used as arguments for this function.</p></td>
+								</tr>
+								<tr><th>s</th></tr>
+								<tr>
+									<td><p>The desired size, as a <code>nana::size</code> structure (which has the data members <code>width</code> and <code>height</code> of type <code>unsigned</code>).</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div>
+								<p>(0) the requested size, as a <code>nana::size</code> structure (which has the data members <code>width</code> and <code>height</code> of type <code>unsigned</code>)</p>
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td>window_position</td>
+						<td>gets the position of a <code>nana::form</code> or <code>nana::nested_form</code> window</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>point window_position(window wd);</code></pre>
+							<p>Gets the position of a <code>nana::form</code> or <code>nana::nested_form</code> window. On Windows, the function returns the coordinates of the upper left corner of the window frame, relative to the client area of the parent or owner window. If a <code>nana::form</code> was not given an owner at creation, then the desktop window is the owner.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>wd</th></tr>
+								<tr>
+									<td><p>The handle of the <code>nana::form</code> or <code>nana::nested_form</code> widget whose window position ot get. Keep in mind that <code>nana::form</code> and <code>nana::nested_form</code> objects are <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code>, so they can be used as arguments for this function.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div>
+								<p>The requested position, as a <code>nana::point</code> structure (which has the data members <code>x</code> and <code>y</code> of type <code>int</code>).</p>
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td>window_size</td>
+						<td>gets / sets the size of the client area of a <code>nana::form</code> or <code>nana::nested_form</code> window</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  size window_size(window wd);<br>(1)  void window_size(window w, const size &s);</code></pre>
+							<ol>
+								<li>gets the size of the specified window</li>
+								<li>sets the size of the specified window</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>wd</th></tr>
+								<tr>
+									<td><p>The handle of the <code>nana::form</code> or <code>nana::nested_form</code> widget whose window size to get or set. Keep in mind that <code>nana::form</code> and <code>nana::nested_form</code> objects are <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code>, so they can be used as arguments for this function.</p></td>
+								</tr>
+								<tr><th>s</th></tr>
+								<tr>
+									<td><p>The desired size, as a <code>nana::size</code> structure (which has the data members <code>width</code> and <code>height</code> of type <code>unsigned</code>).</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div>
+								<p>(0) the requested size, as a <code>nana::size</code> structure (which has the data members <code>width</code> and <code>height</code> of type <code>unsigned</code>)</p>
+							</div>
+						</td>
+					</tr>
+
+				</table>
+
+			</section>
+		</section>
+	</main>
+
+</body>
+</html>

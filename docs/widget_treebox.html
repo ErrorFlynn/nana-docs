@@ -111,7 +111,7 @@
 					<tr> <th>Event</th> <th>Description</th> </tr>
 					<tr>
 						<td>expanded(const arg_treebox&)</td>
-						<td>occurs when a node is expanded or contracted</td>
+						<td>occurs when a node is expanded or collapsed</td>
 					</tr>
 					<tr>
 						<td>checked(const arg_treebox&)</td>
@@ -265,7 +265,7 @@
 						<td>
 							<pre><code>item_proxy find(const std::string& path_key);</code></pre>
 							<p>
-								This method finds a node using its path, and returns an iterator to it. For details about the node path key, see <a href="#widget_treebox::insert" target="_blank">treebox::insert</a>.
+								This method finds a node using its path, and returns an iterator to it. For details about the node key path, see the "Usage details and examples" section at the bottom of the page.
 							</p>
 							<h4>Parameters</h4>
 							<table>
@@ -289,22 +289,22 @@
 						<td>
 							<pre><code>std::string make_key_path(item_proxy node, const std::string& delimiter) const;</code></pre>
 							<p>
-								This method returns the key path of a specified node, using a custom string as the delimiter that separates the nodes in the returned path. For details about the node key path, see <a href="#widget_treebox::insert" target="_blank">treebox::insert</a>.
+								This method returns the key path of a specified node, using a custom string as the delimiter that separates the nodes in the returned path. For details about the node key path, see the "Usage details and examples" section at the bottom of the page.
 							</p>
 							<h4>Parameters</h4>
 							<table>
 								<tr><th>node</th></tr>
 								<tr>
-									<td><p>an iterator pointing to the node the returned path should represent</p></td>
+									<td><p>an iterator pointing to the node that the returned path should represent</p></td>
 								</tr>
 								<tr><th>delimiter</th></tr>
 								<tr>
-									<td><p>a string to be used as the delimiter that separates the nodes in the returned path</p></td>
+									<td><p>a string to be used as the delimiter that separates the keys in the returned path</p></td>
 								</tr>
 							</table>
 							<h4>Return value</h4>
 							<p>
-								The key path string.
+								The requested key path.
 							</p>
 						</td>
 					</tr>
@@ -366,7 +366,7 @@
 								</tr>
 								<tr><th>path_key</th></tr>
 								<tr>
-									<td><p>A path key that identifies the node to be erased. For details about the node path key, see <a href="#widget_treebox::insert" target="_blank">treebox::insert</a>.</p></td>
+									<td><p>A key path that identifies the node to be erased. For details about the node key path, see the "Usage details and examples" section at the bottom of the page.</p></td>
 								</tr>
 							</table>
 							<h4>Return value</h4>
@@ -390,20 +390,104 @@
 								The icon scheme contains three images for three node states: <em>normal</em>, <em>hovered</em>, and <em>expanded</em>. The user can assign a different image for each state, or alternatively, only the <em>normal</em> state could be assigned an image, in which case the other two states would also use that same image.
 							</p>
 							<p>The following example shows how the icon scheme can be used:</p>
-							<pre><code>//treebox tree;<br>//Sets the images<br>auto &img = tree.icon("ID1");<br>img.normal.open("normal1.png");<br>img.hovered.open("hovered1.png");<br>img.expanded.open("expanded1.png");<br><br>auto prx = tree.insert("root", "ROOT");<br>prx.icon("ID1"); //Sets the scheme for this node.<br><br>auto &img2 = tree.icon("ID2");<br>img2.normal.open("normal2.png");<br>img2.hovered.open("hovered2.png");<br>img2.expanded.open("expanded2.png");<br>//If hovered or expanded is not set, it uses normal image for these 2 states.<br><br>prx = tree.insert("root/abc", "abc");<br>prx.icon("ID2");<br>tree.insert("root/def", "def").icon("ID2");<br>//images ID2 are shared for item "abc" and "def".<br></code></pre>
+							<pre><code>// treebox tree;<br>auto &scheme1 {tree.icon("ID1")};<br>scheme1.normal.open("normal1.png");<br>scheme1.hovered.open("hovered1.png");<br>scheme1.expanded.open("expanded1.png");<br><br>auto prx {tree.insert("root", "ROOT")};<br>prx.icon("ID1"); // set the scheme for this node<br><br>auto &scheme2 {tree.icon("ID2")};<br>scheme2.normal.open("normal2.png");<br>scheme2.hovered.open("hovered2.png");<br>scheme2.expanded.open("expanded2.png");<br><br>// the images of scheme "ID2" are shared by items "abc" and "def"<br>prx = tree.insert("root/abc", "abc");<br>prx.icon("ID2");<br>tree.insert("root/def", "def").icon("ID2");</code></pre>
 							<h4>Parameters</h4>
 							<table>
 								<tr><th>name</th></tr>
 								<tr>
-									<td><p>The name of the icon scheme, which is used to identify the scheme when setting it for a node. If the name provided identifies a scheme that already exists, the method just returns a reference to that scheme. Otherwise, a new scheme is created.</td>
+									<td><p>The name of the icon scheme, which is used to identify the scheme. If the name provided identifies a scheme that already exists, the method just returns a reference to that scheme. Otherwise, a new scheme is created.</td>
 								</tr>
 							</table>
 							<h4>Return value</h4>
-							<p>
-								A reference to a newly created icon scheme object, or a reference to an already existing icon scheme (depending on whether the <code>name</code> parameter identifies an already existing scheme or not).
-							</p>
+							<div>
+								<p>
+									A reference to a newly created icon scheme object, or a reference to an already existing icon scheme (depending on whether the <code>name</code> parameter identifies an already existing scheme or not).
+								</p>
+							</div>
 						</td>
 					</tr>
+
+					<tr>
+						<td>icon_erase</td>
+						<td>erases an icon scheme</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void icon_erase(const std::string& name);</code></pre>
+							<p>This method removes an icon scheme that was added with <code>treebox::icon</code>.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>name</th></tr>
+								<tr>
+									<td><p>the name of the icon scheme to remove</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr>
+						<td>insert</td>
+						<td>inserts a new node into the treebox</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  item_proxy insert(const std::string& key_path, std::string title);<br>(1)  item_proxy insert(item_proxy pos, const std::string& key, std::string title);</code></pre>
+							<ol>
+								<li>Inserts a new node at a position defined by the specified key path.</li>
+								<li>Creates a node as a new child of the specified existing node.</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>title</th></tr>
+								<tr>
+									<td><p>The text that the node should display.</td>
+								</tr>
+								<tr><th>key_path</th></tr>
+								<tr>
+									<td><p>A key path that defines the position of the node in the tree. For details, see the "Usage details and examples" section at the bottom of the page.</td>
+								</tr>
+								<tr><th>pos</th></tr>
+								<tr>
+									<td><p>An iterator to the existing node that should be the parent of the new node.</td>
+								</tr>
+								<tr><th>key</th></tr>
+								<tr>
+									<td><p>The key that should be associated with the node. For details, see the "Usage details and examples" section at the bottom of the page.</td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div>
+								<p>An iterator to the new node.</p>
+							</div>
+						</td>
+					</tr>
+
+					<tr> <th>Operations</th> </tr>
+					<tr>
+						<td>scroll_into_view (Nana 1.7)</td>
+						<td>scrolls a specified node into view</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  void scroll_into_view(item_proxy node, align_v bearing);<br>(1)  void scroll_into_view(item_proxy node);</code></pre>
+							<ol>
+								<li>Scrolls the specified node into view using the specified vertical alignment.</li>
+								<li>Scrolls the specified node into view using either a top or bottom alignment, dependending on the current position of the node.</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>node</th></tr>
+								<tr>
+									<td><p>the node to scroll into view</td>
+								</tr>
+								<tr><th>bearing</th></tr>
+								<tr>
+									<td><p>the desired vertical alignment of the node</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
 				</table>
 
 			</section> <!--member functions-->
@@ -414,6 +498,33 @@
 		<section>
 			<h1>Usage details and examples</h1>
 			<p>This section discusses usage details, and tries to explain the major features and functionality of the widget.</p>
+
+			<section>
+				<h2>Node keys and key paths</h2>
+				<p>
+					Every tree node has an <code>std::string</code> key associated with it, that is used to locate the node in the tree structure (the term "key" is borrowed from the terminology of associative arrays). When inserting a new node at the root level, such a key must be provided:
+				</p>
+				<pre><code>tree.insert("my root key", "the text of my root node");</code></pre>
+				<p>
+					The key provided must be unique (not already used at the root level), otherwise the <code>insert</code> method will just overwrite the text of the existing node identified by the key.
+				</p>
+				<hr />
+				<p>
+					When inserting a new node at a level below the root (as a child or a descendant of a root node), a <em>key path</em> can be used. A key path is a sequence of node keys that are separated by a delimiter character (<code>'/'</code> and <code>'\\'</code> are valid delimiters).
+				</p>
+				<p>
+					The last key in the sequence identifies the new node being inserted, and the preceding keys identify the "branch" of the tree to which the new node should be appended. For example, the following line appends a new node as a child of the node added in the previous example:
+				</p>
+				<pre><code>tree.insert("my root key/my level 2 key", "the text of my level 2 node");</code></pre>
+				<hr />
+				<p>
+					When inserting a new item using a key path, every key in the path must identify an existing node, except for the last key (which identifies the new item). In other words, a key path cannot be used to insert multiple nodes at the same time.
+				</p>
+				<p>
+					It should be noted that while key paths can be used to add new items to the tree structure, they are probably most useful for locating items using <a href="index.html#widget_treebox::find" target="_blank">treebox::find</a>.
+				</p>
+				<hr />
+			</section>
 
 			<section expanded>
 				<h2>Using a custom renderer and placer</h2>

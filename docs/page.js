@@ -90,6 +90,7 @@ function makeCollapsableSections()
 			}
 			else h2.insertAdjacentText('afterbegin', '[-] ');
 			h2['className'] = 'linkified-heading';
+			section.style.marginBottom = '10px';
 			
 			h2.addEventListener("click", event =>
 			{
@@ -98,6 +99,7 @@ function makeCollapsableSections()
 				
 				if(c == '+') // expanding
 				{
+					el.parentElement.style.marginBottom = '0';
 					el.style['margin-bottom'] = '';
 					el.textContent = el.textContent.replace('+', '-');
 					var siblings = section.querySelectorAll('h2 ~ *');
@@ -108,6 +110,7 @@ function makeCollapsableSections()
 				}
 				else // collapsing
 				{
+					el.parentElement.style.marginBottom = '10px';
 					el.style['margin-bottom'] = '-20px';
 					el.textContent = el.textContent.replace('-', '+');
 					var siblings = section.querySelectorAll('h2 ~ *');

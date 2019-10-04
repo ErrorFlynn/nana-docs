@@ -73,7 +73,7 @@ ul
 	cursor : pointer;
 	user-select : none;
 	color : #777;
-	font-family : 'Lato', sans-serif;
+	font-family : 'Arimo', sans-serif;
 	font-size : 0.9375rem;
 	font-weight : bold;
 	letter-spacing : .03em;
@@ -119,7 +119,7 @@ ul#toc-ul>li>span.caret
 .active
 {
 	display : block;
-	font-family : 'Lato', sans-serif;
+	font-family : 'Arimo', sans-serif;
 	font-size : 0.8125rem;
 	color : #444;
 }
@@ -139,7 +139,7 @@ ul#toc-ul>li>span.caret
 	color : #8094c7;
 	background-color : white;
 	/*border : 0px solid #eee;*/
-	border-radius : 10px;
+	border-radius : 1em;
 	font-weight : bold;
 	letter-spacing : .1em;
 	box-shadow : 0 0 3px 3px #eee inset;

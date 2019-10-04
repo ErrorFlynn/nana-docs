@@ -421,7 +421,7 @@
 
 					<tr>
 						<td>resolve_from / resolve_to</td>
-						<td>writes data from user object to item / writes data from item to user object</td>
+						<td>writes data from user object to item / from item to user object</td>
 					</tr>
 					<tr>
 						<td>
@@ -446,7 +446,7 @@
 					</tr>
 					<tr>
 						<td>
-							<pre><code>template<typename T> T* value_ptr() const;</code></pre>
+							<pre><code>template&#60;typename T&#62; T* value_ptr() const;</code></pre>
 							<p>This method returns a pointer to the value associated with the item.</p>
 							<h4>Return value</h4>
 							<p>a pointer to the associated value, or <code>nullptr</code> if the item has no value associated with it</p>
@@ -466,7 +466,7 @@
 							<table>
 								<tr><th>t</th></tr>
 								<tr>
-									<td><p>the value to set, which can be an rvalue or an lvalue (the argument is either moved or copied, accordingly)</p></td>
+									<td><p>the value to set, which can be an rvalue or an lvalue (the parameter is a <a href="https://en.cppreference.com/w/cpp/language/reference#Forwarding_references" target="_blank">forwarding reference</a>, so the argument is either moved or copied, accordingly)</p></td>
 								</tr>
 							</table>
 							<h4>Return value</h4>

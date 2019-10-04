@@ -1,0 +1,435 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>nana::treebox::item_proxy</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" href="page.css" media="all">
+	<link href="fonts/Oswald/Oswald.css" rel="stylesheet">
+	<link href="fonts/Arimo/Arimo.css" rel="stylesheet">
+	<link href="fonts/OxygenMono/OxygenMono.css" rel="stylesheet">
+	<link rel="stylesheet" href="highlight/default.css">
+	<script src="highlight/highlight.pack.js"></script>
+	<script>hljs.configure({ useBR: true }); hljs.initHighlightingOnLoad();</script>
+	<script src="page.js"></script>
+</head>
+
+<body>
+
+	<main>
+		<section>
+			<h1>Class nana::treebox::item_proxy</h1>
+			<p>
+				The class <code>item_proxy</code> is an item manipulator based on the concept of <a href="http://stdcxx.apache.org/doc/stdlibug/2-2.html#221" target="_blank">input iterator</a>. It offers functions for changing item properties, acts as an item iterator, and behaves as a container for child items.
+			</p>
+
+			<section expanded>
+				<h2>Member functions</h2>
+
+				<table class="functions">
+					<tr>
+						<td>append</td>
+						<td>appends a new node</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  item_proxy append(const std::string& key, std::string title);<br>(1)  template&#60;typename Value&#62; item_proxy append(const std::string& key, std::string title, Value&& val);</code></pre>
+							<p>Appends a new child node to this node.</p>
+							<ol>
+								<li>appends a new node</li>
+								<li>appends a new node, and associates user-defined data with it</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>checked</th></tr>
+								<tr>
+									<td><p>Indicates whether to check or uncheck the item. <code>true</code> means check, <code>false</code> means uncheck.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div>
+								<ol>
+									<li>a reference to <code>*this</code></li>
+									<li><code>true</code> if the item is checked, <code>false</code> otherwise</li>
+								</ol>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>check / checked</td>
+						<td>checks the item / returns the checked status</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  item_proxy& check(bool checked);<br>(1)  bool checked() const;</code></pre>
+							<ol>
+								<li>Checks/unchecks the node. Only has effect if the treebox is checkable (see <a href="index.html#widget_treebox::checkable" target="_blank">treebox::checkable</a>).</li>
+								<li>Determines whether the node is checked.</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>checked</th></tr>
+								<tr>
+									<td><p>Indicates whether to check or uncheck the node. <code>true</code> means check, <code>false</code> means uncheck.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div>
+								<ol>
+									<li>a reference to <code>*this</code></li>
+									<li><code>true</code> if the node is checked, <code>false</code> otherwise</li>
+								</ol>
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td>expand / expanded</td>
+						<td>expands or collapses the node</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  item_proxy& expand(bool exp);<br>(1)  bool expanded() const;</code></pre>
+							<p>
+								When a node has one or more child nodes, it can be expanded or collapsed, to reveal or hide the child nodes.
+							</p>
+							<ol>
+								<li>expands or collapses the node, depending on the value of the parameter</li>
+								<li>determines the current state of the node (expanded or collapsed)</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>exp</th></tr>
+								<tr>
+									<td><p>boolean flag indicating whether to expand (<code>true</code>) or to collapse (<code>false</code>) the node</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<ol>
+								<li>a reference to <code>*this</code></li>
+								<li><code>true</code> if the node is expanded, or <code>false</code> if it is collapsed</li>
+							</ol>
+						</td>
+					</tr>
+
+					<tr>
+						<td>empty</td>
+						<td>determines if the iterator is an end iterator</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>bool empty() const;</code></pre>
+							<p>
+								This method determines whether the object represents an end iterator. Generally speaking, end iterators don't point to an element, but are instead used to signal the end of the sequence. In the context of <code>treebox::item_proxy</code> specifically, an end iterator signals the end of a sequence of sibling nodes. The <a href="index.html#treebox-item_proxy::operator++" target="_blank">increment operator</a> produces an end iterator when moving past the last sibling node.
+							</p>
+							<h4>Return value</h4>
+							<div>
+								<p>
+									<code>true</code> if the object is an end iterator, or <code>false</code> otherwise
+								</p>
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td>icon</td>
+						<td>sets an icon scheme for the node</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  item_proxy& icon(const std::string& name);<br>(1)  const std::string& icon() const;</code></pre>
+							<p>
+								Sets an icon scheme for the node. The icon scheme must first be created by calling <a href="index.html#widget_treebox::icon" target="_blank">treebox::icon</a>.
+							</p>
+							<ol>
+								<li>Sets a new icon scheme for the node. If the name is empty, any previously set icon scheme is unset.</li>
+								<li>Returns the name of the current icon scheme.</li>
+							</ol>
+							<h4>Return value</h4>
+							<ol>
+								<li>a reference to <code>*this</code></li>
+								<li>the name of the current icon scheme (the string is empty if no scheme is set)</li>
+							</ol>
+						</td>
+					</tr>
+
+					<tr>
+						<td>key</td>
+						<td>sets or gets the node key</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  item_proxy& key(const std::string& key_str);<br>(1)  const std::string& key() const;</code></pre>
+							<ol>
+								<li>Changes the node key. If the provided key already identifies a node at this depth level, the request is ignored.</li>
+								<li>Returns the current key of the node.</li>
+							</ol>
+							<p>
+								For an explanation of node keys, see the "Usage details and examples" section at the bottom of the <a href="index.html#widget_treebox" target="_blank">treebox page</a>.
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>key_str</th></tr>
+								<tr>
+									<td>
+										<p>the new key to associate with the node</p>
+									</td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<ol>
+								<li>a reference to <code>*this</code></li>
+								<li>the key currently associated with the node</li>
+							</ol>
+						</td>
+					</tr>
+
+					<tr>
+						<td>level</td>
+						<td>returns the depth level of the node</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>std::size_t level() const;</code></pre>
+							<p>
+								This method returns the depth level of the node. The root level (which contains the top nodes) is considered to be level 1, so the next level below the root is 2, etc.
+							</p>
+							<h4>Return value</h4>
+							<div>
+								<p>
+									The depth level of the node.
+								</p>
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td>select / selected</td>
+						<td>sets the selected state / returns the selected state</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  item_proxy& select(bool sel);<br>(1)  bool selected() const;</code></pre>
+							<ol>
+								<li>Selects/deselects the node.</li>
+								<li>Determines whether the node is selected.</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>sel</th></tr>
+								<tr>
+									<td><p>Idicates whether to select or deselect the node (<code>true</code> means <em>select</em>, <code>false</code> means <em>deselect</em>).</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div>
+								<ol>
+									<li>a reference to <code>*this</code></li>
+									<li><code>true</code> if the node is selected, or <code>false</code> otherwise</li>
+								</ol>
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td>size</td>
+						<td>returns the number of child nodes</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>std::size_t size() const;</code></pre>
+							<p>
+								Returns the number of child nodes, non-recursively (in other words, only the children at the next level below are counted, excluding any descendants further down the branch).
+							</p>
+							<h4>Return value</h4>
+							<div>
+								<p>
+									The number of child nodes.
+								</p>
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td>text</td>
+						<td>gets or sets the node text</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  const std::string& text() const;<br>(1)  item_proxy& text(const std::string& text_str);</code></pre>
+							<ol>
+								<li>Gets the node text.</li>
+								<li>Sets the node text.</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>text_str</th></tr>
+								<tr>
+									<td><p>The new text to set for the node.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div>
+								<ol>
+									<li>The current node text.</li>
+									<li>A reference to <code>*this</code>.</li>
+								</ol>
+							</div>
+						</td>
+					</tr>
+
+					<tr> <th>Element access</th> </tr>
+
+					<tr>
+						<td>begin / end</td>
+						<td>begin iterator / end iterator</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  item_proxy begin() const;<br>(1)  item_proxy end() const;</code></pre>
+							<p>These methods provide the standard behavior of a container, supporting the use of range-based <code>for</code> loops for iterating through the sequence of child nodes (the sequence of nodes that are the children of the node pointed to by this <code>item_proxy</code>).</p>
+							<ol>
+								<li>returns an iterator to the beginning of the sequence of child nodes</li>
+								<li>returns an end iterator (<a href="index.html#treebox-item_proxy::empty" target="_blank">empty</a> iterator used to denote the end of the sequence)</li>
+							</ol>
+						</td>
+					</tr>
+
+					<tr>
+						<td>child</td>
+						<td>returns the node that is the first child of this node</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>item_proxy child() const;</code></pre>
+							<p>Returns an iterator to the first child of this node. This method is equivalent to <code>item_proxy::begin</code>.</p>
+							<h4>Return value</h4>
+							<div><p>An iterator to the first child.</p></div>
+						</td>
+					</tr>
+
+					<tr>
+						<td>owner</td>
+						<td>returns the owner (parent) of this node</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>item_proxy owner() const;</code></pre>
+							<h4>Return value</h4>
+							<div><p>An iterator to the parent of this node.</p></div>
+						</td>
+					</tr>
+
+					<tr>
+						<td>sibling</td>
+						<td>returns the next sibling node</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>item_proxy sibling() const;</code></pre>
+							<h4>Return value</h4>
+							<div><p>An iterator to the next sibling node, or an <a href="index.html#treebox-item_proxy::empty" target="_blank">end iterator</a> if this node is the last sibling in the sequence.</p></div>
+						</td>
+					</tr>
+
+					<tr>
+						<td>visit_recursively</td>
+						<td>applies a function to all child nodes</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>item_proxy visit_recursively(std::function&#60;bool(item_proxy)&#62; pred);</code></pre>
+							<p>
+								This method visits all child nodes recursively (including all the descendants, all the way down the branch), calling a user function for each node. The method stops visiting the nodes when the user function returns <code>false</code>, returning an iterator to the last node visited.
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>pred</th></tr>
+								<tr>
+									<td>
+										<p>unary predicate which returns <code>true</code> for more visiting</p>
+									</td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div><p>An iterator to the last node visited, or an <a href="index.html#treebox-item_proxy::empty" target="_blank">end iterator</a> if the user function never returns <code>false</code>.</p></div>
+						</td>
+					</tr>
+
+					<tr> <th>Iterator operations</th> </tr>
+
+					<tr>
+						<td>operator++</td>
+						<td>increment operator, advances the iterator to the next sibling node</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  item_proxy& operator++();<br>(1)  item_proxy operator++(int);</code></pre>
+							<ol>
+								<li>Prefix increment operator. Moves the iterator to the next sibling node.</li>
+								<li>
+									Postfix increment operator. Returns an iterator pointing to the current node, and this iterator moves to the next sibling node.
+								</li>
+							</ol>
+							<h4>Return value</h4>
+							<div>
+								<ol>
+									<li>a reference to <code>*this</code></li>
+									<li>an iterator pointing to the current node</li>
+								</ol>
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td>operator*</td>
+						<td>dereference operator</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  item_proxy& operator*();<br>(1)  const item_proxy& operator*() const;</code></pre>
+							<p>Dereference operator, for the STL iterator syntax.</p>
+							<h4>Return value</h4>
+							<p>a reference to <code>*this</code></p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>operator-></td>
+						<td>member access operator</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  item_proxy* operator-&#62;();<br>(1)  item_proxy* operator-&#62;() const;</code></pre>
+							<p>Member access operator, for the STL iterator syntax.</p>
+							<h4>Return value</h4>
+							<p>a pointer to the iterator</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>operator== / operator!=</td>
+						<td>comparison operators</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  bool operator==(const item_proxy& other) const;<br>(1)  bool operator!=(const item_proxy& other) const;<br>(2)  bool operator==(const char* u8str) const;<br>(3)  bool operator==(const wchar_t* str) const;<br>(4)  bool operator==(const std::string& u8str) const;<br>(5)  bool operator==(const std::wstring& str) const;</code></pre>
+							<p>(0, 1) Checks whether the two iterators are pointing to the same node.<br />(2,3,4,5) Checks whether the text of the node pointed to by this iterator is the same as the specified string.</p>
+							<h4>Return value</h4>
+							<div>
+								<p>
+									(0) <code>true</code> if the iterators point to the same node, or <code>false</code> otherwise.<br />
+									(1) <code>true</code> if the iterators point to the different nodes, or <code>false</code> otherwise.<br />
+									(2,3,4,5) <code>true</code> if the node text is the same as the specified string, or <code>false</code> otherwise.
+								</p>
+							</div>
+						</td>
+					</tr>
+				</table>
+
+			</section>
+		</section>
+	</main>
+
+</body>
+</html>
