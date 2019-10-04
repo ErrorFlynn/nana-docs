@@ -192,13 +192,13 @@
 
 					<tr>
 						<td>set_window_z_order</td>
-						<td>changes the z-order of a window belonging to the application</td>
+						<td>changes the z-order of a window relative to other windows belonging to the application</td>
 					</tr>
 					<tr>
 						<td>
 							<pre><code>bool set_window_z_order(window wd, window wd_after, z_order_action action_if_no_wd_after);</code></pre>
 							<p>
-								This function changes the z-order of a <code>nana::form</code> window belonging to the application. The z-order change is relative to other windows belonging to the application, not to windows belonging to other processes (with the single exception of the <code>topmost</code> status).
+								This function changes the z-order of a <code>nana::form</code> window. The change is relative to other windows belonging to the application, not to windows belonging to other processes (with the single exception of the <code>topmost</code> status).
 							</p>
 							<h4>Parameters</h4>
 							<table>
