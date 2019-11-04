@@ -99,6 +99,72 @@
 						</td>
 					</tr>
 
+					<tr>
+						<td>window_icon</td>
+						<td>sets the icon of a <code>nana::form</code> window</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void window_icon(window wd, const paint::image& small_icon, const paint::image& big_icon = {});</code></pre>
+							<p>
+								This function sets the icons that the OS window manager associates with the specified window.
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>wd</th></tr>
+								<tr>
+									<td><p>The handle of the <code>nana::form</code> for which to set the icons. Keep in mind that a <code>nana::form</code> object is <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code>, so it can be used as an argument for this function.</p></td>
+								</tr>
+								<tr><th>small_icon</th></tr>
+								<tr>
+									<td><p>A reference to a <code>paint::image</code> object that contains the small icon. On the Windows platform, the window manager displays this icon in the title bar, next to the window caption. The object need not be permanent (the image is copied).</p></td>
+								</tr>
+								<tr><th>big_icon</th></tr>
+								<tr>
+									<td><p>A reference to a <code>paint::image</code> object that contains the big icon. On the Windows platform, the window manager displays this icon when representing the application in the task switcher window. The object need not be permanent (the image is copied).</p></td>
+								</tr>
+							</table>
+							<h4>Remarks</h4>
+							<div>
+								<p>
+									Keep in mind that <code>paint::image</code> can load an icon from an executable file's resource section. The following Windows example loads the icons from the application's resources:
+								</p>
+								<pre><code>nana::form fm;<br>std::wstring mod_path(4096, '\0'); // application path<br>mod_path.resize(GetModuleFileNameW(0, &mod_path.front(), mod_path.size()));<br>nana::paint::image icon {mod_path};<br>nana::API::window_icon(fm, icon, icon);</code></pre>
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td>window_icon_default</td>
+						<td>sets the default icon of subsequently created <code>nana::form</code> windows</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void window_icon_default(const paint::image& small_icon, const paint::image& big_icon)</code></pre>
+							<p>
+								This function sets the icons that the OS window manager associates with the windows of all subsequently created nana forms.
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>small_icon</th></tr>
+								<tr>
+									<td><p>A reference to a <code>paint::image</code> object that contains the small icon. On the Windows platform, the window manager displays this icon in the title bar, next to the window caption. The object need not be permanent (the image is copied).</p></td>
+								</tr>
+								<tr><th>big_icon</th></tr>
+								<tr>
+									<td><p>A reference to a <code>paint::image</code> object that contains the big icon. On the Windows platform, the window manager displays this icon when representing the application in the task switcher window. The object need not be permanent (the image is copied).</p></td>
+								</tr>
+							</table>
+							<h4>Remarks</h4>
+							<div>
+								<p>
+									Keep in mind that <code>paint::image</code> can load an icon from an executable file's resource section. The following Windows example loads the icons from the application's resources:
+								</p>
+								<pre><code>std::wstring mod_path(4096, '\0');<br>mod_path.resize(GetModuleFileNameW(0, &mod_path.front(), mod_path.size()));<br>nana::paint::image icon {mod_path};<br>nana::API::window_icon_default(icon, icon);<br>// all forms created after this point use the icon that was set above, by default<br>nana::form fm1;<br>nana::form fm2;<br>// both of the above forms are created using the default icon that was set earlier<br>// a different icon can still be set for each of them by calling API::window_icon</code></pre>
+							</div>
+						</td>
+					</tr>
+
 					<tr> <th>Native window state</th> </tr>
 
 					<tr>
