@@ -19,7 +19,7 @@ function makeCollapsableRows()
 		if(table.className.length == 0)
 			table.className = 'normal';
 		var rows = table.querySelectorAll('tr');
-		for(n = 0; n < rows.length; n++)
+		for(var n = 0; n < rows.length; n++)
 		{
 			var hiddenCell = rows[n].querySelector('td:only-child');
 			if(hiddenCell)
