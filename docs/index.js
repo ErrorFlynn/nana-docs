@@ -196,11 +196,6 @@ function makeSideBar()
 		let ul = fdoc.createElement('ul');
 		nav.appendChild(ul);
 		ul.id = 'nav-list';
-		//ul.hovered = false; // CSS `li:hovered` doesn't work well in Chrome, must use JS mechanism
-		//ul.addEventListener('mouseenter', function()
-		//{
-		//	this.parentElement.style.cursor = 'pointer';
-		//});
 
 		let items = new Array();
 		for(let n=0; n<rows.length; n++)
@@ -232,20 +227,6 @@ function makeSideBar()
 				if(hiddenRow.hasAttribute('hidden'))
 					hiddenRow.removeAttribute('hidden');
 				hiddenRow.scrollIntoView({/*behavior: 'smooth', */block: 'center'});
-			});
-
-			// CSS `li:hovered` doesn't work well in Chrome, must use JS mechanism
-			li.addEventListener('mouseenter', function(evt)
-			{
-				//evt.stopPropagation();
-				//this.parentElement.lastItemHovered = this;
-				//this.parentElement.style.cursor = 'pointer';
-			});
-			li.addEventListener('mouseleave', function()
-			{
-				//let hovered = document.querySelector(':hover');
-				//alert(hovered.nodeName);
-				//this.parentElement.style.cursor = 'default';
 			});
 		}
 	}
