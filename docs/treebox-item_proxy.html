@@ -425,6 +425,42 @@
 							</div>
 						</td>
 					</tr>
+
+					<tr> <th>Associated value</th> </tr>
+
+					<tr>
+						<td>value_ptr</td>
+						<td>returns a pointer to the value associated with the node</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>template&#60;typename T&#62; T* value_ptr() const;</code></pre>
+							<p>This method returns a pointer to the value associated with the node.</p>
+							<h4>Return value</h4>
+							<p>a pointer to the associated value, or <code>nullptr</code> if the node has no value associated with it</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>value</td>
+						<td>set or access the value associated with the node</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  template&#60;typename T&#62; const T& value() const;<br>(1)  template&#60;typename T&#62; T& value();<br>(2)  template&#60;typename T&#62; item_proxy& value(T&& t);</code></pre>
+							<p>Each node can have a value associated with it, allowing the treebox to store data of arbitrary types for each item.</p>
+							<p>(0, 1) returns a reference to the associated value<br />(2) sets the associated value</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>t</th></tr>
+								<tr>
+									<td><p>the value to set, which can be an rvalue or an lvalue (the parameter is a <a href="https://en.cppreference.com/w/cpp/language/reference#Forwarding_references" target="_blank">forwarding reference</a>, so the argument is either moved or copied, accordingly)</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div><p>(0, 1) a reference to the stored value<br />(2) a reference to <code>*this</code></p></div>
+						</td>
+					</tr>
 				</table>
 
 			</section>
