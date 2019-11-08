@@ -42,11 +42,11 @@
 							(1) Sets the RGB channels using a <code>nana::colors</code> enumerated value, and sets the alpha channel to <code>1.0</code>.<br /><br />
 							(2) Sets the RGB channels using a <code>nana::colors</code> enumerated value, and sets the alpha channel to the specified value.<br /><br />
 							(3) Sets the RGB channels using an integer that represents a color in RGB format, and sets the alpha channel to <code>1.0</code>. Example:
-							<pre><code>nana::color clr {nana::color_rgb{0xff0000}}; // pure red</code></pre>
+							<pre><code>nana::color clr {static_cast&#60;nana::color_rgb&#62;(0xff0000)}; // pure red</code></pre>
 							(4) Sets the color value using an integer that represents a color in ARGB format. Example:
-							<pre><code>nana::color clr {nana::color_argb{0xffff0000}}; // pure red</code></pre>
+							<pre><code>nana::color clr {static_cast&#60;nana::color_argb&#62;(0xffff0000)}; // pure red</code></pre>
 							(5) Sets the color value using an integer that represents a color in <a href="https://en.wikipedia.org/wiki/RGBA_color_space" target="_blank">RGBA</a> format. Example:
-							<pre><code>nana::color clr {nana::color_rgba{0xff0000ff}}; // pure red</code></pre>
+							<pre><code>nana::color clr {static_cast&#60;nana::color_rgba&#62;(0xff0000ff)}; // pure red</code></pre>
 							(6) Sets the color value using a discrete value for each channel.<br /><br />
 							(7) Sets the color value using a CSS-like string. For example, each of the following strings represents pure red:
 							<ul>
