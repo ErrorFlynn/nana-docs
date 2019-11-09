@@ -22,6 +22,10 @@
 			<p>
 				The class <code>item_proxy</code> is an item manipulator based on the concept of <a href="http://stdcxx.apache.org/doc/stdlibug/2-2.html#221" target="_blank">input iterator</a>. It offers functions for changing item properties, and acts as an item iterator.
 			</p>
+			<p>
+				Due to how the listbox implements sorting, item iterators are not invalidated by sorting. Internally, the listbox maintains an index of display positions for each category, and it is this index that gets sorted, not the item container. The listbox simply <em>displays</em> the items in the sorted order, while continuing to address them using their original positions within the container (referred to as <em>absolute positions</em>). Since the internal item container is unaffected by sorting, iterators are not affected either.
+			</p>
+			<p>Iterators are invalidated when new items are added to the category, or when existing items are removed from it.</p>
 
 			<section expanded>
 				<h2>Member functions</h2>
@@ -124,18 +128,20 @@
 
 					<tr>
 						<td>empty</td>
-						<td>determines whether the iterator is valid</td>
+						<td>determines if the iterator is an end iterator</td>
 					</tr>
 					<tr>
 						<td>
 							<pre><code>bool empty() const;</code></pre>
 							<p>
-								Tests whether the iterator points to a valid item.
+								This method determines whether the object represents an end iterator. Generally speaking, end iterators don't point to an element, but are instead used to signal the end of the sequence. In the context of <code>listbox::item_proxy</code> specifically, an end iterator signals the end of the sequence of items in a category. The <a href="index.html#item_proxy::operator++" target="_blank">increment operator</a> produces an end iterator when moving past the last item in the category.
 							</p>
 							<h4>Return value</h4>
-							<p>
-								<code>true</code> if the iterator is invalid, or <code>false</code> otherwise
-							</p>
+							<div>
+								<p>
+									<code>true</code> if the object is an end iterator, or <code>false</code> otherwise
+								</p>
+							</div>
 						</td>
 					</tr>
 
