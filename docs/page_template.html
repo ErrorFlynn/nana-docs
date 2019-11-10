@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Page Title</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" href="page.css" media="all">
+	<link href="fonts/Oswald/Oswald.css" rel="stylesheet">
+	<link href="fonts/Arimo/Arimo.css" rel="stylesheet">
+	<link href="fonts/OxygenMono/OxygenMono.css" rel="stylesheet">
+	<link rel="stylesheet" href="highlight/default.css">
+	<script src="highlight/highlight.pack.js"></script>
+	<script>hljs.configure({ useBR: true }); hljs.initHighlightingOnLoad();</script>
+	<script src="page.js"></script>
+</head>
+
+<body>
+
+	<main>
+
+		<section>
+			<h1>Section Header</h1>
+			<p>
+				Intro text.
+			</p>
+
+			<section>
+				<h2>Collapsable subsection containing table</h2>
+				<table>
+					<tr> <th>First column</th> <th>Second column</th> </tr>
+					<tr>
+						<td>first cell</td>
+						<td>second cell</td>
+					</tr>
+				</table>
+			</section>
+
+			<section expanded>
+				<h2>Expanded collapsable subsection with functions</h2>
+
+				<table class="functions">
+					<tr>
+						<td>function 1</td>
+						<td>brief description 1</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  void function1(bool param);<br>(1)  bool function1() const;</code></pre>
+							<p>
+								General description.
+							</p>
+							<ol>
+								<li>brief description of overload</li>
+								<li>brief description of overload</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>param</th></tr>
+								<tr>
+									<td><p>Description of parameter.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>Description of return value.</p>
+						</td>
+					</tr>
+
+					<tr> <th>Category header</th> </tr>
+					<tr>
+						<td>function 2</td>
+						<td>brief description 2</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  void function2(bool param);<br>(1)  bool function2() const;</code></pre>
+							<p>
+								General description.
+							</p>
+							<ol>
+								<li>brief description of overload</li>
+								<li>brief description of overload</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>param</th></tr>
+								<tr>
+									<td><p>Description of parameter.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>Description of return value.</p>
+						</td>
+					</tr>
+
+				</table>
+
+			</section>
+
+		</section>
+	</main>
+
+</body>
+</html>
