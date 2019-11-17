@@ -121,7 +121,7 @@
 								</tr>
 								<tr><th>big_icon</th></tr>
 								<tr>
-									<td><p>A reference to a <code>paint::image</code> object that contains the big icon. On the Windows platform, the window manager displays this icon when representing the application in the task switcher window. The object need not be permanent (the image is copied).</p></td>
+									<td><p>A reference to a <code>paint::image</code> object that contains the big icon. On the Windows platform, the window manager displays this icon when representing the application in the task switcher window. The object need not be permanent (the image is copied). If this parameter is omitted, the <code>small_icon</code> is used.</p></td>
 								</tr>
 							</table>
 							<h4>Remarks</h4>
@@ -129,7 +129,7 @@
 								<p>
 									Keep in mind that <code>paint::image</code> can load an icon from an executable file's resource section. The following Windows example loads the icons from the application's resources:
 								</p>
-								<pre><code>nana::form fm;<br>std::wstring mod_path(4096, '\0'); // application path<br>mod_path.resize(GetModuleFileNameW(0, &mod_path.front(), mod_path.size()));<br>nana::paint::image icon {mod_path};<br>nana::API::window_icon(fm, icon, icon);</code></pre>
+								<pre><code>nana::form fm;<br>std::wstring mod_path(4096, '\0'); // application path<br>mod_path.resize(GetModuleFileNameW(0, &mod_path.front(), mod_path.size()));<br>nana::paint::image icon {mod_path};<br>nana::API::window_icon(fm, icon);</code></pre>
 							</div>
 						</td>
 					</tr>
