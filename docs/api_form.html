@@ -32,26 +32,6 @@
 				<table class="functions">
 
 					<tr>
-						<td>close_window</td>
-						<td>closes a <code>nana::form</code> or a <code>nana::nested_form</code> window</td>
-					</tr>
-					<tr>
-						<td>
-							<pre><code>void close_window(window wd);</code></pre>
-							<p>
-								This function is equivalent to <code>widget::close</code>. It can be used not just with form handles, but any valid GUI widget handle (if the handle identifies a GUI widget, the form containing the widget is closed). Before the form is closed, an <code>unload</code> event is emitted.
-							</p>
-							<h4>Parameters</h4>
-							<table>
-								<tr><th>wd</th></tr>
-								<tr>
-									<td><p>The handle of the <code>nana::form</code> or <code>nana::nested_form</code> widget to close. Keep in mind that <code>nana::form</code> and <code>nana::nested_form</code> objects are <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code>, so they can be used as arguments for this function.</p></td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-
-					<tr>
 						<td>get_owner_window</td>
 						<td>gets the handle of the <code>nana::form</code> that is the owner of a given <code>nana::form</code></td>
 					</tr>
