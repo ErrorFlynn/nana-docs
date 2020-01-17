@@ -92,16 +92,6 @@
 				<p><code>nana::event_arg</code> is the base class of all event handler argument types. The class defines two methods that pertain to the call sequence of a chain of handlers.</p>
 				<table class="functions">
 					<tr>
-						<td>stop_propagation</td>
-						<td>causes handlers further down in the call sequence to be ignored</td>
-					</tr>
-					<tr>
-						<td>
-							<pre><code>void stop_propagation() const;</code></pre>
-							<p>When multiple handlers are registered for the same event, they are all called in sequence by default. However, if one of them calls <code>event_arg::stop_propagation</code>, the subsequent handlers in the sequence are no longer called, unless they're registered via <code>basic_event::connect_unignorable</code> (for more details and an example, see the <em>"Events"</em> section of the <a href="index.html#widget_intro" target="_blank">Introduction to widgets</a> page).</p>
-						</td>
-					</tr>
-					<tr>
 						<td>propagation_stopped</td>
 						<td>checks if a prior handler in a chain of event handlers called <code>event_arg::stop_propagation</code> </td>
 					</tr>
@@ -109,6 +99,16 @@
 						<td>
 							<pre><code>bool propagation_stopped() const;</code></pre>
 							<p>This method provides unignorable event handlers the ability to check if a prior handler in the call sequence has called <code>event_arg::stop_propagation</code>.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>stop_propagation</td>
+						<td>causes handlers further down in the call sequence to be ignored</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void stop_propagation() const;</code></pre>
+							<p>When multiple handlers are registered for the same event, they are all called in sequence by default. However, if one of them calls <code>event_arg::stop_propagation</code>, the subsequent handlers in the sequence are no longer called, unless they're registered via <code>basic_event::connect_unignorable</code> (for more details and an example, see the <em>"Events"</em> section of the <a href="index.html#widget_intro" target="_blank">Introduction to widgets</a> page).</p>
 						</td>
 					</tr>
 				</table>
