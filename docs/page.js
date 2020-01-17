@@ -1,5 +1,8 @@
-window.onload = function()
-{	
+onload = function()
+{
+	// if this document was loaded in an iframe, and the owner document hasn't modified it (using index.js)
+	if(window.frameElement && !window.frameElement.onload)
+		return; // index.js modifies this document, causing it to load a second time; only run this code once, after it was modified
 	makeCollapsableSections();
 	makeCollapsableRows();
 	
@@ -8,6 +11,12 @@ window.onload = function()
 	{
 		header.setAttribute("colspan", "2");
 		header.style["text-align"] = "left";
+	});
+	headers = document.querySelectorAll('table.functions>tbody>tr>td table.normal th');
+	headers.forEach(header =>
+	{
+		header.setAttribute("colspan", "1");
+		header.style["text-align"] = "center";
 	});
 };
 
@@ -71,7 +80,65 @@ function makeCollapsableRows()
 
 function makeCollapsableSections()
 {
-	var sections = document.querySelectorAll('section > section');
+	var topSections = document.querySelectorAll('main > section');
+	for(let topSection of topSections)
+	{
+		let sections = topSection.querySelectorAll('section');
+		let expanded = topSection.querySelectorAll('section[expanded]');
+		if(sections.length == expanded.length) break;
+		if(sections.length < 2) continue;
+		sections.forEach(section =>
+		{
+			let h2 = section.querySelector('h2');
+			if(h2)
+			{
+				if(!section.hasAttribute('expanded'))
+				{
+					h2.style['margin-bottom'] = '-20px';
+					h2.insertAdjacentText('afterbegin', '[+] ');
+					let siblings = section.querySelectorAll('h2 ~ *');
+					siblings.forEach(sibling =>
+					{
+						sibling.setAttribute('hidden', '');
+					});
+				}
+				else h2.insertAdjacentText('afterbegin', '[-] ');
+				h2['className'] = 'linkified-heading';
+				section.style.marginBottom = '10px';
+
+				h2.addEventListener("click", event =>
+				{
+					let el = event.target;
+					let c = el.textContent.charAt(1);
+
+					if(c == '+') // expanding
+					{
+						el.parentElement.style.marginBottom = '0';
+						el.style['margin-bottom'] = '';
+						el.textContent = el.textContent.replace('+', '-');
+						let siblings = section.querySelectorAll('h2 ~ *');
+						siblings.forEach(sibling =>
+						{
+							sibling.removeAttribute('hidden');
+						});
+					}
+					else // collapsing
+					{
+						el.parentElement.style.marginBottom = '10px';
+						el.style['margin-bottom'] = '-20px';
+						el.textContent = el.textContent.replace('-', '+');
+						let siblings = section.querySelectorAll('h2 ~ *');
+						siblings.forEach(sibling =>
+						{
+							sibling.setAttribute('hidden', '');
+						});
+					}
+				}, false);
+			}
+		});
+	};
+
+	/*var sections = document.querySelectorAll('section > section');
 	if(sections.length < 2) return;
 	sections.forEach(section =>
 	{
@@ -121,5 +188,5 @@ function makeCollapsableSections()
 				}
 			}, false);
 		}
-	});
+	});*/
 }

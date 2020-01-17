@@ -1,0 +1,100 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Intro to widgets</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" href="page.css" media="all">
+	<link href="fonts/Oswald/Oswald.css" rel="stylesheet">
+	<link href="fonts/Arimo/Arimo.css" rel="stylesheet">
+	<link href="fonts/OxygenMono/OxygenMono.css" rel="stylesheet">
+	<link rel="stylesheet" href="highlight/default.css">
+	<script src="highlight/highlight.pack.js"></script>
+	<script>hljs.configure({ useBR: true }); hljs.initHighlightingOnLoad();</script>
+	<script src="page.js"></script>
+</head>
+
+<body>
+
+	<main>
+
+		<section>
+			<h1>Introduction to widgets</h1>
+			<p>
+				Generally speaking, a widget is a control element that's part of a graphical user interface, like a button or a slider. In Nana, every widget is conceptually a window, and windows are split into three categories:
+			</p>
+			<ul>
+				<li><code>root</code> (wraps an OS native window)</li>
+				<li><code>widget</code> (regular UI element)</li>
+				<li><code>lite widget</code> (UI element without graphics)</li>
+			</ul>
+			<p>In practice, the vast majority of windows are in the <code>widget</code> category. Only two widgets are in the <code>root</code> category (<code>nana::form</code> and <code>nana::nested_form</code>), and only one uses the <code>lite widget</code> category (<code>nana::panel</code>).</p>
+			<p>Each widget object has a window handle of type <code>nana::window</code> that uniquely identifies it, and all widget objects are <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code> (meaning that whenever a <code>nana::window</code> function argument is expected, the widget object itself can be used).</p>
+			<hr />
+			<p>
+				Regardless of category, all widgets are descended from the <a href="https://en.cppreference.com/w/cpp/language/abstract_class" target="_blank">abstract class</a> <a href="index.html#widget" target="_blank">nana::widget</a>, and share the set of methods afforded by that class. This is the hierarchy of the base classes:
+			</p>
+			<div class="clt">
+				<ul>
+					<li>
+						<code>nana::widget</code> (abstract class, provides a basic set of methods for all widgets)
+						<ul>
+							<li>
+								<code>nana::detail::widget_base</code> (encapsulates the window handle, and defines the handle() method)
+								<ul>
+									<li><code>nana::widget_object&lt;widget_tag, ...&gt;</code> (the base class of regular widgets)</li>
+									<li><code>nana::widget_object&lt;lite_widget_tag, ...&gt;</code> (the base class of lite widgets)</li>
+									<li><code>nana::widget_object&lt;root_tag, ...&gt;</code> (the base class of all the classes defined as a root window)</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+			<p>
+				It should be noted that in addition to the two form widgets which are root windows themselves, the library also defines some internal classes as root windows, for other classes to use. Specifically, tooltips use a root window class, and the "non-standard" widget <code>nana::menu</code> (which doesn't inherit from <code>nana::widget</code>) also uses a root window class.
+			</p>
+
+			<section expanded>
+				<h2>Events</h2>
+				<p>
+					The library uses an event system without bubbling, meaning that an event does not "bubble up" (is not routed) to its parent and ancestor widgets. For example if a key is pressed, only the widget that currently has the input focus receives the keypress event, excluding its parent widget (possibly a <code>nana::form</code>) and any ancestors.
+				</p>
+				<p>
+					An event is represented by the class template <code>basic_event</code>, which has a single type parameter representing the type of argument an event handler receives when the event is triggered. For example, the general event <code>basic_event&lt;arg_mouse&gt; mouse_enter;</code> has the argument type <code>arg_mouse</code>, which is a structure with data members that describe the properties of a mouse event (such as cursor position, buttons pressed, etc). A handler for the event <code>mouse_enter</code> is a function (or functor) with the signature <code>void(const nana::arg_mouse&)</code>, or <code>void(void)</code> (the argument is optional).
+				</p>
+				<p>
+					The library defines a number of general events that all widgets possess, encapsulated in the structure <a href="general_events.html" target="_blank">nana::general_events</a>. Each widget object contains a <code>general_events</code> object, or an object of a type derived from <code>general_events</code> (to provide additional specialized events). A reference to this events object must be obtained by calling <a href="index.html#widget_intro::events" target="_blank">widget::events</a>, in order to register event handlers (see below).
+				</p>
+				<hr />
+				<p>
+					In order for a widget to respond to an event, one or more handlers must be registered for the event. An event handler can be any callable object, as shown in the following compilable example:
+				</p>
+				<pre><code>#include &#60;nana/gui.hpp&#62;<br>#include &#60;nana/gui/widgets/button.hpp&#62;<br>#include &#60;functional&#62;<br>#include &#60;iostream&#62;<br><br>void my_handler()<br>{<br>&#9;std::cout &#60;&#60; "`my_handler` free function" &#60;&#60; std::endl;<br>}<br><br>auto my_lambda_handler = []<br>{<br>&#9;std::cout &#60;&#60; "lambda object assigned to `my_lambda_handler` variable" &#60;&#60; std::endl;<br>};<br><br>std::function&#60;void(const nana::arg_mouse&)&#62; hover_handler = [](const nana::arg_mouse &arg)<br>{<br>&#9;auto &wdg {*nana::API::get_widget(arg.window_handle)};<br>&#9;wdg.caption("x=" + std::to_string(arg.pos.x) + " ; y=" + std::to_string(arg.pos.y));<br>};<br><br>struct my_functor_handler<br>{<br>&#9;void operator()() const<br>&#9;{<br>&#9;&#9;std::cout &#60;&#60; "my_functor_handler" &#60;&#60; std::endl;<br>&#9;&#9;std::cout &#60;&#60; std::endl;<br>&#9;}<br>};<br><br>int main()<br>{<br>&#9;nana::form fm;<br>&#9;fm.div("vert margin=15 &#60;&#62;&#60;button weight=30&#62;&#60;&#62;");<br><br>&#9;nana::button btn {fm, "Click or hover me"};<br>&#9;fm["button"] &#60;&#60; btn;<br><br>&#9;btn.events().click([&]<br>&#9;{<br>&#9;&#9;std::cout &#60;&#60; "lambda object" &#60;&#60; std::endl;<br>&#9;});<br><br>&#9;btn.events().click(my_lambda_handler);<br>&#9;btn.events().click(my_handler);<br>&#9;btn.events().click(my_functor_handler{});<br><br>&#9;btn.events().mouse_move(hover_handler);<br><br>&#9;fm.collocate();<br>&#9;fm.show();<br>&#9;nana::exec();<br>}</code></pre>
+				<p>
+					To better understand how an event handler is registered, it might be useful to examine what happens when the following line (for example) is executed:
+				</p>
+				<pre><code>btn.events().click(my_handler);</code></pre>
+				<p>
+					In short, <code>btn.events()</code> returns a reference to a <a href="general_events.html" target="_blank">general_events</a> object, whose data member <code>basic_event&lt;arg_click&gt; click;</code> is accessed, on which <code>operator()(Function&& fn)</code> is called with the event handler as an argument. The <code>basic_event</code> class is a functor, allowing an instance of it to be called like a function, in order to register an event handler.
+				</p>
+				<hr />
+				<p>
+					A widget can have multiple handlers registered for the same event, each being called in an order that depends on the method of registration. In the previous example, the function call operator was used to register the event handlers, but the class <code>basic_event</code> also offers other handler-registering methods:
+				</p>
+				<table>
+					<tr> <th>Method</th> <th>Description</th> </tr>
+					<tr> <td title="template<typename Function>&#10;event_handle connect(Function && fn)&#10;{&#10;	...&#10;};">connect</td> <td>inserts the event handler at the back of the chain</td> </tr>
+					<tr> <td title="template<typename Function>&#10;event_handle operator()(Function&& fn)&#10;{&#10;	return connect(std::forward<Function>(fn));&#10;};">operator()</td> <td>equivalent to <code>connect</code></td> </tr>
+					<tr> <td title="template<typename Function>&#10;event_handle connect_front(Function && fn)&#10;{&#10;	...&#10;};">connect_front</td> <td>inserts the event handler at the front of the chain</td> </tr>
+					<tr> <td title="template<typename Function>&#10;event_handle connect_unignorable(Function && fn, bool in_front = false)&#10;{&#10;	...&#10;};">connect_unignorable</td> <td>inserts the event handler at either end of the chain, and flags it as unignorable (the event handler will be called unconditionally, even if a prior handler in the chain called <a href="index.html#general_events::stop_propagation" target="_blank">event_arg::stop_propagation</a></td> </tr>
+				</table>
+				<p>The following compilable example shows how to make a chain of event handlers using the methods mentioned above:</p>
+				<pre><code>#include &#60;nana/gui.hpp&#62;<br>#include &#60;nana/gui/widgets/button.hpp&#62;<br>#include &#60;functional&#62;<br>#include &#60;iostream&#62;<br><br>void first_click_handler()<br>{<br>&#9;std::cout &#60;&#60; "first_click_handler" &#60;&#60; std::endl;<br>}<br><br>void second_click_handler()<br>{<br>&#9;std::cout &#60;&#60; "second_click_handler" &#60;&#60; std::endl;<br>}<br><br>void third_click_handler(const nana::arg_click &arg)<br>{<br>&#9;std::cout &#60;&#60; "third_click_handler" &#60;&#60; std::endl;<br><br>&#9;arg.stop_propagation();<br>&#9;// event handlers further down the chain are not called<br>&#9;// unless they're registerd with `connect_unignorable`<br>}<br><br>void fourth_click_handler()<br>{<br>&#9;std::cout &#60;&#60; "fourth_click_handler" &#60;&#60; std::endl;<br>}<br><br>void fifth_click_handler()<br>{<br>&#9;std::cout &#60;&#60; "fifth_click_handler" &#60;&#60; std::endl;<br>}<br><br>int main()<br>{<br>&#9;nana::form fm;<br>&#9;fm.div("vert margin=15 &#60;&#62;&#60;button weight=30&#62;&#60;&#62;");<br><br>&#9;nana::button btn {fm, "Click me"};<br>&#9;fm["button"] &#60;&#60; btn;<br><br>&#9;btn.events().click.connect(second_click_handler); // insert handler at the back of the chain<br>&#9;btn.events().click(third_click_handler); // same as above<br>&#9;btn.events().click.connect_front(first_click_handler); // insert handler at the front of the chain<br><br>&#9;// will not be called, because the previous handler in the chain calls event_arg::stop_propagation<br>&#9;btn.events().click(fourth_click_handler);<br><br>&#9;// unignorable handler will be called despite a prior handler having called event_arg::stop_propagation<br>&#9;btn.events().click.connect_unignorable(fifth_click_handler);<br><br>&#9;fm.collocate();<br>&#9;fm.show();<br>&#9;nana::exec();<br>}</code></pre>
+			</section>
+
+		</section>
+	</main>
+
+</body>
+</html>

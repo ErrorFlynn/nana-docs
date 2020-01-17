@@ -79,6 +79,22 @@ code.hljs {
 	color : #3a3a3a;
 }
 
+code[title] {
+	/*text-decoration-line : underline;
+	text-decoration-style : dashed;*/
+	border-bottom : 1px dashed;
+}
+
+td[title] {
+	text-decoration-line : underline;
+	text-decoration-style : dashed;
+}
+
+table.normal code {
+	background-color : #fcfcff;
+	box-shadow : 0 0 2px 2px #fcfcff;
+}
+
 /*li > code {
 	font : bold 14px 'Oxygen Mono', monospace;
 	background-color : #EBF3EB;
@@ -152,6 +168,10 @@ section > section > * {
 	margin-right : 0px;
 }
 
+section > section > *:last-child {
+	margin-bottom : 0!important;
+}
+
 /*section > section:last-child {
 	margin-bottom : 0;
 }*/
@@ -162,10 +182,14 @@ img.centered-pic {
 }
 
 table.normal {
-	margin : 0 auto !important ;
+	margin : 25px auto !important ;
 	background-color : #f8f8ff;
-	box-shadow : -1px 0px 10px 0px #e3e3f0;
+	box-shadow : -1px 0px 10px 0px #dbdbe8;
 	max-width : 93%;
+}
+
+div>table.normal {
+	margin : 0 auto !important ;
 }
 
 table.functions table.normal {
@@ -174,23 +198,37 @@ table.functions table.normal {
 }
 
 table.normal th {
-	color : white;
-	background-color : #89a;
+	color : white!important;
+	background-color : #8e9fb0!important;
 	padding : 3px 6px;
 	letter-spacing : 1px;
+	font-style : normal!important;
+}
+
+table.functions>tbody>tr>td table.normal td *
+{
+	padding : 0px 4px;
 }
 
 table.normal td {
 	color : #555;
 	background-color : white;
-	box-shadow : inset 0px 0px 3vh 0px #e5e8f2;
+	box-shadow : inset 0px 0px 3vh 0px #dadee7;
 	padding : 6px 12px !important;
+}
+
+table.normal tr:nth-child(even)>td {
+	box-shadow : inset 0px 0px 3vh 1px #e9ecf7;
 }
 
 table.normal td:first-child {
 	font : bold 14px Arimo;
 	letter-spacing : 1px;
 	color : #678;
+	text-align : center;
+}
+
+table.normal td:not(:last-child) {
 	text-align : center;
 }
 
@@ -202,7 +240,7 @@ table.normal td:first-child {
 
 img {
 	display : block;
-	margin : 2em auto 1em;
+	margin : 2em auto 1em auto !important;
 	box-shadow: 0px 0px 10px 0px #d3d3e0;
 }
 
@@ -228,6 +266,11 @@ table.functions {
 table.functions > tbody > tr > td {
 	border-bottom : 1px solid #e3e3e3;
 	padding : 8px 25px 9px 25px;
+}
+
+table.functions:not(:nth-child(2)) > tbody > tr:first-child td {
+	border-top : 1px solid #e3e3e3;
+	padding-top : 8px;
 }
 
 table.functions h3 {
@@ -337,13 +380,13 @@ em {
 	font-weight : normal;
 }
 
-ul li {
+section>ul li, td>ul li {
 	/*list-style : square;*/
 	list-style : none;
 	padding : 3px;
 }
 
-td ul>li::before {
+section>ul:not(#nav-list)>li::before, td>ul:not(#nav-list)>li::before {
 	content : "\25AA";
 	color : dimgrey;
 	display : inline-block;
@@ -390,16 +433,31 @@ nav:hover {
 	border-left : 1px solid #abc;
 }
 
-ul#nav-list li:hover {
+ul#nav-list li:hover:not(.separator):not(.head) {
 	background-color : white;
 	color : #800;
 	/*cursor : pointer;*/
 	border-radius : 1em;
 }
 
+ul#nav-list li.separator
+{
+	cursor : default;
+	padding-top : 10px;
+}
+
+ul#nav-list li.head
+{
+	cursor : default;
+	color : #789;
+	border-bottom : solid 1px #abc;
+	margin-bottom : 5px;
+}
+
 ul#nav-list li {
 	list-style : none;
-	padding-left : 10px;
+	/*padding-left : 10px;*/
+	padding : 3px 0 3px 10px;
 	color : black;
 	-moz-user-select : none;
 	-webkit-user-select : none;
@@ -433,6 +491,10 @@ hr {
     padding : 0;
 }
 
+main>section>hr {
+	margin : 1.5em 22px;
+}
+
 hr[hidden] {
 	display : none;
 }
@@ -448,7 +510,7 @@ hr:last-child {
 
 hr:last-child:after {
 	content: '§';
-	font-family : 'Georgia', serif;
+	/*font-family : 'Georgia', serif;*/
 	color : #ccc;
     display: inline-block;
     position: relative;
@@ -474,3 +536,51 @@ hr:last-child:after {
 	background-color: #fff;
 	border-top: 2px dotted #ccc;
 }*/
+
+.clt, .clt ul, .clt li {
+     position: relative;
+}
+
+.clt ul {
+    list-style : none;
+    padding-left : 32px;
+	padding-top : 7px;
+	color : #888;
+}
+
+.clt li::before, .clt li::after {
+    content : "";
+    position : absolute;
+    left : -13px;
+}
+
+.clt li::before {
+    border-top : 1px solid #888;
+    top : 10px;
+    width : 9px;
+    height : 0;
+}
+
+.clt li::after {
+    border-left : 1px solid #888;
+    height : 100%;
+    width : 0px;
+    top : 2px;
+}
+
+.clt>ul>li::after, .clt>ul>li::before {
+    border : none;
+}
+
+.clt ul > li:last-child::after {
+    height : 9px;
+}
+
+.clt li:not(:last-child) {
+    padding-bottom : 7px;
+}
+
+strong {
+	color : #844;
+	font-weight : bold;
+}

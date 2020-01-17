@@ -74,7 +74,7 @@ ul
 	user-select : none;
 	color : #777;
 	font-family : 'Arimo', sans-serif;
-	font-size : 0.9375rem;
+	font-size : 1rem;
 	font-weight : bold;
 	letter-spacing : .03em;
 }
@@ -82,7 +82,7 @@ ul
 ul#toc-ul>li>span.caret
 {
 	font-family : 'Oswald', sans-serif;
-	font-size : 1.125rem;
+	font-size : 1.25rem;
 	font-weight : normal;
 }
 
@@ -120,8 +120,8 @@ ul#toc-ul>li>span.caret
 {
 	display : block;
 	font-family : 'Arimo', sans-serif;
-	font-size : 0.8125rem;
-	color : #444;
+	font-size : 0.9375rem;
+	color : #555;
 }
 
 .active li
@@ -141,7 +141,8 @@ ul#toc-ul>li>span.caret
 	/*border : 0px solid #eee;*/
 	border-radius : 1em;
 	font-weight : bold;
-	letter-spacing : .1em;
+	/*letter-spacing : .1em;*/
+	letter-spacing : 1px;
 	box-shadow : 0 0 3px 3px #eee inset;
 }
 

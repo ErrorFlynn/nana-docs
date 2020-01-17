@@ -45,7 +45,7 @@
 							<table>
 								<tr><th>wd</th></tr>
 								<tr>
-									<td><p>The handle of the <code>nana::form</code> widget whose owner to get. Keep in mind that a <code>nana::form</code> object is <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code>, so it can be used as an argument for this function.</p></td>
+									<td><p>The handle of the <code>nana::form</code> widget whose owner to get. Keep in mind that a <code>nana::form</code> object is <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code> (as are all widget objects), so it can be used as an argument for this function.</p></td>
 								</tr>
 							</table>
 							<h4>Return value</h4>
@@ -69,12 +69,36 @@
 							<table>
 								<tr><th>wd</th></tr>
 								<tr>
-									<td><p>The handle of the <code>nana::nested_form</code> widget whose parent to get. Keep in mind that a <code>nana::nested_form</code> object is <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code>, so it can be used as an argument for this function.</p></td>
+									<td><p>The handle of the <code>nana::nested_form</code> widget whose parent to get. Keep in mind that a <code>nana::nested_form</code> object is <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code> (as are all widget objects), so it can be used as an argument for this function.</p></td>
 								</tr>
 							</table>
 							<h4>Return value</h4>
 							<div>
 								<p>A handle that identifies the requested parent, or <code>nullptr</code> if there is no parent or if the parameter doesn't identify a valid <code>nana::nested_form</code> widget.</p>
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td>root</td>
+						<td>gets the handle of the native window wrapped by a form widget</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>native_window_type root(window wd);</code></pre>
+							<p>
+								This function returns the handle of the native window wrapped by the widget.
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>wd</th></tr>
+								<tr>
+									<td><p>The handle of the <code>nana::form</code> or <code>nana::nested_form</code> widget whose native handle to get. Keep in mind that <code>nana::form</code> and <code>nana::nested_form</code> objects are <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code> (as are all widget objects), so they can be used as arguments for this function.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div>
+								<p>The native handle, as a platform-neutral type that must be cast to the native handle type (must be cast to <code>HWND</code> on Windows, and <code>Window</code> on X11).</p>
 							</div>
 						</td>
 					</tr>
@@ -93,7 +117,7 @@
 							<table>
 								<tr><th>wd</th></tr>
 								<tr>
-									<td><p>The handle of the <code>nana::form</code> for which to set the icons. Keep in mind that a <code>nana::form</code> object is <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code>, so it can be used as an argument for this function.</p></td>
+									<td><p>The handle of the <code>nana::form</code> for which to set the icons. Keep in mind that a <code>nana::form</code> object is <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code> (as are all widget objects), so it can be used as an argument for this function.</p></td>
 								</tr>
 								<tr><th>small_icon</th></tr>
 								<tr>
@@ -154,12 +178,12 @@
 					<tr>
 						<td>
 							<pre><code>void activate_window(window wd);</code></pre>
-							<p>This function only has effect on the Windows platform, and is equivalent to calling the following WinAPI functions in sequence: <a href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enablewindow" target="_blank">EnableWindow</a>, <a href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setactivewindow" target="_blank">SetActiveWindow</a>, <a href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setforegroundwindow" target="_blank">SetForegroundWindow</a>. It is meant to be used for activating one of several <code>nana::form</code> windows belonging to the same application, while the application is in the foreground. The window will not be activated if the application is in the background; its  taskbar button will be flashed instead (the function will not steal focus from windows belonging to other processes).</p>
+							<p>This function only has effect on the Windows platform, and is equivalent to calling the following WinAPI functions in sequence: <a href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enablewindow" target="_blank">EnableWindow</a>, <a href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setactivewindow" target="_blank">SetActiveWindow</a>, <a href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setforegroundwindow" target="_blank">SetForegroundWindow</a>. It is meant to be used for activating one of several <code>nana::form</code> windows, while the application is in the foreground. The window will not be activated if the application is in the background; its  taskbar button will be flashed instead (focus will not be stolen from windows belonging to other processes).</p>
 							<h4>Parameters</h4>
 							<table>
 								<tr><th>wd</th></tr>
 								<tr>
-									<td><p>The handle of the <code>nana::form</code> widget whose native window should be activated. Keep in mind that a <code>nana::form</code> object is <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code>, so it can be used as an argument for this function.</p></td>
+									<td><p>The handle of the <code>nana::form</code> widget whose native window should be activated. Keep in mind that a <code>nana::form</code> object is <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code> (as are all widget objects), so it can be used as an argument for this function.</p></td>
 								</tr>
 							</table>
 						</td>
@@ -173,13 +197,13 @@
 						<td>
 							<pre><code>void bring_top(window wd, bool activated);</code></pre>
 							<p>
-								This function brings the specified <code>nana::form</code> window to the top of the z-order, optionally activating it. Unlike <code>API::activate_window</code> and <code>API::set_window_z_order</code>, this function can steal the focus from other applications, putting the specified window above all non-topmost windows belonging to other processes.
+								This function brings the specified <code>nana::form</code> window to the top of the z-order, optionally activating it. Unlike <code>API::activate_window</code> and <code>API::set_window_z_order</code>, this function can steal the focus from other applications, placing the specified window above all non-topmost windows belonging to other processes.
 							</p>
 							<h4>Parameters</h4>
 							<table>
 								<tr><th>wd</th></tr>
 								<tr>
-									<td><p>The handle of the <code>nana::form</code> widget whose native window should be brought to the top of the z-order. Keep in mind that a <code>nana::form</code> object is <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code>, so it can be used as an argument for this function.</p></td>
+									<td><p>The handle of the <code>nana::form</code> widget whose native window should be brought to the top of the z-order. Keep in mind that a <code>nana::form</code> object is <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code> (as are all widget objects), so it can be used as an argument for this function.</p></td>
 								</tr>
 								<tr><th>activated</th></tr>
 								<tr>
@@ -203,7 +227,7 @@
 							<table>
 								<tr><th>wd</th></tr>
 								<tr>
-									<td><p>The handle of the <code>nana::form</code> widget whose native window should be tested for minimized/maximized status. Keep in mind that a <code>nana::form</code> object is <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code>, so it can be used as an argument for this function.</p></td>
+									<td><p>The handle of the <code>nana::form</code> widget whose native window should be tested for minimized/maximized status. Keep in mind that a <code>nana::form</code> object is <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code> (as are all widget objects), so it can be used as an argument for this function.</p></td>
 								</tr>
 								<tr><th>ask_for_max</th></tr>
 								<tr>
@@ -230,7 +254,7 @@
 							<table>
 								<tr><th>wd</th></tr>
 								<tr>
-									<td><p>The handle of the <code>nana::form</code> widget whose native window should be restored. Keep in mind that a <code>nana::form</code> object is <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code>, so it can be used as an argument for this function.</p></td>
+									<td><p>The handle of the <code>nana::form</code> widget whose native window should be restored. Keep in mind that a <code>nana::form</code> object is <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code> (as are all widget objects), so it can be used as an argument for this function.</p></td>
 								</tr>
 							</table>
 						</td>
@@ -250,7 +274,7 @@
 							<table>
 								<tr><th>wd</th></tr>
 								<tr>
-									<td><p>The handle of the <code>nana::form</code> widget whose native window should have its z-order changed. Keep in mind that a <code>nana::form</code> object is <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code>, so it can be used as an argument for this function.</p></td>
+									<td><p>The handle of the <code>nana::form</code> widget whose native window should have its z-order changed. Keep in mind that a <code>nana::form</code> object is <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code> (as are all widget objects), so it can be used as an argument for this function.</p></td>
 								</tr>
 								<tr><th>wd_after</th></tr>
 								<tr>
@@ -310,7 +334,7 @@
 							<table>
 								<tr><th>wd</th></tr>
 								<tr>
-									<td><p>The handle of the <code>nana::form</code> or <code>nana::nested_form</code> widget whose enabled state to get or set. Keep in mind that <code>nana::form</code> and <code>nana::nested_form</code> objects are <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code>, so they can be used as arguments for this function.</p></td>
+									<td><p>The handle of the <code>nana::form</code> or <code>nana::nested_form</code> widget whose enabled state to get or set. Keep in mind that <code>nana::form</code> and <code>nana::nested_form</code> objects are <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code> (as are all widget objects), so they can be used as arguments for this function.</p></td>
 								</tr>
 								<tr><th>enable</th></tr>
 								<tr>
@@ -336,7 +360,7 @@
 							<table>
 								<tr><th>wd</th></tr>
 								<tr>
-									<td><p>The handle of the <code>nana::form</code> widget to maximize or minimize. Keep in mind that a <code>nana::form</code> object is <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code>, so it can be used as an argument for this function.</p></td>
+									<td><p>The handle of the <code>nana::form</code> widget to maximize or minimize. Keep in mind that a <code>nana::form</code> object is <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code> (as are all widget objects), so it can be used as an argument for this function.</p></td>
 								</tr>
 								<tr><th>ask_for_max</th></tr>
 								<tr>
@@ -360,7 +384,7 @@
 							<table>
 								<tr><th>wd</th></tr>
 								<tr>
-									<td><p>The handle of the <code>nana::form</code> or <code>nana::nested_form</code> widget whose size limit to set. Keep in mind that <code>nana::form</code> and <code>nana::nested_form</code> objects are <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code>, so they can be used as arguments for this function.</p></td>
+									<td><p>The handle of the <code>nana::form</code> or <code>nana::nested_form</code> widget whose size limit to set. Keep in mind that <code>nana::form</code> and <code>nana::nested_form</code> objects are <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code> (as are all widget objects), so they can be used as arguments for this function.</p></td>
 								</tr>
 								<tr><th>s</th></tr>
 								<tr>
@@ -384,7 +408,7 @@
 					</tr>
 					<tr>
 						<td>
-							<pre><code>(0)  size window_outline_size(window wd);<br>(1)  void window_outline_size(window wd, const size &s);</code></pre>
+							<pre><code>(0)  nana::size window_outline_size(window wd);<br>(1)  void window_outline_size(window wd, const nana::size &s);</code></pre>
 							<ol>
 								<li>gets the frame size of the specified window</li>
 								<li>sets the frame size of the specified window</li>
@@ -393,7 +417,7 @@
 							<table>
 								<tr><th>wd</th></tr>
 								<tr>
-									<td><p>The handle of the <code>nana::form</code> or <code>nana::nested_form</code> widget whose window frame size to get or set. Keep in mind that <code>nana::form</code> and <code>nana::nested_form</code> objects are <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code>, so they can be used as arguments for this function.</p></td>
+									<td><p>The handle of the <code>nana::form</code> or <code>nana::nested_form</code> widget whose window frame size to get or set. Keep in mind that <code>nana::form</code> and <code>nana::nested_form</code> objects are <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code> (as are all widget objects), so they can be used as arguments for this function.</p></td>
 								</tr>
 								<tr><th>s</th></tr>
 								<tr>
@@ -419,7 +443,7 @@
 							<table>
 								<tr><th>wd</th></tr>
 								<tr>
-									<td><p>The handle of the <code>nana::form</code> or <code>nana::nested_form</code> widget whose window position ot get. Keep in mind that <code>nana::form</code> and <code>nana::nested_form</code> objects are <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code>, so they can be used as arguments for this function.</p></td>
+									<td><p>The handle of the <code>nana::form</code> or <code>nana::nested_form</code> widget whose window position ot get. Keep in mind that <code>nana::form</code> and <code>nana::nested_form</code> objects are <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code> (as are all widget objects), so they can be used as arguments for this function.</p></td>
 								</tr>
 							</table>
 							<h4>Return value</h4>
@@ -444,7 +468,7 @@
 							<table>
 								<tr><th>wd</th></tr>
 								<tr>
-									<td><p>The handle of the <code>nana::form</code> or <code>nana::nested_form</code> widget whose window size to get or set. Keep in mind that <code>nana::form</code> and <code>nana::nested_form</code> objects are <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code>, so they can be used as arguments for this function.</p></td>
+									<td><p>The handle of the <code>nana::form</code> or <code>nana::nested_form</code> widget whose window size to get or set. Keep in mind that <code>nana::form</code> and <code>nana::nested_form</code> objects are <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code> (as are all widget objects), so they can be used as arguments for this function.</p></td>
 								</tr>
 								<tr><th>s</th></tr>
 								<tr>

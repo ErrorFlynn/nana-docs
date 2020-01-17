@@ -1,0 +1,554 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>nana::general_events</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" href="page.css" media="all">
+	<link href="fonts/Oswald/Oswald.css" rel="stylesheet">
+	<link href="fonts/Arimo/Arimo.css" rel="stylesheet">
+	<link href="fonts/OxygenMono/OxygenMono.css" rel="stylesheet">
+	<link rel="stylesheet" href="highlight/default.css">
+	<script src="highlight/highlight.pack.js"></script>
+	<script>hljs.configure({ useBR: true }); hljs.initHighlightingOnLoad();</script>
+	<script src="page.js"></script>
+</head>
+
+<body>
+
+	<main>
+
+		<section>
+			<h1>General events</h1>
+			<p>
+				The structure <code>nana::general_events</code> defines some fundamental events that all widgets support. All widget objects contain an instance of this structure, or an instance of a derived type (certain widgets have additional specialized events). This page documents the events defined by the structure, and some pertinent data types (for details about the event system, see the <em>"Events"</em> section of the <a href="index.html#widget_intro" target="_blank">Introduction to widgets</a> page).
+			</p>
+
+			<section>
+				<h2>nana::event_code</h2>
+				<p>The enumeration <code>enum class nana::event_code;</code> defines some codes that identify events. These codes are used by <code>arg_mouse</code> and <code>arg_keyboard</code> to inform event handlers which event was triggered, because multiple mouse and keyboard events use those argument types, and the same handler can be registered for multiple events. The example at the bottom of this page shows how the codes are used in that scenario.</p>
+				<table>
+					<tr> <th>Event code</th> <th>Description</th> </tr>
+					<tr> <td>click</td> <td>the left mouse button is pressed and released while the cursor is inside the widget window</td> </tr>
+					<tr> <td>dbl_click</td> <td>a mouse button is double-clicked inside the widget window</td> </tr>
+					<tr> <td>mouse_enter</td> <td>the mouse cursor enters the widget window</td> </tr>
+					<tr> <td>mouse_move</td> <td>the mouse cursor changes position inside the widget window</td> </tr>
+					<tr> <td>mouse_leave</td> <td>the mouse cursor leaves the widget window</td> </tr>
+					<tr> <td>mouse_down</td> <td>a mouse button is pressed inside the widget window</td> </tr>
+					<tr> <td>mouse_up</td> <td>a mouse button is released inside the widget window</td> </tr>
+					<tr> <td>mouse_wheel</td> <td>the mouse wheel is operated inside the widget window</td> </tr>
+					<tr> <td>mouse_drop</td> <td>a mouse button is released over a window registered as the recipient of a drag and drop operation</td> </tr>
+					<tr> <td>expose</td> <td>the window visibility changes</td> </tr>
+					<tr> <td>resizing</td> <td>the widget's window is resizing; this event allows the new size to be overridden</td> </tr>
+					<tr> <td>resized</td> <td>the widget's window has been resized</td> </tr>
+					<tr> <td>move</td> <td>the position of the widget's window has changed</td> </tr>
+					<tr> <td>unload</td> <td>a form widget is closing</td> </tr>
+					<tr> <td>destroy</td> <td>the widget is about to be destroyed</td> </tr>
+					<tr> <td>focus</td> <td>the widget has lost or gained the input focus</td> </tr>
+					<tr> <td>key_ime</td> <td>?</td> </tr>
+					<tr> <td>key_press</td> <td>a key is pressed while the widget has the input focus</td> </tr>
+					<tr> <td>key_char</td> <td>a key representing a character, whitespace or backspace is pressed while the widget has the input focus</td> </tr>
+					<tr> <td>key_release</td> <td>a key is released while the widget has the input focus</td> </tr>
+					<tr> <td>shortkey</td> <td>the widget's shortcut key is pressed (see <a href="index.html#widget_intro::register_shortkey" target="_blank">widget::register_shortkey</a>)</td> </tr>
+				</table>
+			</section>
+
+			<section>
+				<h2>nana::arg_mouse</h2>
+				<p>The structure <code>nana::arg_mouse</code> is the data type of the argument that the library passes to event handlers for the following events: <code>mouse_enter</code>, <code>mouse_move</code>, <code>mouse_leave</code>, <code>mouse_down</code>, <code>mouse_up</code>, and <code>dbl_click</code>. The structure contains the following data members:</p>
+				<table>
+					<tr> <th>Data member</th> <th>Type</th> <th>Description</th> </tr>
+					<tr> <td>evt_code</td> <td><code>nana::event_code</code></td> <td>the mouse event for which the handler is called</td> </tr>
+					<tr> <td>window_handle</td> <td><code>nana::window</code></td> <td>the window handle of the widget for which the event is triggered</td> </tr>
+					<tr> <td>pos</td> <td><code>nana::point</code></td> <td>the position of the mouse cursor within the widget window</td> </tr>
+					<tr> <td>button</td> <td><code title="enum class mouse&#10;{&#10;	any_button, &#10;	left_button, &#10;	middle_button, &#10;	right_button&#10;};">nana::mouse</code></td> <td>the mouse button that triggered the event (for <code>mouse_down</code> and  <code>mouse_up</code>)</td> </tr>
+					<tr> <td>left_button</td> <td><code>bool</code></td> <td><code>true</code> if the left mouse button is down when the event is triggered</td> </tr>
+					<tr> <td>mid_button</td> <td><code>bool</code></td> <td><code>true</code> if the middle mouse button is down when the event is triggered</td> </tr>
+					<tr> <td>right_button</td> <td><code>bool</code></td> <td><code>true</code> if the right mouse button is down when the event is triggered</td> </tr>
+					<tr> <td>alt</td> <td><code>bool</code></td> <td><code>true</code> if the <code>Alt</code> key is down when the event is triggered</td> </tr>
+					<tr> <td>shift</td> <td><code>bool</code></td> <td><code>true</code> if the <code>Shift</code> key is down when the event is triggered</td> </tr>
+					<tr> <td>ctrl</td> <td><code>bool</code></td> <td><code>true</code> if the <code>Ctrl</code> key is down when the event is triggered</td> </tr>
+				</table>
+				<p>The structure also defines the method <code>bool is_left_button() const;</code>, which checks if the left button triggered the event (in the case of <code>mouse_down</code> and <code>mouse_up</code>), or if the left button is down (in the case of <code>mouse_move</code>).</p>
+			</section>
+
+			<section>
+				<h2>nana::arg_keyboard</h2>
+				<p>The structure <code>nana::arg_keyboard</code> is the data type of the argument that the library passes to event handlers for the following events: <code>key_press</code>, <code>key_release</code>, <code>key_char</code>, and <code>shortkey</code>. The structure contains the following data members:</p>
+				<table>
+					<tr> <th>Data member</th> <th>Type</th> <th>Description</th> </tr>
+					<tr> <td>evt_code</td> <td><code>nana::event_code</code></td> <td>the keyboard event for which the handler is called</td> </tr>
+					<tr> <td>window_handle</td> <td><code>nana::window</code></td> <td>the window handle of the widget for which the event is triggered</td> </tr>
+					<tr> <td>key</td> <td><code>mutable wchar_t</code></td> <td>the key that triggered the event</td> </tr>
+					<tr> <td>ignore</td> <td><code>mutable bool</code></td> <td>set to <code>true</code> to ignore the input (only for <code>key_char</code>)</td> </tr>
+					<tr> <td>alt</td> <td><code>bool</code></td> <td><code>true</code> if the <code>Alt</code> modifier key if down when the event occurs</td> </tr>
+					<tr> <td>ctrl</td> <td><code>bool</code></td> <td><code>true</code> if the <code>Ctrl</code> modifier key if down when the event occurs</td> </tr>
+					<tr> <td>shift</td> <td><code>bool</code></td> <td><code>true</code> if the <code>Shift</code> modifier key if down when the event occurs</td> </tr>
+				</table>
+			</section>
+
+			<section>
+				<h2>nana::event_arg</h2>
+				<p><code>nana::event_arg</code> is the base class of all event handler argument types. The class defines two methods that pertain to the call sequence of a chain of handlers.</p>
+				<table class="functions">
+					<tr>
+						<td>stop_propagation</td>
+						<td>causes handlers further down in the call sequence to be ignored</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void stop_propagation() const;</code></pre>
+							<p>When multiple handlers are registered for the same event, they are all called in sequence by default. However, if one of them calls <code>event_arg::stop_propagation</code>, the subsequent handlers in the sequence are no longer called, unless they're registered via <code>basic_event::connect_unignorable</code> (for more details and an example, see the <em>"Events"</em> section of the <a href="index.html#widget_intro" target="_blank">Introduction to widgets</a> page).</p>
+						</td>
+					</tr>
+					<tr>
+						<td>propagation_stopped</td>
+						<td>checks if a prior handler in a chain of event handlers called <code>event_arg::stop_propagation</code> </td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>bool propagation_stopped() const;</code></pre>
+							<p>This method provides unignorable event handlers the ability to check if a prior handler in the call sequence has called <code>event_arg::stop_propagation</code>.</p>
+						</td>
+					</tr>
+				</table>
+			</section>
+
+			<section expanded>
+				<h2>Events</h2>
+
+				<table class="functions">
+					<tr> <th>Mouse events</th> </tr>
+					<tr>
+						<td>mouse_enter</td>
+						<td>occurs when the cursor enters the widget window</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>basic_event&lt;arg_mouse&gt; mouse_enter;</code></pre>
+							<p>When the cursor enters the widget window, all handlers registered for this event are called, with an argument of type <code>arg_mouse</code> optionally passed to them.</p>
+							<h4>Template type parameter</h4>
+							<p></p>
+							<table>
+								<tr><th>arg_mouse</th></tr>
+								<tr>
+									<td><p>A structure containing data members pertinent to mouse events.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>mouse_move</td>
+						<td>occurs when the cursor moves inside the widget window</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>basic_event&lt;arg_mouse&gt; mouse_move;</code></pre>
+							<p>When the cursor moves inside the widget window, all handlers registered for this event are called, with an argument of type <code>arg_mouse</code> optionally passed to them.</p>
+							<h4>Template type parameter</h4>
+							<p></p>
+							<table>
+								<tr><th>arg_mouse</th></tr>
+								<tr>
+									<td><p>A structure containing data members pertinent to mouse events.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>mouse_leave</td>
+						<td>occurs when the cursor leaves the widget window</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>basic_event&lt;arg_mouse&gt; mouse_leave;</code></pre>
+							<p>When the cursor leaves the widget window, all handlers registered for this event are called, with an argument of type <code>arg_mouse</code> optionally passed to them.</p>
+							<h4>Template type parameter</h4>
+							<p></p>
+							<table>
+								<tr><th>arg_mouse</th></tr>
+								<tr>
+									<td><p>A structure containing data members pertinent to mouse events.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>mouse_down</td>
+						<td>occurs when a mouse button is pressed inside the widget window</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>basic_event&lt;arg_mouse&gt; mouse_down;</code></pre>
+							<p>When a mouse button is pressed inside the widget window, all handlers registered for this event are called, with an argument of type <code>arg_mouse</code> optionally passed to them.</p>
+							<h4>Template type parameter</h4>
+							<p></p>
+							<table>
+								<tr><th>arg_mouse</th></tr>
+								<tr>
+									<td><p>A structure containing data members pertinent to mouse events.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>mouse_up</td>
+						<td>occurs when a mouse button is released inside the widget window</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>basic_event&lt;arg_mouse&gt; mouse_up;</code></pre>
+							<p>When a mouse button is released inside the widget window, all handlers registered for this event are called, with an argument of type <code>arg_mouse</code> optionally passed to them.</p>
+							<h4>Template type parameter</h4>
+							<p></p>
+							<table>
+								<tr><th>arg_mouse</th></tr>
+								<tr>
+									<td><p>A structure containing data members pertinent to mouse events.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>click</td>
+						<td>occurs when the left mouse button is pressed and released inside the widget window</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>basic_event&lt;arg_click&gt; click;</code></pre>
+							<p>When the left mouse button is pressed and released inside the widget window, all handlers registered for this event are called, with an argument of type <code>arg_click</code> optionally passed to them. This event occurs after <code>mouse_down</code> and before <code>mouse_up</code>.</p>
+							<h4>Template type parameter</h4>
+							<p></p>
+							<table>
+								<tr><th>arg_click</th></tr>
+								<tr>
+									<td>
+										<p>A structure containing data members pertinent to the <code>click</code> event.</p>
+										<div>
+											<table class="normal">
+												<tr> <th>Data member</th> <th>Type</th> <th>Description</th> </tr>
+												<tr> <td>window_handle</td> <td><code>nana::window</code></td> <td>the window handle of the widget for which the event is triggered</td> </tr>
+												<tr> <td>mouse_args</td> <td><code>const nana::arg_mouse*</code></td> <td>mouse event properties</td> </tr>
+											</table>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>dbl_click</td>
+						<td>occurs when a mouse button is double-clicked inside the widget window</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>basic_event&lt;arg_mouse&gt; dbl_click;</code></pre>
+							<p>When a mouse button is double-clicked inside the widget window, all handlers registered for this event are called, with an argument of type <code>arg_mouse</code> optionally passed to them.</p>
+							<h4>Template type parameter</h4>
+							<p></p>
+							<table>
+								<tr><th>arg_mouse</th></tr>
+								<tr>
+									<td><p>A structure containing data members pertinent to mouse events.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>mouse_wheel</td>
+						<td>occurs when the mouse wheel is operated inside the widget window</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>basic_event&lt;arg_wheel&gt; mouse_wheel;</code></pre>
+							<p>When the mouse wheel is operated and the cursor is inside the widget window, all handlers registered for this event are called, with an argument of type <code>arg_wheel</code> optionally passed to them.</p>
+							<h4>Template type parameter</h4>
+							<p></p>
+							<table>
+								<tr><th>arg_wheel</th></tr>
+								<tr>
+									<td>
+										<p>A structure derived from <code>nana::arg_mouse</code>, containing data members pertinent to the <code>mouse_wheel</code> event.</p>
+										<div>
+											<table class="normal">
+												<tr> <th>Data member</th> <th>Type</th> <th>Description</th> </tr>
+												<tr> <td>which</td> <td><code title="enum class wheel&#10;{&#10;	vertical, &#10;	horizontal&#10;};">nana::arg_wheel::wheel</code></td> <td>the orientation of the scrolling action</td> </tr>
+												<tr> <td>upwards</td> <td><code>bool</code></td> <td><code>true</code> if the wheel was rolled upwards or tilted leftward</td> </tr>
+											</table>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>mouse_dropfiles</td>
+						<td>occurs when files are dropped onto the widget window from an external source</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>basic_event&lt;arg_dropfiles&gt; mouse_dropfiles;</code></pre>
+							<p>This event occurs when files are dropped onto the widget window through a drag-and-drop operation initiated outside the program. The handlers registered for this event receive an argument of type <code>arg_dropfiles</code>, which contains the paths of the dropped files.</p>
+							<h4>Template type parameter</h4>
+							<p></p>
+							<table>
+								<tr><th>arg_dropfiles</th></tr>
+								<tr>
+									<td>
+										<p>A structure containing data members pertinent to the <code>mouse_dropfiles</code> event.</p>
+										<div>
+											<table class="normal">
+												<tr> <th>Data member</th> <th>Type</th> <th>Description</th> </tr>
+												<tr> <td>window_handle</td> <td><code>nana::window</code></td> <td>the window handle of the widget</td> </tr>
+												<tr> <td>pos</td> <td><code>nana::point</code></td> <td>the cursor position within the widget window</td> </tr>
+												<tr> <td>files</td> <td><code>std::vector&lt;std::filesystem::path&gt;</code></td> <td>the dropped files</td> </tr>
+											</table>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr> <th>Keyboard events</th> </tr>
+					<tr>
+						<td>key_press</td>
+						<td>occurs when a key is pressed while the widget has the input focus</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>basic_event&lt;arg_keyboard&gt; key_press;</code></pre>
+							<p>This event occurs when a key is pressed down (it is analagous to the <code>mouse_down</code> event). The handlers registered for this event are optionally passed an argument of type <code>arg_keyboard</code>.</p>
+							<h4>Template type parameter</h4>
+							<table>
+								<tr><th>arg_keyboard</th></tr>
+								<tr> <td><p>A structure containing data members pertinent to the <code>key_press</code> event.</p></td> </tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr>
+						<td>key_release</td>
+						<td>occurs when a key is released while the widget has the input focus</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>basic_event&lt;arg_keyboard&gt; key_release;</code></pre>
+							<p>This event occurs when a key is released (it is analagous to the <code>mouse_up</code> event). The handlers registered for this event are optionally passed an argument of type <code>arg_keyboard</code>.</p>
+							<h4>Template type parameter</h4>
+							<table>
+								<tr><th>arg_keyboard</th></tr>
+								<tr> <td><p>A structure containing data members pertinent to the <code>key_press</code> event.</p></td> </tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr>
+						<td>key_char</td>
+						<td>occurs when a key representing a character, whitespace or backspace is pressed</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>basic_event&lt;arg_keyboard&gt; key_char;</code></pre>
+							<p>This event occurs when a key representing a character, whitespace or backspace is pressed. The handlers registered for this event are optionally passed an argument of type <code>arg_keyboard</code>.</p>
+							<h4>Template type parameter</h4>
+							<table>
+								<tr><th>arg_keyboard</th></tr>
+								<tr> <td><p>A structure containing data members pertinent to the <code>key_press</code> event.</p></td> </tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr>
+						<td>shortkey</td>
+						<td>occurs when a registered shortkey is pressed</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>basic_event&lt;arg_keyboard&gt; key_char;</code></pre>
+							<p>This event occurs when a shortkey is pressed (see <a href="index.html#widget_intro::register_shortkey" target="_blank">widget::register_shortkey</a>). The handlers registered for this event are optionally passed an argument of type <code>arg_keyboard</code>.</p>
+							<h4>Template type parameter</h4>
+							<table>
+								<tr><th>arg_keyboard</th></tr>
+								<tr> <td><p>A structure containing data members pertinent to the <code>key_press</code> event.</p></td> </tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr> <th>Window state events</th> </tr>
+					<tr>
+						<td>expose</td>
+						<td>occurs when the window visibility changes</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>basic_event&lt;arg_expose&gt; expose;</code></pre>
+							<p>This event occurs when the visibility of the widget changes (the visibility can be changed by calling <code>widget::show()</code> or <code>widget::hide</code>). The handlers registered for this event are optionally passed an argument of type <code>arg_expose</code>.</p>
+							<h4>Template type parameter</h4>
+							<table>
+								<tr><th>arg_expose</th></tr>
+								<tr>
+									<td>
+										<p>A structure containing data members pertinent to the <code>expose</code> event.</p>
+										<div>
+											<table class="normal">
+												<tr> <th>Data member</th> <th>Type</th> <th>Description</th> </tr>
+												<tr> <td>window_handle</td> <td><code>nana::window</code></td> <td>the window handle of the widget for which the event is triggered</td> </tr>
+												<tr> <td>exposed</td> <td><code>bool</code></td> <td><code>true</code> if the window has become visible, or <code>false</code> if it is hidden</td> </tr>
+											</table>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr>
+						<td>focus</td>
+						<td>occurs when the window receives or loses the keyboard input focus</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>basic_event&lt;arg_focus&gt; focus;</code></pre>
+							<p>This event occurs when the window receives or loses the keyboard input focus. The handlers registered for this event are optionally passed an argument of type <code>arg_focus</code>.</p>
+							<h4>Template type parameter</h4>
+							<table>
+								<tr><th>arg_focus</th></tr>
+								<tr>
+									<td>
+										<p>A structure containing data members pertinent to the <code>focus</code> event.</p>
+										<div>
+											<table class="normal">
+												<tr> <th>Data member</th> <th>Type</th> <th>Description</th> </tr>
+												<tr> <td>window_handle</td> <td><code>nana::window</code></td> <td>the window handle of the widget for which the event is triggered</td> </tr>
+												<tr> <td>receiver</td> <td><code>nana::native_window_type</code></td> <td>The handle of the native window that receives the focus. This can be useful when the focus is transfered from one nana root window (such as a <code>nana::form</code>) to another.</td> </tr>
+												<tr> <td>getting</td> <td><code>bool</code></td> <td>indicates whether the window receives the focus (<code>true</code>) or loses it (<code>false</code>).</td> </tr>
+												<tr> <td>focus_reason</td> <td><code title="enum class reason&#10;{&#10;	general,			// the focus was received by the OS window manager&#10;	tabstop,			// the focus is received because Tab was pressed&#10;	mouse_press		// the focus is received because the window was clicked&#10;};">nana::arg_focus::reason</code></td> <td>indicates the reason why the window receives the focus (this member is not used when the focus is lost)</td> </tr>
+											</table>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr>
+						<td>move</td>
+						<td>occurs when the window is moved</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>basic_event&lt;arg_move&gt; move;</code></pre>
+							<p>This event occurs when the window is moved (a widget changes position when <a href="index.html#widget_intro::move" target="_blank">widget::move</a> is called, and in the case of <code>nana::form</code> widgets, when the user moves the window). The handlers registered for this event are optionally passed an argument of type <code>arg_move</code>.</p>
+							<h4>Template type parameter</h4>
+							<table>
+								<tr><th>arg_move</th></tr>
+								<tr>
+									<td>
+										<p>A structure containing data members pertinent to the <code>move</code> event.</p>
+										<div>
+											<table class="normal">
+												<tr> <th>Data member</th> <th>Type</th> <th>Description</th> </tr>
+												<tr> <td>window_handle</td> <td><code>nana::window</code></td> <td>the window handle of the widget for which the event is triggered</td> </tr>
+												<tr> <td>x</td> <td><code>int</code></td> <td>the new <code>x</code> coordinate of the upper-left corner of the window</td> </tr>
+												<tr> <td>y</td> <td><code>int</code></td> <td>the new <code>y</code> coordinate of the upper-left corner of the window</td> </tr>
+											</table>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr>
+						<td>resizing</td>
+						<td>occurs when the window is about to be resized</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>basic_event&lt;arg_resizing&gt; resizing;</code></pre>
+							<p>This event occurs when the window is about to be resized (a widget changes size when <a href="index.html#widget_intro::size" target="_blank">widget::size</a> is called, and in the case of <code>nana::form</code> widgets, when the user resizes the window). The handlers registered for this event are optionally passed an argument of type <code>arg_resizing</code>.</p>
+							<h4>Template type parameter</h4>
+							<table>
+								<tr><th>arg_resizing</th></tr>
+								<tr>
+									<td>
+										<p>A structure containing data members pertinent to the <code>resizing</code> event.</p>
+										<div>
+											<table class="normal">
+												<tr> <th>Data member</th> <th>Type</th> <th>Description</th> </tr>
+												<tr> <td>window_handle</td> <td><code>nana::window</code></td> <td>the window handle of the widget for which the event is triggered</td> </tr>
+												<tr> <td>border</td> <td><code title="enum class window_border&#10;{&#10;	none,&#10;	left, right, top, bottom,&#10;	top_left, top_right, bottom_left, bottom_right&#10;};">nana::window_border</code></td> <td>indicates which window border was used to initiate the resizing event (in the case of <code>nana::form</code> widgets)</td> </tr>
+												<tr> <td>width</td> <td><code>mutable unsigned</code></td> <td>the new width to which the window is resizing, in pixels</td> </tr>
+												<tr> <td>height</td> <td><code>mutable unsigned</code></td> <td>the new height to which the window is resizing, in pixels</td> </tr>
+											</table>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr>
+						<td>resized</td>
+						<td>occurs after the window has been resized</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>basic_event&lt;arg_resized&gt; resized;</code></pre>
+							<p>This event occurs after the window has been resized (a widget changes size when <a href="index.html#widget_intro::size" target="_blank">widget::size</a> is called, and in the case of <code>nana::form</code> widgets, when the user resizes the window). The handlers registered for this event are optionally passed an argument of type <code>arg_resized</code>.</p>
+							<h4>Template type parameter</h4>
+							<table>
+								<tr><th>arg_resized</th></tr>
+								<tr>
+									<td>
+										<p>A structure containing data members pertinent to the <code>resized</code> event.</p>
+										<div>
+											<table class="normal">
+												<tr> <th>Data member</th> <th>Type</th> <th>Description</th> </tr>
+												<tr> <td>window_handle</td> <td><code>nana::window</code></td> <td>the window handle of the widget for which the event is triggered</td> </tr>
+												<tr> <td>width</td> <td><code>mutable unsigned</code></td> <td>the new width to which the window has been resized, in pixels</td> </tr>
+												<tr> <td>height</td> <td><code>mutable unsigned</code></td> <td>the new height to which the window has been resized, in pixels</td> </tr>
+											</table>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr>
+						<td>destroy</td>
+						<td>occurs when the window is destroyed</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>basic_event&lt;arg_destroy&gt; destroy;</code></pre>
+							<p>This event occurs when the window is destroyed (if the widget has any children, they are destroyed first). The handlers registered for this event are optionally passed an argument of type <code>arg_destroy</code>.</p>
+							<h4>Template type parameter</h4>
+							<table>
+								<tr><th>arg_destroy</th></tr>
+								<tr>
+									<td>
+										<p>A structure containing a single data member, <code>nana::window window_handle;</code>, which is the window handle of the widget for which the event is triggered.</p>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+				</table>
+
+			</section>
+
+			<section expanded>
+				<h2>Example</h2>
+				<p>The following example shows how to use the same event handler for multiple events:</p>
+				<pre><code>#include &#60;nana/gui.hpp&#62;<br>#include &#60;nana/gui/widgets/label.hpp&#62;<br><br>// this callback function handles multiple mouse events<br>void mouse_handler(const nana::arg_mouse &arg)<br>{<br>&#9;using namespace nana;<br>&#9;auto &wdg {*API::get_widget(arg.window_handle)};<br><br>&#9;switch(arg.evt_code)<br>&#9;{<br>&#9;case event_code::mouse_down :<br>&#9;&#9;wdg.caption("mouse_down");<br>&#9;&#9;break;<br>&#9;&#9;<br>&#9;case event_code::mouse_enter :<br>&#9;&#9;wdg.caption("mouse_enter");<br>&#9;&#9;break;<br><br>&#9;case event_code::mouse_leave :<br>&#9;&#9;wdg.caption("mouse_leave");<br>&#9;&#9;break;<br><br>&#9;case event_code::mouse_up :<br>&#9;&#9;wdg.caption("mouse_up");<br>&#9;&#9;break;<br>&#9;}<br>}<br><br>int main()<br>{<br>&#9;nana::form fm;<br>&#9;fm.div("vert margin=15 &#60;weight=25%&#62; &#60;&#60;weight=25%&#62; &#60;label&#62; &#60;weight=25%&#62;&#62; &#60;weight=25%&#62;");<br><br>&#9;nana::label lbl {fm, "mouse event target"};<br>&#9;fm["label"] &#60;&#60; lbl;<br>&#9;lbl.bgcolor(nana::colors::light_goldenrod_yellow);<br>&#9;lbl.text_align(nana::align::center, nana::align_v::center);<br><br>&#9;lbl.events().mouse_down(mouse_handler);<br>&#9;lbl.events().mouse_enter(mouse_handler);<br>&#9;lbl.events().mouse_leave(mouse_handler);<br>&#9;lbl.events().mouse_up(mouse_handler);<br><br>&#9;fm.collocate();<br>&#9;fm.show();<br>&#9;nana::exec();<br>}</code></pre>
+			</section>
+
+		</section>
+	</main>
+
+</body>
+</html>

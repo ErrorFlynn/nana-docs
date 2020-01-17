@@ -32,7 +32,7 @@
 				<table>
 					<tr> <th>Type</th> <th>Description</th> </tr>
 					<tr>
-						<td>item_proxy</td>
+						<td><a href="index.html#treebox-item_proxy" target="_blank">item_proxy</a></td>
 						<td>item iterator and manipulator</td>
 					</tr>
 					<tr>
@@ -105,8 +105,8 @@
 			<section>
 				<h2>Events</h2>
 				<p>
-					In addition to the <a href="http://nanapro.org/en-us/documentation/core/events.htm" target="_blank">general events</a>
-					that most widgets have, the treebox also has the following:
+					In addition to the <a href="index.html#general_events" target="_blank">general events</a>
+					that all widgets support, the treebox also has the following specialized events:
 				</p>
 				<table>
 					<tr> <th>Event</th> <th>Description</th> </tr>
@@ -127,10 +127,18 @@
 						<td>occurs when the user moves the mouse cursor over a node</td>
 					</tr>
 				</table>
+				<p>The structure <code>arg_treebox</code> is derived from <code>event_arg</code> (see <a href="index.html#general_events" target="_blank">general events</a>), and defines the following data members:</p>
+				<table>
+					<tr> <th>Data member</th> <th>Type</th> <th>Description</th> </tr>
+					<tr> <td>widget</td> <td><code>treebox&</code></td> <td>the widget for which the event triggered</td> </tr>
+					<tr> <td>item</td> <td><a href="index.html#treebox-item_proxy" target="_blank">item_proxy</a></td> <td>an iterator to the item on which the event triggered</td> </tr>
+					<tr> <td>operated</td> <td><code>bool</code></td> <td>indicates whether the node is expanded (<code>true</code>) or collapsed (<code>false</code>)</td> </tr>
+				</table>
 			</section> <!--events-->
 
 			<section expanded>
 				<h2>Member functions</h2>
+				<p>In addition to the methods inherited from <a href="index.html#widget" target="_blank">nana::widget</a> and <a href="index.html#widget_object" target="_blank">nana::widget_object&lt;widget_tag, ...&gt;</a>, the class <code>nana::treebox</code> defines the following methods:</p>
 
 				<table class="functions">
 					<tr>
@@ -141,15 +149,13 @@
 						<td>
 							<pre><code>(0)  treebox();<br>(1)  treebox(window parent, bool visible);<br>(2)  treebox(window parent, const rectangle& r, bool visible = true);</code></pre>
 							<p>
-								(0) Default constructor, constructs an "empty" <code>treebox</code> object. Does not create a UI element;
-								<code>treebox.create(...)</code> must be subsequently called before the object can be used
-								as a widget.<br /><br />(1, 2) Construct and initialize a <code>treebox</code> object, making it usable as a widget.
+								(0) Default constructor, constructs an "empty" <code>treebox</code> object. Does not create a UI element; <a href="index.html#widget_object::create" target="_blank">widget_object::create</a> must be subsequently called before the object can be used as a widget.<br /><br />(1, 2) Construct and initialize a <code>treebox</code> object, making it usable as a widget.
 							</p>
 							<h4>Parameters</h4>
 							<table>
 								<tr><th>parent</th></tr>
 								<tr>
-									<td><p>A handle to a parent widget, which is usually a <code>nana::form</code> or a <code>nana::panel</code>. Keep in mind that all widgets have a <a href="https://en.cppreference.com/w/cpp/language/cast_operator" target="_blank"> conversion operator </a> that returns a <code>nana::window</code>, so you can pass a widget object directly to these constructors, instead of having to call <code>handle()</code> on the widget object.</p></td>
+									<td><p>A handle to a parent widget, which is usually a <code>nana::form</code> or a <code>nana::panel</code>. Keep in mind that all widgets have a <a href="https://en.cppreference.com/w/cpp/language/cast_operator" target="_blank">conversion operator</a> that returns a <code>nana::window</code>, making widget objects <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code>. That means you can pass a widget object directly to these constructors (no need to call <a href="index.html#widget::handle" target="_blank">widget::handle</a> to obtain the handle).</p></td>
 								</tr>
 								<tr><th>visible</th></tr>
 								<tr>
@@ -530,7 +536,7 @@
 			<section expanded>
 				<h2>Using a custom renderer and placer</h2>
 				<p>
-					The following example shows how to implement a custom renderer that changes the graphics of the node operator (the expander/collapser element) to the <code>[+][-]</code> style, and displays all parent nodes with a bold font and a different foreground color:
+					The following example shows how to implement a custom renderer that changes the graphics of the node operator (the expander/collapser element) to the <code>[+][-]</code> style, and that displays all parent nodes with a bold font and a different foreground color:
 				</p>
 				<pre><code>class my_tree_renderer : public nana::treebox::renderer_interface<br>{<br>&#9;using clonable_renderer = nana::pat::cloneable&#60;renderer_interface&#62;;<br>&#9;clonable_renderer renderer_; // wraps a pointer to the library's internal renderer<br><br>public:<br>&#9;my_tree_renderer(const clonable_renderer &rd) : renderer_(rd) {}<br><br>private:<br><br>&#9;nana::window htree_ {nullptr}; // treebox window handle<br><br>&#9;// this function is called whenever a paint operation begins<br>&#9;void begin_paint(nana::widget &wdg) override<br>&#9;{<br>&#9;&#9;htree_ = wdg.handle();<br>&#9;&#9;renderer_-&#62;begin_paint(wdg);<br>&#9;}<br><br>&#9;// paints the background for each item<br>&#9;void bground(graph_reference graph, const compset_interface *compset) const override<br>&#9;{<br>&#9;&#9;renderer_-&#62;bground(graph, compset);<br>&#9;}<br><br>&#9;// paints the node operator for each item<br>&#9;void expander(graph_reference graph, const compset_interface *compset) const override<br>&#9;{<br>&#9;&#9;comp_attribute_t attr;<br>&#9;&#9;if(compset-&#62;comp_attribute(component::expander, attr))<br>&#9;&#9;{<br>&#9;&#9;&#9;auto clr = attr.mouse_pointed ? nana::colors::deep_sky_blue : nana::colors::black;<br>&#9;&#9;&#9;auto r = attr.area;<br><br>&#9;&#9;&#9;graph.frame_rectangle(nana::rectangle {{r.x+4, r.y+6}, {11, 11}}, clr, 0);<br><br>&#9;&#9;&#9;if(compset-&#62;item_attribute().expended)<br>&#9;&#9;&#9;{<br>&#9;&#9;&#9;&#9;graph.line({r.x+7, r.y+11}, {r.x+11, r.y+11});<br>&#9;&#9;&#9;}<br>&#9;&#9;&#9;else<br>&#9;&#9;&#9;{<br>&#9;&#9;&#9;&#9;graph.line({r.x+7, r.y+11}, {r.x+11, r.y+11});<br>&#9;&#9;&#9;&#9;graph.line({r.x+9, r.y+9}, {r.x+9, r.y+13});<br>&#9;&#9;&#9;}<br>&#9;&#9;}<br>&#9;}<br><br>&#9;// paints the checkbox for each item (if the checkable mode is enabled)<br>&#9;void crook(graph_reference graph, const compset_interface *compset) const override<br>&#9;{<br>&#9;&#9;renderer_-&#62;crook(graph, compset);<br>&#9;}<br><br>&#9;// paints the icon for each item (if the node has an icon scheme set)<br>&#9;virtual void icon(graph_reference graph, const compset_interface *compset) const override<br>&#9;{<br>&#9;&#9;renderer_-&#62;icon(graph, compset);<br>&#9;}<br><br>&#9;// paints the text for each item<br>&#9;virtual void text(graph_reference graph, const compset_interface *compset) const override<br>&#9;{<br>&#9;&#9;auto iattr {compset-&#62;item_attribute()};<br>&#9;&#9;if(iattr.has_children)<br>&#9;&#9;{<br>&#9;&#9;&#9;comp_attribute_t cattr;<br>&#9;&#9;&#9;compset-&#62;comp_attribute(component::text, cattr);<br>&#9;&#9;&#9;auto tf {graph.typeface()};<br>&#9;&#9;&#9;graph.typeface({tf.name(), tf.size(), {800}}); // bold font<br><br>&#9;&#9;&#9;auto tsize {graph.text_extent_size(iattr.text)};<br>&#9;&#9;&#9;auto gsize {cattr.area.dimension()};<br>&#9;&#9;&#9;nana::point pos {cattr.area.position()};<br>&#9;&#9;&#9;if(tsize.height &#60; gsize.height)<br>&#9;&#9;&#9;&#9;pos.y += gsize.height/2 - tsize.height/2; // center text vertically<br><br>&#9;&#9;&#9;graph.string(pos, iattr.text, nana::API::fgcolor(htree_).blend(nana::color {"#47f"}, .7));<br>&#9;&#9;&#9;graph.typeface(tf); // restore original font<br>&#9;&#9;}<br>&#9;&#9;else renderer_-&#62;text(graph, compset);<br>&#9;}<br>};</code></pre>
 				<p>

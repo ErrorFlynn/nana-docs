@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>nana::widget</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" href="page.css" media="all">
+	<link href="fonts/Oswald/Oswald.css" rel="stylesheet">
+	<link href="fonts/Arimo/Arimo.css" rel="stylesheet">
+	<link href="fonts/OxygenMono/OxygenMono.css" rel="stylesheet">
+	<link rel="stylesheet" href="highlight/default.css">
+	<script src="highlight/highlight.pack.js"></script>
+	<script>hljs.configure({ useBR: true }); hljs.initHighlightingOnLoad();</script>
+	<script src="page.js"></script>
+</head>
+
+<body>
+
+	<main>
+
+		<section>
+			<h1>Class nana::widget</h1>
+			<p>
+				Non-copyable, non-movable abstract class that is the ancestor of all the widget classes. Defines a set of general-purpose methods that all widgets inherit. For the rationale behind widgets being non-movable and non-copyable, see <a href="https://sourceforge.net/p/nanapro/blog/2013/05/why-should-not-a-widget-be-copyable-or-movable/" target="_blank">this article</a>.
+			</p>
+
+			<section expanded>
+				<h2>Member functions</h2>
+
+				<table class="functions">
+					<tr>
+						<td>close</td>
+						<td>closes the window of this widget</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void close();</code></pre>
+							<p>
+								Closes the window, destroying the widget.
+							</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>empty</td>
+						<td>tests whether the object corresponds to an existing UI element</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>bool empty() const;</code></pre>
+							<p>
+								This method calls the <code>handle()</code> method and compares the return value to <code>nullptr</code>. It enables a more semantically clear way of writing <code>if(!widget.handle())</code>.
+							</p>
+							<h4>Return value</h4>
+							<p><code>true</code> if the object is empty, or <code>false</code> otherwise.</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>enabled</td>
+						<td>enables or disables mouse and keyboard input</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  bool enabled() const;<br>(1)  void enabled(bool enable);</code></pre>
+							<p>
+								Enables or disables mouse and keyboard input for the widget. When input is disabled, the widget doesn't receive any mouse clicks or key presses.
+							</p>
+							<ol>
+								<li>returns the current input state</li>
+								<li>enables or disables input</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>enable</th></tr>
+								<tr>
+									<td><p>Indicates whether to enable (<code>true</code>) or disable (<code>false</code>) the widget's input.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>(0) <code>true</code> if input is enabled, or <code>false</code> otherwise.</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>enable_dropfiles</td>
+						<td>registers or unregisters the widget as a target for dropped files</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void enable_dropfiles(bool enable);</code></pre>
+							<p>
+								This method allows the widget to receive files dropped onto it through a drag-and-drop operation initiated outside the program. In order to process the files, the event <code>mouse_dropfiles</code> should be handled.
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>enable</th></tr>
+								<tr>
+									<td><p><code>true</code> if the widget should accept dropped files, or <code>false</code> otherwise.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr>
+						<td>focus / focused</td>
+						<td>keyboard input focus operations</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  void focus();<br>(1)  bool focused() const;</code></pre>
+							<ol>
+								<li>gives this widget the input focus (sets it as the receiver of keyboard input)</li>
+								<li>tests whether this widget has the input focus</li>
+							</ol>
+							<h4>Return value</h4>
+							<p>(1) <code>true</code> if the widget has the keyboard input focus, or <code>false</code> otherwise.</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>handle</td>
+						<td>returns the window handle of the widget</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>virtual window handle() const = 0;</code></pre>
+							<p>
+								Each widget is identified by a unique window handle of type <code>nana::window</code>, which can be accessed by calling this method. Many methods and free functions throughout the library take window handles as arguments, but as mentioned in the introduction at the top of this page, <strong>it's not necessary to call this method directly</strong>.
+							</p>
+							<p>
+								The <code>nana::widget</code> class also defines a <a href="https://en.cppreference.com/w/cpp/language/cast_operator" target="_blank">cast operator</a> that enables the <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicit conversion</a> of widget objects to the <code>nana::window</code> type (the operator calls this method to obtain the window handle). That means that the widget object itself can be passed to functions that expect a window handle.
+							</p>
+							<h4>Return value</h4>
+							<p>This method returns the window handle if the widget object corresponds to an existing UI element, or <code>nullptr</code> otherwise (if the widget's window has been closed, or if the UI element has not yet been created). Most widgets have a default constructor that constructs an "empty" object, allowing for a later creation of the UI element by calling <code>widget_object::create</code>.</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>move</td>
+						<td>moves the window, optionally resizing it</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  void move(const point& pos);<br>(1)  void move(const rectangle& rect);</code></pre>
+							<ol>
+								<li>moves the widget</li>
+								<li>moves the widget and resizes it</li>
+							</ol>
+							<p>
+								A widget is positioned inside the window of its parent widget, with the exception of <code>nana::form</code> widgets, whose position is relative to the desktop window (or root window on X11 platforms).
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>pos</th></tr>
+								<tr>
+									<td><p>The new position, in the form of a <code>nana::pos</code> structure (which has the members <code>x</code> and <code>y</code> of type <code>int</code>).</p></td>
+								</tr>
+								<tr><th>rect</th></tr>
+								<tr>
+									<td><p>The new position and dimensions, in the form of a <code>nana::rectangle</code> structure (which has the members <code>x</code> and <code>y</code> of type <code>int</code>, and <code>width</code> and <code>height</code> of type <code>unsigned</code>).</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr>
+						<td>parent</td>
+						<td>returns the window handle of the parent widget</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>window parent() const;</code></pre>
+							<p>
+								Most widgets have a parent, with very few exceptions (like <code>nana::menu</code>). A parent widget acts (visually) as a container for its children, displaying the children in its window. Typical parent widgets are <code>nana::form</code>, <code>nana::group</code>, and <code>nana::panel</code>.
+							</p>
+							<h4>Return value</h4>
+							<p>The window handle of the parent widget. To obtain a pointer to the widget represented by the window handle, call <code>API::get_widget</code>.</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>pos</td>
+						<td>returns the position of the widget</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>point pos() const;</code></pre>
+							<p>
+								Returns the position of the widget, which is relative to the upper-left corner of the parent widget's window. For <code>nana::form</code> widgets, the position is relative to the upper-left corner of the desktop window (or root window on X11 platforms).
+							</p>
+							<h4>Return value</h4>
+							<p>The widget position, in the form of a <code>nana::pos</code> structure (which has the members <code>x</code> and <code>y</code> of type <code>int</code>).</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>register_shortkey</td>
+						<td>registers (or unregisters) a shortcut key for the widget</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>widget& register_shortkey(wchar_t key);</code></pre>
+							<p>
+								This method sets a shortcut key that can be used in combination with the <code>Alt</code> key to perform the command associated with the widget. Shortcut keys are typically used with widgets that perform a user-defined action when clicked, like buttons and menus, or widgets that represent a selection state, like checkboxes and radio buttons. However, other widgets can also benefit from having a shortkey, by handling the <code>shortkey</code> event.
+							</p>
+							<p>
+								It's not necessary to call this method directly &mdash; it's enough to put an ampersand character (<code>'&amp;'</code>) in front of a character in the widget's caption. That character is then displayed with an underline, and is automatically registered as a shortcut key. For example, the caption text <code>S&ubmit</code> automatically registers <code>'u'</code> as the shortkey, allowing the user to execute the command associated with the widget by pressing <code>Alt+U</code>.
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>key</th></tr>
+								<tr>
+									<td><p>The key that should be registered as a shortkey. To unregister the current shortkey, pass <code>0</code>.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>A reference to <code>*this</code>.</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>scroll_operation (Nana 1.6)</td>
+						<td>access the embedded scrollbars of the widget</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>std::shared_ptr&#60;scroll_operation_interface&#62; scroll_operation();</code></pre>
+							<p>
+								Returns an interface to access the embedded scrollbars of the widget (currently <code>nana::listbox</code>, <code>nana::treebox</code>, and <code>nana::textbox</code> have embedded scrollbars). As of v1.7.2, the interface only provides the <code>visible</code> method, which makes it possible to query whether the scrollbars are visible.
+							</p>
+							<p>
+								The following code queries whether the scrollbars of a listbox are visible:
+							</p>
+							<pre><code>// nana::listbox list_box;<br>bool vert_scrollbar_visible = list_box.scroll_operation()-&#62;visible(true);<br>bool horz_scrollbar_visible = list_box.scroll_operation()-&#62;visible(false);</code></pre>
+							<h4>Return value</h4>
+							<p>A pointer to an interface to access the embedded scrollbars of the widget, or <code>nullptr</code> if the widget doesn't use scrollbars.</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>set_capture / release_capture (Nana 1.4)</td>
+						<td>sets or releases the mouse capture for the widget</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  void set_capture(bool ignore_children);<br>(1)  void release_capture();</code></pre>
+							<ol>
+								<li>captures the mouse input for this widget</li>
+								<li>releases the mouse capture</li>
+							</ol>
+							<p>
+								When a widget has captured the mouse, all mouse input is directed to it, even when the cursor is outside the widget's window. To check which widget has captured the mouse, call <code>API::capture_window()</code>.
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>ignore_children</th></tr>
+								<tr>
+									<td><p>Indicates whether to redirect the mouse input to the children of the widget, when the mouse cursor is over the children.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr>
+						<td>size</td>
+						<td>gets or sets the size of the widget</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  nana::size size() const;<br>(1)  void size(const nana::size& sz);</code></pre>
+							<ol>
+								<li>returns the current size</li>
+								<li>sets a new size (changes the dimensions of the widget)</li>
+							</ol>
+							<p>Both overloads of this method use the structure <code>nana::size</code> to convey the dimensions of the widget. The structure has the members <code>width</code> and <code>height</code> of type <code>unsigned</code>.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>sz</th></tr>
+								<tr>
+									<td><p>The dimensions that the widget should be resized to.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>(0) The current dimensions of the widget.</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>take_active</td>
+						<td>sets a different widget to receive the input focus when this widget is clicked</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>widget& take_active(bool activated, window take_if_not_activated);</code></pre>
+							<p>By default, a widget takes the input focus when clicked, becoming the receiver of subsequent keyboard input. This method can override the default behavior, causing a different widget to receive the input focus when this widget is clicked.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>activated</th></tr>
+								<tr>
+									<td><p>Pass <code>true</code> to reset this widget to default behavior, or <code>false</code> to designate another widget as the receiver of keyboard input when this widget is clicked.</p></td>
+								</tr>
+								<tr><th>take_if_not_activated</th></tr>
+								<tr>
+									<td><p>The widget that should take the input focus when this widget is clicked. This parameter is ignored if <code>activated</code> is <code>true</code>.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>A reference to <code>*this</code>.</p>
+						</td>
+					</tr>
+
+					<tr> <th>Access content</th> </tr>
+					<tr>
+						<td>caption</td>
+						<td>gets or sets the caption</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  std::string caption() const noexcept;<br>(1)  std::wstring caption_wstring() const noexcept;<br>(2)  native_string_type caption_native() const noexcept;<br>(3)  widget& caption(std::string text_utf8);<br>(4)  widget& caption(std::wstring text_wide);</code></pre>
+							<ol>
+								<li>returns the caption as a UTF-8 encoded string</li>
+								<li>returns the caption as a wide character string</li>
+								<li>returns the caption as a platform-dependent string type (<code>std::wstring</code> on Windows, or <code>std::string</code> otherwise)</li>
+								<li>sets the caption using a UTF-8 encoded string</li>
+								<li>sets the caption using a wide character string</li>
+							</ol>
+							<p>
+								The term "caption" refers to the main text content that a widget displays, like the text displayed in a <code>nana::button</code>, or the editable text that a <code>nana::textbox</code> manages.
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>text_utf8</th></tr>
+								<tr>
+									<td><p>a UTF-8 encoded string, representing the text to set as the new caption</p></td>
+								</tr>
+								<tr><th>text_wide</th></tr>
+								<tr>
+									<td><p>a wide character string, representing the text to set as the new caption</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>(0, 1, 2) the current caption<br />(3, 4) a reference to <code>*this</code></p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>i18n</td>
+						<td>sets the caption using an internationalization mechanism</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  template&#60;typename ...Args&#62; void i18n(std::string msgid, Args&&... args);<br>(1)  void i18n(i18n_eval eval);</code></pre>
+							<p>
+								This method uses an internationalization mechanism to set the widget caption. For details, see <a href="https://sourceforge.net/p/nanapro/blog/2014/11/nana-i18n-overview/" target="_blank">this article</a>.
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>msgid</th></tr>
+								<tr>
+									<td><p>message ID</p></td>
+								</tr>
+								<tr><th>args</th></tr>
+								<tr>
+									<td><p>arguments for the message ID</p></td>
+								</tr>
+								<tr><th>eval</th></tr>
+								<tr>
+									<td><p>message ID <code>i18n_eval</code> object</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr> <th>Appearance</th> </tr>
+					<tr>
+						<td>bgcolor</td>
+						<td>gets or sets the background color</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  void bgcolor(const color& clr);<br>(1)  color bgcolor() const;</code></pre>
+							<ol>
+								<li>sets the background color</li>
+								<li>gets the background color</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>clr</th></tr>
+								<tr>
+									<td><p>a <a href="index.html#color" target="_blank">color</a> to set as the new background</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>(1) the current background <a href="index.html#color" target="_blank">color</a></p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>fgcolor</td>
+						<td>gets or sets the foreground color</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  void fgcolor(const color& clr);<br>(1)  color fgcolor() const;</code></pre>
+							<ol>
+								<li>sets the foreground color</li>
+								<li>gets the foreground color</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>clr</th></tr>
+								<tr>
+									<td><p>a <a href="index.html#color" target="_blank">color</a> to set as the new foreground</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>(1) the current foreground <a href="index.html#color" target="_blank">color</a></p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>tooltip</td>
+						<td>sets the tooltip for the widget</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>widget& tooltip(const std::string& text);</code></pre>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>text</th></tr>
+								<tr>
+									<td><p>UTF-8 encoded string to set as the tooltip (can contain <code>\n</code> newline characters).</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>A reference to <code>*this</code>.</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>typeface</td>
+						<td>sets or gets the font that the widget uses</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  void typeface(const nana::paint::font& font);<br>(1)  nana::paint::font typeface() const;</code></pre>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>font</th></tr>
+								<tr>
+									<td><p>A <a href="index.html#font" target="_blank">paint::font</a> object representing the desired font for the widget to use.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>A <a href="index.html#font" target="_blank">paint::font</a> object representing the font that the widget is using.</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>show / hide</td>
+						<td>set the widget visibility</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  void show();<br>(1)  void hide();</code></pre>
+							<ol>
+								<li>makes the widget visible</li>
+								<li>hides the widget</li>
+							</ol>
+						</td>
+					</tr>
+
+					<tr>
+						<td>visible</td>
+						<td>gets the widget visibility</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>bool visible() const;</code></pre>
+							<h4>Return value</h4>
+							<p><code>true</code> if the widget is visible, or <code>false</code> if the widget is hidden.</p>
+						</td>
+					</tr>
+
+					<tr> <th>Event handling</th> </tr>
+					<tr>
+						<td>events</td>
+						<td>returns a reference to the internal events object</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>general_events& events() const;</code></pre>
+							<h4>Return value</h4>
+							<p>A reference to the internal events object (see <a href="general_events.html" target="_blank">general_events</a>).</p>
+						</td>
+					</tr>
+					<tr>
+						<td>umake_event</td>
+						<td>unregisters an event handler</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void umake_event(event_handle eh) const;</code></pre>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>eh</th></tr>
+								<tr>
+									<td><p>The handle of the callback function to unregister. The handle can be obtained when the event handler function is registered (all handler-registering methods of the <code>basic_event</code> class return such a handle).</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+				</table>
+
+			</section>
+
+		</section>
+	</main>
+
+</body>
+</html>

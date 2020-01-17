@@ -1,0 +1,325 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>nana::widget_object</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" href="page.css" media="all">
+	<link href="fonts/Oswald/Oswald.css" rel="stylesheet">
+	<link href="fonts/Arimo/Arimo.css" rel="stylesheet">
+	<link href="fonts/OxygenMono/OxygenMono.css" rel="stylesheet">
+	<link rel="stylesheet" href="highlight/default.css">
+	<script src="highlight/highlight.pack.js"></script>
+	<script>hljs.configure({ useBR: true }); hljs.initHighlightingOnLoad();</script>
+	<script src="page.js"></script>
+</head>
+
+<body>
+
+	<main>
+
+		<section>
+			<h1>nana::widget_object</h1>
+			<p>
+				<code>nana::widget_object</code> is a class template that is the primary template for the base classes of all the widgets.
+			</p>
+			<pre><code>template&#60;typename Category,<br>&#9;        typename DrawerTrigger,<br>&#9;        typename Events = nana::general_events,<br>&#9;        typename Scheme = nana::widget_geometrics,<br>&#9;&#9;&#9;typename = typename std::enable_if&#60;std::is_base_of&#60;nana::drawer_trigger, DrawerTrigger&#62;::value&#62;::type&#62;<br>class widget_object : public detail::widget_base</code></pre>
+
+			<section expanded>
+				<h2>widget_object&lt;widget_tag, ...&gt;</h2>
+
+				<p>
+					All the classes that represent normal widgets (which have a window in the "widget" category &mdash; the vast majority of widgets) are derived from a specialization of the <code>widget_object</code> template that uses the argument <code>nana::category::widget_tag</code> for the <code>Category</code> parameter. For example, the class <code>nana::button</code> is declared as follows:
+				</p>
+				<pre><code>class button : public widget_object&#60;category::widget_tag, drawerbase::button::trigger&#62;</code></pre>
+				<p>
+					The widget classes derived from such a specialization inherit the following methods:
+				</p>
+				<table class="functions">
+					<tr>
+						<td>borderless</td>
+						<td>disables / enables a visual border for the widget</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  widget_object& borderless(bool enable);<br>(1)  bool borderless() const;</code></pre>
+							<p>
+								An interface to configure the visual border of widget, the effect of which depends on the idividual implementations of the widgets.
+							</p>
+							<ol>
+								<li>sets the borderless status (an internal flag, ignored by some widgets)</li>
+								<li>gets the borderless status</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>enable</th></tr>
+								<tr>
+									<td><p><code>true</code> to disable the widget border, or <code>false</code> to enable it</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div>
+								<ol>
+									<li>a reference to <code>*this</code></li>
+									<li>the current borderless status</li>
+								</ol>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>create</td>
+						<td>creates the UI element for the widget</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  bool create(window parent_wd, bool visible);<br>(1)  bool create(window parent_wd, const rectangle & r = {}, bool visible = true);</code></pre>
+							<p>
+								Most widget classes have a default constructor that constructs an "empty" object, allowing for a later creation of the UI element by calling this method.
+							</p>
+							<ol>
+								<li>creates a UI element with a zero-size window</li>
+								<li>creates a UI element with a window of a size and position defined by the <code>rectangle</code> parameter</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>parent_wd</th></tr>
+								<tr>
+									<td><p>the handle of the parent widget (the window of this widget is positioned inside the window of the parent, which is usually a <code>nana::form</code>)</p></td>
+								</tr>
+								<tr><th>visible</th></tr>
+								<tr>
+									<td><p>specifies whether the UI element should be visible (<code>true</code>) or hidden (<code>false</code>) when created</p></td>
+								</tr>
+								<tr><th>r</th></tr>
+								<tr>
+									<td><p>a <code>nana::rectangle</code> structure indicating the desired size and position of the UI element (the structure has the data members <code>x</code> and <code>y</code> of type <code>int</code>, and <code>width</code> and <code>height</code> of type <code>unsigned</code>)</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p><code>true</code> if the creation succeeded, or <code>false</code> otherwise</p>
+						</td>
+					</tr>
+					<tr>
+						<td>events</td>
+						<td>returns a reference to the events object</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>Events& events() const;</code></pre>
+							<p>
+								This method returns a reference to the internal events object, which allows callback functions to be registered as handlers for the events supported by the widget. Unlike <a href="index.html#widget_intro::events" target="_blank">widget::events</a>, this method doesn't necessarily return a <a href="index.html#general_events" target="_blank">general_events</a> reference (see below).
+							</p>
+							<h4>Return value</h4>
+							<div><p>The type of the events object depends on the template specialization that a widget is derived from, specifically on the argument passed to the <code>Events</code> parameter. That can be either <a href="index.html#general_events" target="_blank">nana::general_events</a>, or a derived type which defines additional specialized events, depending on the widget.</p></div>
+						</td>
+					</tr>
+					<tr>
+						<td>scheme</td>
+						<td>accesses the appearance scheme</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>Scheme& scheme() const;</code></pre>
+							<p>
+								This method returns a reference to the internal scheme object, which contains configurable properties (data members) pertaining to widget appearance.
+							</p>
+							<h4>Return value</h4>
+							<div><p>The type of the scheme object depends on the template specialization that a widget is derived from, specifically on the argument passed to the <code>Scheme</code> parameter. That can be either <code title="struct widget_geometrics&#10;{&#10;	virtual ~widget_geometrics() = default;&#10;	color_proxy activated{ static_cast<color_rgb>(0x60C8FD) };&#10;	color_proxy background{colors::button_face};&#10;	color_proxy foreground{colors::black};&#10;};">nana::widget_geometrics</code>, or a derived type which defines additional appearance properties, depending on the widget.</p></div>
+						</td>
+					</tr>
+				</table>
+
+			</section>
+
+			<section expanded>
+				<h2>widget_object&lt;root_tag, ...&gt;</h2>
+
+				<p>
+					All the classes defined as a root window (most notably <code>nana::form</code>) are derived from a <a href="https://en.cppreference.com/w/cpp/language/partial_specialization" target="_blank">partial specialization</a> of the <code>widget_object</code> template, that uses the argument <code>nana::category::root_tag</code> for the <code>Category</code> parameter.
+				</p>
+				<pre><code>template&#60;typename DrawerTrigger, typename Events, typename Scheme&#62;<br>class widget_object&#60;category::root_tag, DrawerTrigger, Events, Scheme&#62; : public detail::widget_base</code></pre>
+				<p>
+					The classes derived from this partial specialization inherit the following methods:
+				</p>
+				<table class="functions">
+					<tr>
+						<td>(constructors)</td>
+						<td>construct a <code>widget_object</code> instance</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  widget_object();<br>(1)  widget_object(window owner, bool nested, const rectangle& r = {}, const appearance& apr = {});</code></pre>
+							<ol>
+								<li>default constructor, creates a popup (top-level) window with default appearance (title, resizable border)</li>
+								<li>creates a child window or a popup window, depending on the <code>nested</code> flag</li>
+							</ol>
+							<p>
+								Root window widgets don't have a <code>create</code> method like other categories of widgets. When a root window widget is constructed, the UI window is created immediately, even when the default constructor is used.
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>owner</th></tr>
+								<tr>
+									<td><p>The handle of a root window that should own this window. An owner window always stays under the window it owns, in the z-order. Ownership is a relationship among top-level windows.</p></td>
+								</tr>
+								<tr><th>nested</th></tr>
+								<tr>
+									<td><p>A flag that specifies whether the widget should be a child window, instead of a top-level window. If this flag is <code>true</code>, the window identified by the <code>owner</code> handle acts as a parent instead of an owner. A child window (or "subwindow" on X11) is confined to the area of the parent window, being clipped to that area when moved.</p></td>
+								</tr>
+								<tr><th>r</th></tr>
+								<tr>
+									<td><p>The position and dimensions that the window should have when created, as		a <code>nana::rectangle</code> structure (which has the data members <code>x</code> and <code>y</code> of type <code>int</code>, and <code>width</code> and <code>height</code> of type <code>unsigned</code>).</p></td>
+								</tr>
+								<tr><th>apr</th></tr>
+								<tr>
+									<td><p>The appearance attributes that the window should have when created, as a <code title="struct appearance&#10;{&#10;	bool taskbar;&#10;	bool floating;&#10;	bool no_activate;&#10;&#10;	bool minimize;&#10;&#9;bool maximize;&#10;&#9;bool sizable;&#10;&#9;bool decoration;&#10;};">nana::appearance</code> structure.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>activate</td>
+						<td>activates the window</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void activate();</code></pre>
+							<p>This method calls <a href="index.html#api_form::activate_window" target="_blank">API::activate_window</a> with the window handle of the widget.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>bring_top</td>
+						<td>brings the window to the top of the global z-order</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void bring_top(bool activated);</code></pre>
+							<p>This method calls <a href="index.html#api_form::bring_top" target="_blank">API::bring_top</a> with the window handle of the widget and the value of the <code>activated</code> parameter.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>events</td>
+						<td>returns a reference to the events object</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>Events& events() const;</code></pre>
+							<p>
+								This method returns a reference to the internal events object, which allows callback functions to be registered as handlers for the events supported by the widget.
+							</p>
+							<h4>Return value</h4>
+							<div><p>The type of the events object depends on the template specialization that a class is derived from, specifically on the argument passed to the <code>Events</code> parameter. For the classes <code>nana::form</code> and <code>nana::nested_form</code>, the type is <code>nana::detail::events_root_extension</code>, which is a structure derived from <a href="index.html#general_events" target="_blank">nana::general_events</a>. This derived type only adds one additional specialized event, <code>basic_event&lt;arg_unload&gt; unload;</code> (triggered when the form closes).</p></div>
+						</td>
+					</tr>
+					<tr>
+						<td>icon</td>
+						<td>sets the window icon</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void icon(const nana::paint::image& ico);</code></pre>
+							<p>This method calls <a href="index.html#api_form::window_icon" target="_blank">API::window_icon</a> with the window handle of the widget and the value of the <code>ico</code> parameter.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>is_zoomed</td>
+						<td>determines whether the window is minimized or maximized</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>bool is_zoomed(bool check_maximized) const;</code></pre>
+							<p>This method calls <a href="index.html#api_form::is_window_zoomed" target="_blank">API::is_window_zoomed</a> with the window handle of the widget and the value of the <code>check_maximized</code> parameter.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>native_handle</td>
+						<td>gets the handle of the native window wrapped by the widget</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>native_window_type native_handle() const;</code></pre>
+							<p>This method calls <a href="index.html#api_form::root" target="_blank">API::root</a> with the window handle of the widget.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>outline_size</td>
+						<td>gets or sets the size of the frame of the native window wrapped by the widget</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  nana::size outline_size() const;<br>(1)  void outline_size(const nana::size& sz);</code></pre>
+							<ol><li>gets the frame size</li><li>sets the frame size</li></ol>
+							<p>This method calls <a href="index.html#api_form::window_outline_size" target="_blank">API::window_outline_size</a> with the window handle of the widget.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>owner</td>
+						<td>gets the handle of the root window that is the owner of this window</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>window owner() const;</code></pre>
+							<p>This method calls <a href="index.html#api_form::get_owner_window" target="_blank">API::get_owner_window</a> with the window handle of the widget.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>restore</td>
+						<td>restores the window to normal state (from minimized or maximized state)</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void restore();</code></pre>
+							<p>This method calls <a href="index.html#api_form::restore_window" target="_blank">API::restore_window</a> with the window handle of the widget.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>scheme</td>
+						<td>accesses the appearance scheme</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>Scheme& scheme() const;</code></pre>
+							<p>
+								This method returns a reference to the internal scheme object, which contains configurable properties (data members) pertaining to widget appearance.
+							</p>
+							<h4>Return value</h4>
+							<div><p>The type of the scheme object depends on the template specialization that a class is derived from, specifically on the argument passed to the <code>Scheme</code> parameter. For the classes <code>nana::form</code> and <code>nana::nested_form</code>, the type is <code title="struct widget_geometrics&#10;{&#10;	virtual ~widget_geometrics() = default;&#10;	color_proxy activated{ static_cast<color_rgb>(0x60C8FD) };&#10;	color_proxy background{colors::button_face};&#10;	color_proxy foreground{colors::black};&#10;};">nana::widget_geometrics</code>.</p></div>
+						</td>
+					</tr>
+					<tr>
+						<td>z_order</td>
+						<td>changes the z-order of the window relative to other windows belonging to the application</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>widget_object& z_order(window wd_after, z_order_action action_if_no_wd_after);</code></pre>
+							<p>This method calls <a href="index.html#api_form::set_window_z_order" target="_blank">API::set_window_z_order</a> with the window handle of the widget and the received arguments.</p>
+							<h4>Return value</h4>
+							<p>a reference to <code>*this</code></p>
+						</td>
+					</tr>
+					<tr>
+						<td>zoom</td>
+						<td>minimizes or maximizes the window</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void zoom(bool ask_for_max);</code></pre>
+							<p>This method calls <a href="index.html#api_form::zoom_window" target="_blank">API::zoom_window</a> with the window handle of the widget, and the value of the <code>ask_for_max</code> parameter.</p>
+						</td>
+					</tr>
+				</table>
+
+			</section>
+
+			<section expanded>
+				<h2>widget_object&lt;lite_widget_tag, ...&gt;</h2>
+				<p>The widgets with windows in the "lite widget" category are derived from a partial specialization of the <code>widget_object</code> template that uses the argument <code>nana::category::lite_widget_tag</code> for the <code>Category</code> parameter. In practice, there is only one widget that uses this category (<code>nana::panel</code>). This partial specialization only defines three methods (<code>create</code>, <code>events</code>, and <code>scheme</code>), which are identical to their versions from the <code>widget_object&lt;widget_tag, ...&gt;</code> specialization.</p>
+				<p></p>
+			</section>
+
+		</section>
+	</main>
+
+</body>
+</html>

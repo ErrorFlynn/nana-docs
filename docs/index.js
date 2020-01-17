@@ -23,7 +23,7 @@ onload = function()
 		link.onauxclick = onTOCLink;
 	}
 
-	var startDoc = 'widget_listbox.html';
+	var startDoc = 'widget_intro.html';
 	fnTarget = new String();
 	var loc = location.href;
 	var pos = loc.indexOf('#');
@@ -185,11 +185,12 @@ function makeSideBar()
 {
 	makeSideBar.hovered = false;
 	var fdoc = frames[0].document;
-	var rows = fdoc.querySelectorAll('tr.clickable-row');
-	if(rows.length)
+	var main = fdoc.getElementsByTagName('main')[0];
+	main.style.paddingRight = '256px';
+	var sections = fdoc.querySelectorAll('main>section>section');
+	var allRows = fdoc.querySelectorAll('tr.clickable-row');
+	if(allRows.length)
 	{
-		let main = fdoc.getElementsByTagName('main')[0];
-		main.style.paddingRight = '256px';
 		let nav = fdoc.createElement('nav');
 		fdoc.body.appendChild(nav);
 
@@ -197,38 +198,64 @@ function makeSideBar()
 		nav.appendChild(ul);
 		ul.id = 'nav-list';
 
-		let items = new Array();
-		for(let n=0; n<rows.length; n++)
+		for(let section of sections)
 		{
-			let text = rows[n].querySelector('span').textContent;
-			items.push(text);
-			items[text] = n;
-		}
-		items.sort();
-		for(let item of items)
-		{
-			let li = fdoc.createElement('li');
-			ul.appendChild(li);
-			let text = fdoc.createTextNode(item);
-			li.appendChild(text);
-			li.addEventListener('click', function()
+			let rows = section.querySelectorAll('tr.clickable-row');
+			if(sections.length > 1 && rows.length)
 			{
-				let section = fdoc.querySelector('section[expanded]');
-				if(section) expandSection(section);
-
-				let row = rows[items[this.textContent]];
-				for(let r of rows)
+				let head = fdoc.createElement('li');
+				head.classList.toggle('head');
+				let text = section.firstElementChild.textContent;
+				text = text.replace(/\[-\]/g, '').replace(/\[\+\]/g, '');
+				head.appendChild(fdoc.createTextNode(text));
+				ul.appendChild(head);
+			}
+			let items = new Array();
+			for(let n = 0; n < rows.length; n++)
+			{
+				let text = rows[n].querySelector('span').textContent;
+				items.push(text);
+				items[text] = n;
+			}
+			items.sort();
+			for(let item of items)
+			{
+				let li = fdoc.createElement('li');
+				ul.appendChild(li);
+				let text = fdoc.createTextNode(item);
+				li.appendChild(text);
+				li.addEventListener('click', function()
 				{
-					let sib = r.nextElementSibling;
-					if(!sib.hasAttribute('hidden'))
-						sib.setAttribute('hidden', '');
-				}
-				let hiddenRow = row.nextElementSibling;
-				if(hiddenRow.hasAttribute('hidden'))
-					hiddenRow.removeAttribute('hidden');
-				hiddenRow.scrollIntoView({/*behavior: 'smooth', */block: 'center'});
-			});
+					let row = rows[items[this.textContent]];
+					let section = row.parentElement.parentElement.parentElement;
+					if(section) expandSection(section);
+					for(let r of allRows)
+					{
+						let sib = r.nextElementSibling;
+						if(!sib.hasAttribute('hidden'))
+							sib.setAttribute('hidden', '');
+					}
+					let hiddenRow = row.nextElementSibling;
+					if(hiddenRow.hasAttribute('hidden'))
+						hiddenRow.removeAttribute('hidden');
+					hiddenRow.scrollIntoView({/*behavior: 'smooth', */block: 'center' });
+				});
+			}
+			if(sections.length > 1 && sections[sections.length-1] != section)
+			{
+				let separator = fdoc.createElement('li');
+				separator.classList.toggle('separator');
+				//separator.appendChild(fdoc.createTextNode(''));
+				ul.appendChild(separator);
+			}
 		}
+	}
+	var headers = fdoc.querySelectorAll('ul#nav-list .head');
+	if(headers.length == 1)
+	{
+		headers[0].style.display = 'none';
+		let separators = fdoc.querySelectorAll('ul#nav-list .separator');
+		separators[0].style.display = 'none';
 	}
 }
 
