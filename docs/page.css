@@ -545,6 +545,9 @@ hr:last-child:after {
     list-style : none;
     padding-left : 32px;
 	padding-top : 7px;
+}
+
+.clt span {
 	color : #888;
 }
 
