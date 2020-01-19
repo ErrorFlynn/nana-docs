@@ -36,7 +36,10 @@
 						<td>
 							<pre><code>void close();</code></pre>
 							<p>
-								Closes the window, destroying the widget.
+								This method closes the window of the widget, making the widget object unusable as a UI element until <a href="index.html#widget_object::create" target="_blank">widget_object::create</a> is called. For widgets that are not in the <em>root window</em> category (the vast majority), the internal state of the UI element and the resources allocated for it are preserved (with the exception of any registered event handlers, which are lost).
+							</p>
+							<p>
+								For example, closing the window of a <code>listbox</code> widget will preserve all existing listbox items, selection state, and so on. If <a href="index.html#widget_object::create" target="_blank">widget_object::create</a> is subsequently called, the <code>listbox</code> UI element will be re-created as it was when its window was closed.
 							</p>
 						</td>
 					</tr>
