@@ -85,9 +85,10 @@ code[title] {
 	border-bottom : 1px dashed;
 }
 
-td[title] {
+td[title], em[title] {
 	text-decoration-line : underline;
 	text-decoration-style : dashed;
+	color : #555;
 }
 
 table.normal code {
@@ -268,9 +269,19 @@ table.functions > tbody > tr > td {
 	padding : 8px 25px 9px 25px;
 }
 
-table.functions:not(:nth-child(2)) > tbody > tr:first-child td {
+/*table.functions:not(:nth-child(2)) > tbody > tr:first-child td {
 	border-top : 1px solid #e3e3e3;
 	padding-top : 8px;
+}*/
+
+table.functions > tbody > tr:first-child td {
+	border-top : 1px solid #e3e3e3;
+	padding-top : 8px;
+}
+
+h2+table.functions > tbody > tr:first-child td {
+	border-top : none;
+	padding-top : 0;
 }
 
 table.functions h3 {
