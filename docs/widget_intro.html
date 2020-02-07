@@ -64,7 +64,7 @@
 					An event is represented by the class template <code>basic_event</code>, which has a single type parameter representing the type of argument an event handler receives when the event is triggered. For example, the general event <code>basic_event&lt;arg_mouse&gt; mouse_enter;</code> has the argument type <code>arg_mouse</code>, which is a structure with data members that describe the properties of a mouse event (such as cursor position, buttons pressed, etc). A handler for the event <code>mouse_enter</code> is a <a href="https://en.wikipedia.org/wiki/Callback_%28computer_programming%29" target="_blank">callback</a> function (or functor) with the prototype <code>void(const nana::arg_mouse&)</code>, or <code>void(void)</code> (the argument is always optional).
 				</p>
 				<p>
-					The library defines a number of general events that all widgets possess, encapsulated in the structure <a href="general_events.html" target="_blank">nana::general_events</a>. Each widget object contains a <code>general_events</code> object, or an object of a type derived from <code>general_events</code> (to provide additional specialized events). A reference to this events object must be obtained by calling <a href="index.html#widget_intro::events" target="_blank">widget::events</a>, in order to register event handlers (see below).
+					The library defines a number of general events that all widgets possess, encapsulated in the structure <a href="index.html#general_events" target="_blank">general_events</a>. Each widget object contains a <code>general_events</code> object, or an object of a type derived from <code>general_events</code> (to provide additional specialized events). A reference to this events object must be obtained by calling <a href="index.html#widget_intro::events" target="_blank">widget::events</a>, in order to register event handlers (see below).
 				</p>
 				<hr />
 				<p>
@@ -76,7 +76,7 @@
 				</p>
 				<pre><code>btn.events().click(my_handler);</code></pre>
 				<p>
-					In short, <code>btn.events()</code> returns a reference to a <a href="general_events.html" target="_blank">general_events</a> object, whose data member <code>basic_event&lt;arg_click&gt; click;</code> is accessed, on which <code>operator()(Function&& fn)</code> is called with the event handler as an argument. The <code>basic_event</code> class is a functor, allowing an instance of it to be called like a function, in order to register an event handler.
+					In short, <code>btn.events()</code> returns a reference to a <a href="index.html#general_events" target="_blank">general_events</a> object, whose data member <code>basic_event&lt;arg_click&gt; click;</code> is accessed, on which <code>operator()(Function&& fn)</code> is called with the event handler as an argument. The <code>basic_event</code> class is a functor, allowing an instance of it to be called like a function, in order to register an event handler.
 				</p>
 				<hr />
 				<p>
