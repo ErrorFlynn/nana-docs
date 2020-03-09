@@ -18,6 +18,32 @@ onload = function()
 		header.setAttribute("colspan", "1");
 		header.style["text-align"] = "center";
 	});
+
+	var cfimgs = document.querySelectorAll('div.crossfade img:last-child');
+	if(cfimgs.length)
+	{
+		setInterval(function()
+		{
+			cfimgOpacityOff();
+			setTimeout(cfimgOpacityOn, 2000);
+		}, 10000);
+
+		function cfimgOpacityOff()
+		{
+			cfimgs.forEach(cfimg =>
+			{
+				cfimg.style["opacity"] = "0";
+			});
+		}
+
+		function cfimgOpacityOn()
+		{
+			cfimgs.forEach(cfimg =>
+			{
+				cfimg.style["opacity"] = "1";
+			});
+		}
+	}
 };
 
 function makeCollapsableRows()

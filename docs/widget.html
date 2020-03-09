@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -135,7 +135,7 @@
 								The <code>nana::widget</code> class also defines a <a href="https://en.cppreference.com/w/cpp/language/cast_operator" target="_blank">cast operator</a> that enables the <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicit conversion</a> of widget objects to the <code>nana::window</code> type (the operator calls this method to obtain the window handle). That means that the widget object itself can be passed to functions that expect a window handle.
 							</p>
 							<h4>Return value</h4>
-							<p>This method returns the window handle if the widget object corresponds to an existing UI element, or <code>nullptr</code> otherwise (if the widget's window has been closed, or if the UI element has not yet been created). Most widgets have a default constructor that constructs an "empty" object, allowing for a later creation of the UI element by calling <code>widget_object::create</code>.</p>
+							<div><p>This method returns the window handle if the widget object corresponds to an existing UI element, or <code>nullptr</code> otherwise (if the widget's window has been closed, or if the UI element has not yet been created). Most widgets have a default constructor that constructs an "empty" object, allowing for a later creation of the UI element by calling <code>widget_object::create</code>.</p></div>
 						</td>
 					</tr>
 

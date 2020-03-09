@@ -263,6 +263,21 @@
 						</td>
 					</tr>
 
+					<tr><td>use_entire_line (Nana 1.7.3)</td><td>enables or disables a mode that expands the width of an item to match that of the widget</td></tr>
+					<tr>
+						<td>
+							<pre><code>void use_entire_line(bool enable);</code></pre>
+							<p>By default, the width of an item is equivalent to the total width of its components (icon, text, etc). That means that the item can't be selected by clicking in the empty space to the right of the item text, for example. This method can enable a mode that expands the width of an item to encompass the entire width the widget, effectively causing items to behave like listbox items.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>enable</th></tr>
+								<tr>
+									<td><p><code>true</code> to enable the line mode, or <code>false</code> to disable it</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
 					<tr> <th>Node access</th> </tr>
 					<tr>
 						<td>find</td>

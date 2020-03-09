@@ -1,0 +1,503 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>nana::place</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" href="page.css" media="all">
+	<link href="fonts/Oswald/Oswald.css" rel="stylesheet">
+	<link href="fonts/Arimo/Arimo.css" rel="stylesheet">
+	<link href="fonts/OxygenMono/OxygenMono.css" rel="stylesheet">
+	<link rel="stylesheet" href="highlight/default.css">
+	<script src="highlight/highlight.pack.js"></script>
+	<script>hljs.configure({ useBR: true }); hljs.initHighlightingOnLoad();</script>
+	<script src="page.js"></script>
+</head>
+
+<body>
+
+	<main>
+
+		<section>
+			<h1>Class nana::place</h1>
+			<p>
+				The class <code>nana::place</code> is used to automatically manage the layout of child widgets inside their parent window, according to a user-defined set of rules. To achieve that, a <code>place</code> object must be associated with a widget that is the parent of other widgets (such as a <code>nana::form</code> or a <code>nana::panel</code>), and a set of layout rules must defined as a string, using a notation similar to a markup language. That allows the <code>place</code> object to automatically position and size the child widgets within the parent window, whenever the parent window is resized.
+			</p>
+			<p>
+				The string that defines the layout rules is refered to as the "div text", and is set by calling <code>place::div</code>. Essentially, the div text divides the associated window into multiple distinct areas refered to as "fields", and defines how these fields relate to each other in terms of size and position. For a detailed description of the div text format and related concepts, see this <a href="https://github.com/cnjinhao/nana/wiki/Div-Text" target="_blank">wiki article</a>.
+			</p>
+			<p>
+				After the div text is set, widgets can be assigned to specific fields, which causes the <code>place</code> object to automatically position and size each widget to occupy the space of the associated field. Not every field must have a widget assigned to it; "empty" fields are often used as spacers. For details, be sure to read the "Usage details and examples" section at the bottom of this page.
+			</p>
+
+			<section>
+				<h2>place::field_interface</h2>
+				<p>
+					The abstract class <code>place::field_interface</code> represents a field, and defines an interface for assigning widgets to fields, comprised of two methods (<code>fasten</code> and <code>operator&lt;&lt;</code>).
+				</p>
+				<p>
+					After a widget has been assigned to a field, that widget's window is automatically sized and positioned to occupy the space of the field. Much of the time, there's no reason to assign more than one widget to a given field, but it's possible to do so if necessary (sometimes it may be useful to do so). What happens in such a case depends on which method is used to assign the widgets.
+				</p>
+				<p>
+					If <code>operator&lt;&lt;</code> is used to assign multiple widgets to the same field, the widgets all share the space of the field, being grouped adjacent to each other in a pattern that can be controlled by a few relevant field attributes (<a href="https://github.com/cnjinhao/nana/wiki/Div-Text#arrange" target="_blank">arrange</a>, <a href="https://github.com/cnjinhao/nana/wiki/Div-Text#grid" target="_blank">grid</a>, and <a href="https://github.com/cnjinhao/nana/wiki/Div-Text#gap" target="_blank">gap</a>). In this case, the <code>place</code> object makes the widgets visible whenever <a href="index.html#place::collocate" target="_blank">place::collocate</a> is called, counteracting any prior call to <a href="index.html#widget::show" target="_blank">widget::hide</a>.
+				</p>
+				<p>
+					If <code>fasten</code> is used to assign multiple widgets to the same field, the widgets overlap each other, each widget occupying the entire field. Only the widget at the top of the z-order is visible, occluding all the others (the z-order is the same as the order in which the widgets are created). The widgets being overlapped is useful, because any one of them can be made visible at any time, by simply hiding all the others with <a href="index.html#widget::show" target="_blank">widget::hide</a>. This technique can be used with several <code>nana::panel</code> widgets to create a <a href="https://en.wikipedia.org/wiki/Wizard_%28software%29" target="_blank">wizard</a>-like interface.
+				</p>
+				<br />
+				<table class="functions">
+					<tr>
+						<td>fasten</td>
+						<td>assigns a widget to a field</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>virtual field_interface& fasten(window wd) = 0;</code></pre>
+							<p>
+								This method is one of the two ways to assign a widget to a field, as discussed above.
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>wd</th></tr>
+								<tr>
+									<td><p>The window handle of the widget to assign to the field. The widget's parent must be the same widget that the <code>place</code> object is bound to, otherwise an exception is thrown.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div><p>A reference to <code>*this</code>.</p></div>
+							<h4>Exceptions</h4>
+							<div><p>An exception of type <code>place::error</code> is thrown on failure.</p></div>
+							<h4>Example</h4>
+							<div>
+								<p>The following example shows how <code>fasten</code> can be used to assign multiple widgets to the same field, placing two overlapping buttons in the window of a <code>nana::form</code> widget (clicking a button visually swaps it with the other one).</p>
+								<pre><code>#include &#60;nana/gui.hpp&#62;<br>#include &#60;nana/gui/widgets/button.hpp&#62;<br><br>int main()<br>{<br>&#9;nana::form fm;<br>&#9;nana::place plc {fm}; // the nana::place object `plc` is associated with the nana::form widget `fm`<br><br>&#9;plc.div("margin=15 &#60;my_field_name&#62;"); // define a named field that will receive the buttons<br><br>&#9;// buttons are created with zero size<br>&#9;nana::button btn1 {fm, "Show the blue button"}, btn2 {fm, "Show the red button"};<br>&#9;btn1.bgcolor(nana::colors::light_salmon); // red background<br>&#9;btn2.bgcolor(nana::colors::light_blue); // blue background<br>&#9;btn1.typeface({"", 16}); btn2.typeface({"", 16}); // larger font<br><br>&#9;plc["my_field_name"].fasten(btn1).fasten(btn2); // assign both buttons to the field "my_field_name"<br><br>&#9;// when a button is clicked, hide it and show the other one<br>&#9;auto click_handler = [&amp;](const nana::arg_click &amp;arg)<br>&#9;{<br>&#9;&#9;auto &amp;this_button {*nana::API::get_widget(arg.window_handle)};<br>&#9;&#9;auto &amp;other_button {btn1.handle() == this_button ? btn2 : btn1};<br>&#9;&#9;other_button.show();<br>&#9;&#9;this_button.hide();<br>&#9;};<br><br>&#9;btn1.events().click(click_handler);<br>&#9;btn2.events().click(click_handler);<br><br>&#9;// enact the layout rules before starting the form's event processing loop,<br>&#9;// otherwise the buttons have zero size until the form is resized<br>&#9;plc.collocate();<br><br>&#9;fm.show();<br>&#9;nana::exec();<br>}</code></pre>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>operator&lt;&lt;</td>
+						<td>assigns a widget to a field</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>virtual field_interface& operator&#60;&#60;(window wd) = 0;</code></pre>
+							<p>This method (bitshift operator) is one of the two ways to assign a widget to a field, as discussed above.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>wd</th></tr>
+								<tr>
+									<td><p>The window handle of the widget to assign to the field. The widget's parent must be the same widget that the <code>place</code> object is bound to, otherwise an exception is thrown.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div><p>A reference to <code>*this</code>.</p></div>
+							<h4>Exceptions</h4>
+							<div><p>An exception of type <code>place::error</code> is thrown on failure.</p></div>
+							<h4>Example</h4>
+							<div>
+								<p>The following example shows how <code>operator&#60;&#60;</code> can be used to assign multiple widgets to the same field, placing two buttons side by side in the window of a <code>nana::form</code> widget.</p>
+								<pre><code>#include &#60;nana/gui.hpp&#62;<br>#include &#60;nana/gui/widgets/button.hpp&#62;<br><br>int main()<br>{<br>&#9;nana::form fm;<br>&#9;nana::place plc {fm}; // the nana::place object `plc` is associated with the nana::form widget `fm`<br><br>&#9;plc.div("margin=15 &#60;my_field_name gap=15&#62;"); // define a named field that will receive the buttons<br><br>&#9;nana::button btn1 {fm, "Left button"}, btn2 {fm, "Right button"}; // buttons are created with zero size<br>&#9;plc["my_field_name"] &#60;&#60; btn1 &#60;&#60; btn2; // assign both buttons to the field "my_field_name"<br><br>&#9;// enact the layout rules before starting the form's event processing loop,<br>&#9;// otherwise the buttons have zero size until the form is resized<br>&#9;plc.collocate();<br><br>&#9;fm.show();<br>&#9;nana::exec();<br>}</code></pre>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</section>
+
+			<section>
+				<h2>place::error</h2>
+				<p>
+					The class <code>place::error</code> (derived from <code>std::invalid_argument</code>) is the type of most exceptions thrown by the methods of classes <code>nana::place</code> and <code>place::field_interface</code>.
+				</p>
+				<table>
+					<tr> <th>Data member</th> <th>Type</th> <th>Description</th> </tr>
+					<tr> <td>base_what</td> <td><code>std::string</code></td> <td>the error string</td> </tr>
+					<tr> <td>owner_caption</td> <td><code>std::string</code></td> <td>the caption of the widget that the <code>place</code> object is bound to</td> </tr>
+					<tr> <td>div_text</td> <td><code>std::string</code></td> <td>the div text</td> </tr>
+					<tr> <td>field</td> <td><code>std::string</code></td> <td>the name of the field where the error occured (if applicable)</td> </tr>
+					<tr> <td>pos</td> <td><code>std::string::size_type</code></td> <td>position in the div text where the error ocurred (<code>npos</code> when not applicable)</td> </tr>
+				</table>
+			</section>
+
+			<section expanded>
+				<h2>Member functions</h2>
+
+				<table class="functions">
+					<tr>
+						<td>(constructors)</td>
+						<td>construct a <code>nana::place</code> instance</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  place();<br>(1)  place(window w);</code></pre>
+							<ol>
+								<li>default constructor, constructs an unattached <code>place</code> object (not associated with any window)</li>
+								<li>constructs a <code>place</code> object and associates it with the specified window</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>w</th></tr>
+								<tr>
+									<td><p>The window handle of the widget whose child widgets the <code>place</code> object should manage the layout of.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>bind</td>
+						<td>associates this object with a given parent widget</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void bind(window handle);</code></pre>
+							<p>
+								This method designates the specified widget as the widget whose children this object manages the layout of.
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>handle</th></tr>
+								<tr>
+									<td><p>The handle of the widget whose children this object should manage the layout of.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>collocate</td>
+						<td>immediately applies the layout rules</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void collocate();</code></pre>
+							<p>
+								As mentioned in the introduction to the class, the layout rules are automatically enacted whenever the window of the associated parent widget is resized. However, there is also a need for the layout rules to be enacted on demand, just after changes are made to the layout (to avoid the child widgets' positions and dimensions being out of date until the parent window is resized). This method fulfils that need, immediately repositioning and resizing the child widgets to reflect the current layout.
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<td>window_handle</td>
+						<td>returns the window handle of the associated widget</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>window window_handle() const;</code></pre>
+							<h4>Return value</h4>
+							<p>The window handle of the widget whose children this object currently manages the layout of.</p>
+						</td>
+					</tr>
+
+					<tr> <th>Field access</th> </tr>
+					<tr>
+						<td>field / operator[]</td>
+						<td>access a specified field</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  field_interface& field(const char* name);<br>(1)  field_interface& operator[](const char* name);</code></pre>
+							<p>
+								Both <code>field</code> and <code>operator[]</code> provide access to named fields, returning a reference to <code>place::field_interface</code>, which allows widgets to be assigned to the specified field.
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>name</th></tr>
+								<tr>
+									<td><p>The name of the field to access; must start either with an ASCII letter, or the underscore character (<code>_</code>). If the name doesn't identify an existing field, a new invisible field is created, that doesn't occupy space in the layout. Widgets can be assigned to this field, but they will not be visible until the field becomes visible, which happens when its definition is no longer absent from the div text.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>A reference to the internal object that represents the requested field, which is of a type derived from the abstract class <code>place::field_interface</code> (documented above).</p>
+							<h4>Exceptions</h4>
+							<p>An exception of type <code>place::error</code> is thrown on failure.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>field_display</td>
+						<td>sets or gets the display state of a field</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  void field_display(const char* field_name, bool display);<br>(1)  bool field_display(const char* field_name) const;</code></pre>
+							<ol>
+								<li>sets the display state</li>
+								<li>gets the display state</li>
+							</ol>
+							<p>This method allows a field to be temporarily removed from the layout (meaning the field no longer occupies space in the layout, and any widgets belonging to it are no longer visible). After changing the display state of a field, <a href="index.html#place::collocate" target="_blank">place::collocate</a> should be called, otherwise the change to the layout will not be applied until the associated window is resized.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>name</th></tr>
+								<tr>
+									<td><p>The name of the field.</p></td>
+								</tr>
+								<tr><th>display</th></tr>
+								<tr>
+									<td><p>Indicates whether to display the field or not. If <code>false</code>, the field is removed from the layout (no longer occupies space in it), and any widgets assigned to it are no longer visible.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>(1) <code>true</code> if the field is currently being displayed, or <code>false</code> otherwise</p>
+							<h4>Exceptions</h4>
+							<p>An exception of type <code>place::error</code> is thrown on failure.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>field_visible</td>
+						<td>sets or gets the visibility of the widgets in a field</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  void field_visible(const char* field_name, bool visible);<br>(1)  bool field_visible(const char* field_name) const;</code></pre>
+							<ol>
+								<li>sets the visibility</li>
+								<li>gets the visibility</li>
+							</ol>
+							<p>This method allows a field to temporarily stop showing the widget(s) assigned to it. The field continues to occupy space in the layout (the layout is not affected, the field simply behaves as if it's empty).</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>name</th></tr>
+								<tr>
+									<td><p>The name of the field.</p></td>
+								</tr>
+								<tr><th>visible</th></tr>
+								<tr>
+									<td><p>Indicates whether to show (<code>true</code>) or hide (<code>false</code>) the widgets in the field.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>(1) <code>true</code> if the widgets in the field are visible, or <code>false</code> otherwise</p>
+							<h4>Exceptions</h4>
+							<p>An exception of type <code>place::error</code> is thrown on failure.</p>
+						</td>
+					</tr>
+
+					<tr> <th>Dockable field</th> </tr>
+					<tr>
+						<td>dock</td>
+						<td>registers a <a href="https://en.wikipedia.org/wiki/Factory_%28object-oriented_programming%29" target="_blank">factory</a> that produces widget objects for a dockable field</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  template&#60;typename Panel, typename ...Args&#62;<br>place& dock(const std::string& dockname, const std::string& factory_name, Args&& ... args);<br><br>(1)  place& dock(const std::string& dockname, std::string factory_name, std::function&#60;std::unique_ptr&#60;widget&#62;(window)&#62; factory);</code></pre>
+							<ol>
+								<li>registers an internal factory that uses the specified arguments</li>
+								<li>registers a user-provided factory</li>
+							</ol>
+							<p>This method registers a factory that produces widget objects for the specified dockable field (the factory is stored and associated with the provided name). For info about dockable fields, see the <a href="https://github.com/cnjinhao/nana/wiki/Div-Text#dock" target="_blank">relevant section</a> of the wiki article about the div text. For an example of how to use either overload of this method, see the dockable field example in the "Usage details" section at the bottom of this page.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>dockname</th></tr>
+								<tr>
+									<td><p>The name of the dockable field, as it appears in the div text.</p></td>
+								</tr>
+								<tr><th>factory_name</th></tr>
+								<tr>
+									<td><p>A name to identify the factory. If the name isn't an empty string, the <code>place</code> object retains the factory, allowing it to be called via <code>place::dock_create</code> using the provided name. Otherwise, the factory is called immediately and then dropped.</td>
+								</tr>
+								<tr><th>Panel</th></tr>
+								<tr>
+									<td><p>The type of widget the factory should produce (for example <code>nana::button</code>).</td>
+								</tr>
+								<tr><th>Args</th></tr>
+								<tr>
+									<td><p>The argumens that should be passed to the factory (which in turn forwards them to the widget constructor).</td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>A reference to <code>*this</code>.</p>
+							<h4>Exceptions</h4>
+							<p>An exception of type <code>place::error</code> is thrown on failure (if the field name is invalid, or if the factory name identifies an existing factory).</p>
+						</td>
+					</tr>
+					<tr>
+						<td>dock_create</td>
+						<td>invokes a registered widget factory, creating the parent dockable window as needed</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>widget* dock_create(const std::string& factory);</code></pre>
+							<p>This method calls a factory previously registered via <code>place::dock</code>, returning a pointer to the widget object produced by the factory. A dockable window acting as the parent of the produced widget is also created, if one doesn't already exist. For an example of how this method is used, see the dockable field example in the "Usage details" section at the bottom of this page.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>factory</th></tr>
+								<tr>
+									<td><p>The name under which the factory was registered via <code>place::dock</code>.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>A pointer to the widget produced by the factory.</p>
+							<h4>Exceptions</h4>
+							<p>An exception of type <code>std::invalid_argument</code> is thrown if the name provided doesn't identify a factory registered via <code>place::dock</code>.</p>
+						</td>
+					</tr>
+
+					<tr> <th>Modifiers</th> </tr>
+					<tr>
+						<td>div</td>
+						<td>sets or gets the text that defines the layout rules</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  void div(std::string div_text);<br>(1)  const std::string& div() const noexcept;</code></pre>
+							<ol>
+								<li>sets the div text</li>
+								<li>gets the div text</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>div_text</th></tr>
+								<tr>
+									<td><p>A string that defines the layout rules, which must be formatted according to the specifications described in this <a href="https://github.com/cnjinhao/nana/wiki/Div-Text" target="_blank">wiki article</a>.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>(1) the current div text</p>
+							<h4>Exceptions</h4>
+							<p>(0) an exception of type <code>place::error</code> is thrown on failure</p>
+						</td>
+					</tr>
+					<tr>
+						<td>erase</td>
+						<td>removes a widget from the field it is assigned to</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void erase(window handle);</code></pre>
+							<p>This method removes a widget from the field it is assigned to. The field continues to occupy space in the layout, and the widget is still visible, but the <code>place</code> object no longer changes its size and position.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>handle</th></tr>
+								<tr>
+									<td><p>The handle of the widget to erase. It's not necessary to explicitly pass a handle to this parameter, the widget object iself can be used instead (see <a href="index.html#widget::handle" target="_blank">widget::handle</a>).</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>modify</td>
+						<td>modifies the definition of a field inside the div text</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void modify(const char* field_name, const char* div_text);</code></pre>
+							<p>This method changes the definition of a specified field (the section of the div text that defines the field is changed). As with all actions that change to the layout, <a href="index.html#place::collocate" target="_blank">place::collocate</a> should be called after modifying a field, otherwise any change to widgets' sizes and positions will not be effectuated until their parent window is resized.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>field_name</th></tr>
+								<tr>
+									<td><p>The name of the field whose definition is being changed.</p></td>
+								</tr>
+								<tr><th>div_text</th></tr>
+								<tr>
+									<td><p>The new definition of the field (must exclude the field name).</p></td>
+								</tr>
+							</table>
+							<h4>Exceptions</h4>
+							<p>An exception of type <code>place::error</code> is thrown on failure.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>splitter_renderer</td>
+						<td>sets a custom renderer for the <a href="https://github.com/cnjinhao/nana/wiki/Div-Text#splitter-bar" target="_blank">splitter bar</a></td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void splitter_renderer(std::function&#60;void(window, paint::graphics&amp;, mouse_action)&#62; fn);</code></pre>
+							<p>This method sets a function object that renders the splitter bar (the bar does not have any default renderer, so it is invisible if	the user does not set a renderer).</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>fn</th></tr>
+								<tr>
+									<td><p>The function object that renders the splitter bar (once set, this function object is called whenever the splitter bar needs to be rendered). The function object's parameter of type <code>mouse_action</code> indicates the interaction between the mouse cursor and the splitter bar (if any). The <code>mouse_action</code> type is an enumeration defined as follows:</p><pre><code>enum class mouse_action<br>{<br>&#9;begin, normal = begin, normal_captured, hovered, pressed, end<br>};</code></pre></td>
+								</tr>
+							</table>
+							<h4>Example</h4>
+							<div>
+								<p>The following example sets a function object that renders a grey splitter bar two pixels wide:</p>
+								<pre><code>#include &#60;nana/gui.hpp&#62;<br>#include &#60;nana/gui/widgets/button.hpp&#62;<br><br>int main()<br>{<br>&#9;nana::form fm;<br>&#9;nana::place plc {fm};<br><br>&#9;plc.div("margin=15 &#60;btn1 margin=[0,8,0]&#62; | &#60;btn2 margin=[0,0,0,8]&#62;");<br><br>&#9;nana::button btn1 {fm, "Left button"};<br>&#9;plc["btn1"] &#60;&#60; btn1;<br><br>&#9;nana::button btn2 {fm, "Right button"};<br>&#9;plc["btn2"] &#60;&#60; btn2;<br><br>&#9;plc.splitter_renderer([](nana::window, nana::paint::graphics &amp;g, nana::mouse_action ma)<br>&#9;{<br>&#9;&#9;nana::point from {static_cast&#60;int&#62;(g.width()/2-1), 0},<br>&#9;&#9;              to {from.x, static_cast&#60;int&#62;(g.height())};<br>&#9;&#9;nana::color color;<br>&#9;&#9;switch(ma)<br>&#9;&#9;{<br>&#9;&#9;case nana::mouse_action::hovered:<br>&#9;&#9;&#9;color = nana::colors::dim_grey;<br>&#9;&#9;&#9;break;<br>&#9;&#9;case nana::mouse_action::pressed:<br>&#9;&#9;case nana::mouse_action::normal_captured:<br>&#9;&#9;&#9;color = nana::colors::dark_grey;<br>&#9;&#9;&#9;break;<br>&#9;&#9;default:<br>&#9;&#9;&#9;color = nana::colors::grey;<br>&#9;&#9;}<br>&#9;&#9;g.line(from, to, color);<br>&#9;&#9;from.x += 1;<br>&#9;&#9;to.x += 1;<br>&#9;&#9;g.line(from, to, color);<br>&#9;});<br><br>&#9;plc.collocate();<br>&#9;fm.show();<br>&#9;nana::exec();<br>}</code></pre>
+							</div>
+						</td>
+					</tr>
+				</table>
+
+			</section>
+
+		</section>
+
+
+		<section>
+			<h1>Usage details and examples</h1>
+			<p>Before reading this section, it's recommended to read <a href="http://nanapro.org/en-us/blog/2016/05/an-introduction-to-nana-c-library/" target="_blank">this article</a>, which has a very good introduction to using <code>nana::place</code> for layout management. Also, another helpful article to consider is <a href="https://github.com/qPCR4vir/nana-docs/wiki/Using-place-for-layouts" target="_blank">Using place for layouts</a>. And finally, <a href="https://github.com/cnjinhao/nana/wiki/Div-Text" target="_blank">Jinhao's wiki article</a> about the div text format should be regarded as the main documentation resource for the div text.</p>
+
+			<section>
+				<h2>Dockable field example</h2>
+				<p>The following example defines two <a href="https://github.com/cnjinhao/nana/wiki/Div-Text#dock" target="_blank">dockable fields</a> in the window of a <code>nana::form</code> widget, and attaches a <code>nana::button</code> widget to each field. It should be noted that the dockable window that is created when <code>place::dock_create</code> is called, is given the caption of the widget created by the factory. Thus, the widgets created by the factory are constructed with the caption desired for the dockable window, and their own desired caption is set afterwards by calling <a href="index.html#widget::caption" target="_blank">widget::caption</a>.</p>
+				<pre><code>#include &#60;nana/gui.hpp&#62;<br>#include &#60;nana/gui/widgets/button.hpp&#62;<br><br>int main()<br>{<br>&#9;nana::form fm;<br>&#9;nana::place plc {fm};<br><br>&#9;// define two dockable fields aligned vertically, with a 15px spacer field between them<br>&#9;plc.div("margin=15 vert &#60;dock &#60;btn1&#62;&#62; &#60;weight=15&#62; &#60;dock &#60;btn2&#62;&#62;");<br><br>&#9;auto btn_factory = [&amp;](nana::window w)<br>&#9;{<br>&#9;&#9;// the argument received by the nana::window parameter is the handle of <br>&#9;&#9;// the dockable window that must be the parent of the widgets produced by<br>&#9;&#9;// this factory, so this handle must be passed on to the widget constructor<br>&#9;&#9;return std::make_unique&#60;nana::button&#62;(w, "dockpane 2");<br>&#9;};<br><br>&#9;plc.dock&#60;nana::button&#62;("btn1", "internal factory", std::string {"dockpane 1"});<br>&#9;nana::button &amp;btn1 {*reinterpret_cast&#60;nana::button*&#62;(plc.dock_create("internal factory"))};<br>&#9;btn1.caption("created by nana::place internal factory");<br><br>&#9;plc.dock("btn2", "my factory", btn_factory);<br>&#9;nana::button &amp;btn2 {*reinterpret_cast&#60;nana::button*&#62;(plc.dock_create("my factory"))};<br>&#9;btn2.caption("created by `btn_factory`");<br><br>&#9;plc.collocate();<br><br>&#9;fm.show();<br>&#9;nana::exec();<br>}</code></pre>
+				<hr />
+			</section>
+
+			<section>
+				<h2>Fields and how they relate to each other</h2>
+				<p>As explained in the introduction to the class, a field is an area of a window that can display a widget (when one is assigned to it). But how are the position and dimensions of a field controlled, exactly?</p>
+				<p>The first thing to understand is that the layout model used by the <code>place</code> class is a hierarchical structure of fields (parent fields containing child fields). At the top of the hierarchy lies an implicit root field that fills the entire window. Thus, the fields that the user defines in the div text are children or descendants of the implicit root field. The layout is essentially a tree-like structure of fields, with the fields that terminate a "branch" acting as recipients for widgets. Technically, it's possible to assign widgets to fields that have children, but doing so is not useful or recommended (so as a rule, only assign widgets to childless fields).</p>
+				<hr />
+				<p>When it comes to field dimensions (width and height), the relevant principle is that a field occupies as much of the space of its parent as possible, within the limits of a few restrictive factors. These factors can be the field's own <a href="https://github.com/cnjinhao/nana/wiki/Div-Text#weight" target="_blank">weight</a> attribute, the <code>weight</code> of sibling fields, the alignment of the siblings (vertical / horizontal), or a combination thereof.</p>
+				<p>The dimension that the <code>weight</code> attribute controls depends of the type of alignment that the parent field uses for its children. By default, sibling fields are aligned horizontally, but if the parent field is defined with the <a href="https://github.com/cnjinhao/nana/wiki/Div-Text#vert" target="_blank">vert</a> attribute, then they are aligned vertically. So the <code>weight</code> of a field controls its width when the parent uses a horizontal alignment, and its height when the parent uses a vertical alignment. The dimension that isn't controlled by the <code>weight</code> of a field, is controlled by the <code>weight</code> of its parent.</p>
+				<p>Consider the following example:</p>
+				<pre><code>#include &#60;nana/gui.hpp&#62;<br>#include &#60;nana/gui/widgets/button.hpp&#62;<br><br>int main()<br>{<br>&#9;nana::form fm;<br>&#9;nana::place plc {fm}; // the nana::place object `plc` is associated with the nana::form widget `fm`<br><br>&#9;plc.div("&#60;first&#62; &#60;second&#62; &#60;third&#62;"); // define three horizontally adjacent fields<br><br>&#9;// buttons are created with zero size<br>&#9;nana::button btn1 {fm, "First button"};<br>&#9;plc["first"] &#60;&#60; btn1; // assign the widget `btn1` to the field named "first"<br>&#9;nana::button btn2 {fm, "Second button"};<br>&#9;plc["second"] &#60;&#60; btn2;<br>&#9;nana::button btn3 {fm, "Third button"};<br>&#9;plc["third"] &#60;&#60; btn3;<br><br>&#9;// enact the layout rules before starting the form's event processing loop,<br>&#9;// otherwise the buttons have zero size until the form is resized<br>&#9;plc.collocate();<br><br>&#9;fm.show();<br>&#9;nana::exec();<br>}</code></pre>
+				<p>The parent of the three fields defined in the div text is the implicit root field, which uses the default (horizontal) alignment for its child fields, so the result is three fields aligned horizontally:</p>
+				<img class="no-shadow" src="img/place1.png" alt="three horizontally adjacent fields">
+				<p>Since none of the fields has a <code>weight</code> attribute explicitly defined, the only factors that determine each field's dimensions are the space occupied by the siblings, and the orientation of their alignment (horizontal or vertical). Since the alignment is horizontal, the fields share the width of the parent field (which fills the entire  <code>nana::form</code> window), and match its height.</p>
+				<p>Generally speaking, sibling fields with undefined <code>weight</code> equally share whatever space remains after the siblings with defined <code>weight</code> are considered, and since in this case none of the fields has a <code>weight</code> attribute defined, the entire width of the parent field is shared equally among all the fields.</p>
+				<p>It's also worth noting that since none of the fields has an absolute <code>weight</code> value, they all stretch or contract accordingly when the parent root field is resized (which happens when the <code>nana::form</code> window is resized).</p>
+				<hr />
+				<p>The position of a field depends on the <code>weight</code> of the previous sibling field. If the previous sibling has a fixed <code>weight</code>, then the field has a fixed position. Otherwise, the previous sibling "pushes" the field, causing it to move when the parent is resized. To show that, let's change the div text of the previous example to give the first and third fields a fixed width (80 pixels):</p>
+				<pre><code>&#9;plc.div("&#60;first weight=80&#62; &#60;second&#62; &#60;third weight=80&#62;");</code></pre>
+				<p>After this change, the <code>first</code> and <code>third</code> fields each take up 80 pixels of the parent's width, and the <code>second</code> field fills the remaining space. This has the effect of the <code>second</code> field "pushing" the <code>third</code> field to the right side of the parent field, sticking it to that side.</p>
+				<p>Since the three sibling fields are alligned horizontally, their <code>weight</code> controls their width, and their parent's <code>weight</code> controls their height. And since their parent field is the implicit root field (which fills the entire window), the siblings are as tall as the window. To make them have a fixed height (let's say 30 pixels), they must be given a new parent that has a 30 pixel height:</p>
+				<pre><code>&#9;plc.div("vert &#60;row_btn weight=30 &#60;first weight=80&#62; &#60;second&#62; &#60;third weight=80&#62;&#62;");</code></pre>
+				<p>The three fields holding the buttons now have a new parent field, named <code>row_btn</code>, that has a fixed <code>weight</code> of 30 pixels. In turn, the field <code>row_btn</code> is nested inside an unnamed parent field that has the <code>vert</code> attribute, causing its children to have a vertical alignment (which is why the <code>weight</code> of field <code>row_btn</code> defines its height). Note that the <code>vert</code> attribute here doesn't apply to the root field, but rather to a new unnamed user-defined field that is implicitly started (the first child of the root field can be defined without angle brackets).</p>
+				<div class="crossfade"><div><img src="img/place2a.png"><img src="img/place2b.png"></div></div>
+				<p>The children of a parent field are arranged from left to right by default, or from top to bottom if the parent field has the <code>vert</code> attribute. Thus, the field <code>row_btn</code> is placed at the top of the area occupied by its parent.</p>
+				<p>In order to place <code>row_btn</code> further down, a new sibling field must be inserted before it. Once that's done, the <code>weight</code> of the new sibling will determine the amount of downward displacement that <code>row_btn</code> experiences. If the new sibling field has no <code>weight</code> defined, it will occupy the entirety of the remaining area, pushing <code>row_btn</code> all the way down:</p>
+				<div class="crossfade"><div><img src="img/place3a.png"><img src="img/place3b.png"></div></div>
+				<p>So what would happen if a new sibling field of undefined <code>weight</code> is inserted <em>after</em> <code>row_btn</code>? As mentioned earlier, sibling fields with undefined <code>weight</code> equally share whatever space remains after the siblings with defined <code>weight</code> are considered. In this case, the result is that <code>row_btn</code> becomes centered vertically in the parent field:</p>
+				<div class="crossfade"><div><img src="img/place4a.png"><img src="img/place4b.png"></div></div>
+				<hr />
+				<p>To summarize the points discussed in this section:</p>
+				<ul>
+					<li>the layout is a hierarchy of fields (parents containing children), with an implicit root field at the top that covers the entire window</li>
+					<li>sibling fields are arranged from left to right inside their parent when horizontally aligned, or from top to bottom when vertically aligned</li>
+					<li>sibling fields with undefined <code>weight</code> equally share whatever space remains after the siblings with defined <code>weight</code> are considered</li>
+					<li>the <code>weight</code> of sibling fields controls their width when horizontally aligned, or their height when vertically aligned</li>
+					<li>the dimension not controlled by a field's own <code>weight</code> attribute is controlled by the <code>weight</code> of the parent field</li>
+					<li>widgets should only be assigned to childless fields</li>
+				</ul>
+				<hr />
+			</section>
+			
+			<section expanded>
+				<h2>Field spacing, managing a large div text</h2>
+				<p>The previous section focused on the relationships between fields (how they affect each other's dimensions and positions), so the example it used didn't space out the fields, causing the widgets to be "stuck" to each other. That may not be desirable in an actual interface, so this section will show how to introduce spacing between fields.</p>
+				<p>The obvious way to introduce spacing, is to use the <a href="https://github.com/cnjinhao/nana/wiki/Div-Text#margin" target="_blank">margin</a> attribute. This attribute behaves like the CSS property <code>padding</code>, in the sense that it introduces space <em>inside</em> the field rather than around it, as a result squeezing the content of the field into a smaller size. In other words, the introduced space pushes the the content of the field inward (widgets or child fields), rather than pushing the surrounding fields outward. Let's add a 15 pixel margin to the outermost field in the example from the previous section:</p>
+				<pre><code>&#9;plc.div("vert margin=15 &#60;&#62; &#60;row_btn weight=30 &#60;first weight=80&#62; &#60;second&#62; &#60;third weight=80&#62;&#62; &#60;&#62;");</code></pre>
+				<p>The result is a 15 pixel-wide inner band of empty space introduced along the boundary of the field, which pushes the child fields inward:</p>
+				<img class="no-shadow" src="img/place5.png" alt="field margin">
+				<p>The <code>margin</code> attribute could also be used to introduce space between the sibling fields holding the buttons, but it wouldn't be practical to do so. The space introduced via <code>margin</code> would take away from the space available to the widgets, squeezing them into a smaller size, and creating the need to artificially inflate the weight of the fields in order to compensate. For example, in order for the first button to be 80 pixels wide while having a 15 pixel right margin, the <code>weight</code> of its field would have to be 95 (80+15).</p>
+				<p>A much simpler way to introduce space between two fields that hold widgets, is to introduce an empty sibling field between them, and give it a fixed weight equal to the amount of space desired:</p>
+				<pre><code>&#9;plc.div("vert margin=15 &#60;&#62; &#60;row_btn weight=30 &#60;first weight=80&#62; &#60;weight=15&#62; &#60;second&#62; &#60;weight=15&#62; &#60;third weight=80&#62;&#62; &#60;&#62;");</code></pre>
+				<img class="no-shadow" src="img/place6.png" alt="field spacing">
+				<p>That is much more straight-forward, but now a new problem becomes evident: the longer the div text becomes, the harder it is to read. To mitigate this problem, the div text can be split into multiple lines:</p>
+				<pre><code>&#9;plc.div(<br>&#9;&#9;"vert margin=15"<br>&#9;&#9;&#9;"&#60;&#62;"<br>&#9;&#9;&#9;"&#60;row_btn weight=30"<br>&#9;&#9;&#9;&#9;"&#60;first weight=80&#62; &#60;weight=15&#62; &#60;second&#62; &#60;weight=15&#62; &#60;third weight=80&#62;"<br>&#9;&#9;&#9;"&#62;"<br>&#9;&#9;&#9;"&#60;&#62;"<br>&#9;);</code></pre>
+				<p>Or alternatively, the following works best after setting the text editor to highlight string escape characters with a low contrast color:</p>
+				<pre><code>&#9;plc.div("\<br>&#9;&#9;vert margin=15\<br>&#9;&#9;&#9;&#60;&#62;\<br>&#9;&#9;&#9;&#60;row_btn weight=30\<br>&#9;&#9;&#9;&#9;&#60;first weight=80&#62; &#60;weight=15&#62; &#60;second&#62; &#60;weight=15&#62; &#60;third weight=80&#62;\<br>&#9;&#9;&#9;&#62;\<br>&#9;&#9;&#9;&#60;&#62;\<br>&#9;");</code></pre>
+				<p>Also, the div text can be made less complex by eliminating the children of field <code>row_btn</code>, and assigning the button widgets directly to <code>row_btn</code>. This requires the use of attributes <a href="https://github.com/cnjinhao/nana/wiki/Div-Text#arrange" target="_blank">arrange</a> and <a href="https://github.com/cnjinhao/nana/wiki/Div-Text#gap" target="_blank">gap</a>:</p>
+				<pre><code>#include &#60;nana/gui.hpp&#62;<br>#include &#60;nana/gui/widgets/button.hpp&#62;<br><br>int main()<br>{<br>&#9;nana::form fm;<br>&#9;nana::place plc {fm}; // the nana::place object `plc` is associated with the nana::form widget `fm`<br><br>&#9;plc.div("\<br>&#9;&#9;vert margin=15\<br>&#9;&#9;&#9;&#60;&#62;\<br>&#9;&#9;&#9;&#60;row_btn weight=30 arrange=[80,variable,80] gap=15&#62;\<br>&#9;&#9;&#9;&#60;&#62;\<br>&#9;");<br><br>&#9;// buttons are created with zero size<br>&#9;nana::button btn1 {fm, "First button"}, btn2 {fm, "Second button"}, btn3 {fm, "Third button"};<br>&#9;plc["row_btn"] &#60;&#60; btn1 &#60;&#60; btn2 &#60;&#60; btn3;<br><br>&#9;// enact the layout rules before starting the form's event processing loop,<br>&#9;// otherwise the buttons have zero size until the form is resized<br>&#9;plc.collocate();<br><br>&#9;fm.show();<br>&#9;nana::exec();<br>}</code></pre>
+				<div class="crossfade"><img src="img/place7a.png"><img src="img/place7b.png"></div>
+				<p>One disadvantage of putting all the buttons into a single field, is that it eliminates the possibility of giving the second button a minimum width using the <a href="https://github.com/cnjinhao/nana/wiki/Div-Text#maxmin" target="_blank">min</a> attribute (for example <code>min=80</code>).</p>
+				<p>And finally, if the div text gets <em>really</em> big, it may be time to break up the layout into smaller sections using <code>nana::panel</code>, and possibly <code>nana::group</code>.</p>
+			</section>
+
+		</section>
+
+	</main>
+
+</body>
+</html>

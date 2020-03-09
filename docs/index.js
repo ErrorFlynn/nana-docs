@@ -243,10 +243,13 @@ function makeSideBar()
 			}
 			if(sections.length > 1 && sections[sections.length-1] != section)
 			{
-				let separator = fdoc.createElement('li');
-				separator.classList.toggle('separator');
-				//separator.appendChild(fdoc.createTextNode(''));
-				ul.appendChild(separator);
+				if(section.querySelector('table.functions'))
+				{
+					let separator = fdoc.createElement('li');
+					separator.classList.toggle('separator');
+					//separator.appendChild(fdoc.createTextNode(''));
+					ul.appendChild(separator);
+				}
 			}
 		}
 	}
