@@ -56,6 +56,18 @@
 			</p>
 
 			<section expanded>
+				<h2>Appearance scheme</h2>
+				<p>All widgets provide a common interface for customizing their appearance, in the form of an appearance scheme accessed by calling <a href="index.html#widget_object::scheme" target="_blank">widget_object::scheme</a> (all widget objects contain an internal scheme object that can be accessed to change the appearance of the widget).</p>
+				<p>The type of a scheme object can be either <code>nana::widget_geometrics</code>, or a derived type which defines additional appearance properties. The structure <code>nana::widget_geometrics</code> defines the following basic appearance properties, that all widgets have:</p>
+				<table>
+					<tr> <th>Member</th> <th>Type</th> <th>Description</th> </tr>
+					<tr> <td>activated</td> <td><code>nana::color_proxy</code></td> <td>the <a href="index.html#color" target="_blank">color</a> of the outline that highlights some widgets when they have the input focus or when the mouse cursor hovers over them</td> </tr>
+					<tr> <td>background</td> <td><code>nana::color_proxy</code></td> <td>the background color of the widget (<a href="index.html#widget::bgcolor" target="_blank">widget::bgcolor</a> accesses this member)</td> </tr>
+					<tr> <td>foreground</td> <td><code>nana::color_proxy</code></td> <td>the foreground color of the widget (<a href="index.html#widget::fgcolor" target="_blank">widget::fgcolor</a> accesses this member)</td> </tr>
+				</table>
+			</section>
+
+			<section expanded>
 				<h2>Events</h2>
 				<p>
 					The library uses an event system without bubbling, meaning that an event does not "bubble up" (is not routed) to its parent and ancestor widgets. For example if a key is pressed, only the widget that currently has the input focus receives the keypress event, excluding its parent widget (possibly a <code>nana::form</code>) and any ancestors.
