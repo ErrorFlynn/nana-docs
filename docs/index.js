@@ -36,8 +36,8 @@ onload = function()
 			startDoc = loc.substring(pos+1, pos2);
 			let strTarget = loc.substr(pos2 + 2);
 			if(isNaN(strTarget))
-				fnTarget = loc.substr(pos2+2);
-			else secTarget = Number(strTarget);
+				fnTarget = strTarget;
+			else secTarget = strTarget;
 		}
 		else startDoc = loc.substring(pos+1);
 
