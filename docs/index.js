@@ -25,6 +25,7 @@ onload = function()
 
 	var startDoc = 'widget_intro.html';
 	fnTarget = new String();
+	secTarget = new Number(-1);
 	var loc = location.href;
 	var pos = loc.indexOf('#');
 	if(pos != -1)
@@ -33,7 +34,10 @@ onload = function()
 		if(pos2 != -1)
 		{
 			startDoc = loc.substring(pos+1, pos2);
-			fnTarget = loc.substr(pos2+2);
+			let strTarget = loc.substr(pos2 + 2);
+			if(isNaN(strTarget))
+				fnTarget = loc.substr(pos2+2);
+			else secTarget = Number(strTarget);
 		}
 		else startDoc = loc.substring(pos+1);
 
@@ -129,8 +133,10 @@ function iframeOnLoad()
 	setTOCCursor();
 	makeSideBar();
 
-	if(fnTarget !== 'undefined')
+	if(fnTarget.length)
 		scrollToFunction(fnTarget);
+	else if(secTarget >= 0)
+		scrollToSection(secTarget);
 
 	if(typeof this.first === 'undefined')
 	{
@@ -296,6 +302,20 @@ function scrollToFunction(name)
 				hiddenRow.scrollIntoView({block: 'center'});
 				return;
 			}
+		}
+	}
+}
+
+function scrollToSection(idx)
+{
+	if(idx >= 0)
+	{
+		let fdoc = frames[0].document;
+		let sections = fdoc.querySelectorAll('section>section');
+		if(sections.length > idx)
+		{
+			expandSection(sections[idx]);
+			sections[idx].scrollIntoView();
 		}
 	}
 }
