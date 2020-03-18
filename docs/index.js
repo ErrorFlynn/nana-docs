@@ -24,8 +24,8 @@ onload = function()
 	}
 
 	var startDoc = 'widget_intro.html';
-	fnTarget = new String();
-	secTarget = new Number(-1);
+	fnTarget = "";
+	secTarget = -1;
 	var loc = location.href;
 	var pos = loc.indexOf('#');
 	if(pos != -1)
