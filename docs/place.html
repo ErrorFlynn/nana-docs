@@ -21,7 +21,7 @@
 		<section>
 			<h1>Class nana::place</h1>
 			<p>
-				The class <code>nana::place</code> is used to automatically manage the layout of child widgets inside their parent window, according to a user-defined set of rules. To achieve that, a <code>place</code> object must be associated with a widget that is the parent of other widgets (such as a <code>nana::form</code> or a <code>nana::panel</code>), and a set of layout rules must defined as a string, using a notation similar to a markup language. That allows the <code>place</code> object to automatically position and size the child widgets within the parent window, whenever the parent window is resized.
+				The class <code>nana::place</code> is used to automatically manage the layout of child widgets inside their parent window, according to a user-defined set of rules. To achieve that, a <code>place</code> object must be associated with a widget that is the parent of other widgets (such as a <code>nana::form</code> or a <code>nana::panel</code>), and a set of layout rules must be defined as a string, using a notation similar to a markup language. That allows the <code>place</code> object to automatically position and size the child widgets within the parent window, whenever the parent window is resized.
 			</p>
 			<p>
 				The string that defines the layout rules is refered to as the "div text", and is set by calling <code>place::div</code>. Essentially, the div text divides the associated window into multiple distinct areas refered to as "fields", and defines how these fields relate to each other in terms of size and position. For a detailed description of the div text format and related concepts, see this <a href="https://github.com/cnjinhao/nana/wiki/Div-Text" target="_blank">wiki article</a>.
