@@ -105,10 +105,12 @@
 								</tr>
 							</table>
 							<h4>Return value</h4>
-							<ol>
-								<li>a reference to <code>*this</code></li>
-								<li><code>true</code> if the node is expanded, or <code>false</code> if it is collapsed</li>
-							</ol>
+							<div>
+								<ol>
+									<li>a reference to <code>*this</code></li>
+									<li><code>true</code> if the node is expanded, or <code>false</code> if it is collapsed</li>
+								</ol>
+							</div>
 						</td>
 					</tr>
 
@@ -127,6 +129,37 @@
 								<p>
 									<code>true</code> if the object is an end iterator, or <code>false</code> otherwise
 								</p>
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td>hide / hidden (Nana 1.7.3)</td>
+						<td>shows or hides the node / returns the visibility state</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  item_proxy&amp; hide(bool hidden);<br>(1)  bool hidden() const;</code></pre>
+							<p>
+								The <code>hide</code> method allows the node to be hidden from view. When all the children of a node have been hidden, that node no longer displays a node operator (the expander / contractor element).
+							</p>
+							<ol>
+								<li>sets the visibility of the node</li>
+								<li>returns the visibility state</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>hidden</th></tr>
+								<tr>
+									<td><p>A flag indicating whether to hide the node (<code>true</code>) or show it (<code>false</code>).</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div>
+								<ol>
+									<li>a reference to <code>*this</code></li>
+									<li><code>true</code> if the node is hidden, or <code>false</code> if it is visible</li>
+								</ol>
 							</div>
 						</td>
 					</tr>
