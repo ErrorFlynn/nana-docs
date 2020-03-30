@@ -691,14 +691,14 @@
 				<tr><td>cast</td><td>returns the item or category that is being displayed at the specified pixel coordinates</td></tr>
 				<tr>
 					<td>
-						<pre><code>index_pair cast( const point& pos ) const</code></pre>
-						<p>This method tests whether the specified point falls within the draw area of an item or category currently being displayed in the listbox viewport.</p>
+						<pre><code>index_pair cast(const point& pos) const</code></pre>
+						<p>This method tests whether the specified point falls within the draw area of an item or category currently being displayed in the listbox window.</p>
 
 						<h4>Parameters</h4>
 						<table>
 							<tr><th>pos</th></tr>
 							<tr>
-								<td><p>The listbox viewport coordinates to test (coordinates {0, 0} represent the upper-left corner of the listbox's draw area).</p></td>
+								<td><p>The coordinates to test (coordinates {0, 0} represent the upper-left corner of the listbox window).</p></td>
 							</tr>
 						</table>
 						<h4>Return value</h4>
