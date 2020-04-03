@@ -41,9 +41,17 @@
 							</ol>
 							<h4>Parameters</h4>
 							<table>
-								<tr><th>checked</th></tr>
+								<tr><th>key</th></tr>
 								<tr>
-									<td><p>Indicates whether to check or uncheck the item. <code>true</code> means check, <code>false</code> means uncheck.</p></td>
+									<td><p>The key that should be associated with the new node (see <a href="index.html#widget_treebox::4" target="_blank">this section</a> for details about node keys and key paths).</p></td>
+								</tr>
+								<tr><th>title</th></tr>
+								<tr>
+									<td><p>The text that the node should display.</p></td>
+								</tr>
+								<tr><th>val</th></tr>
+								<tr>
+									<td><p>A user-defined value of arbitrary type that should be associated with the node (the type of the value is defined by the template parameter <code>Value</code>). This parameter is a <a href="https://en.cppreference.com/w/cpp/language/reference#Forwarding_references" target="_blank">forwarding reference</a>, meaning it can receive both rvalue and lvalue arguments, the argument being either copied or moved, as appropriate.</p></td>
 								</tr>
 							</table>
 							<h4>Return value</h4>
