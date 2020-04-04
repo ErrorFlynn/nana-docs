@@ -121,7 +121,7 @@
 						<td>
 							<pre><code>Scheme& scheme() const;</code></pre>
 							<p>
-								This method returns a reference to the internal scheme object, which contains configurable properties (data members) pertaining to widget appearance.
+								This method returns a reference to the internal scheme object, which contains configurable properties (data members) pertaining to widget appearance. For details, see <a href="index.html#widget_intro::0" target="_blank">this section</a>.
 							</p>
 							<h4>Return value</h4>
 							<div><p>The type of the scheme object depends on the template specialization that a widget is derived from, specifically on the argument passed to the <code>Scheme</code> parameter. That can be either <code title="struct widget_geometrics&#10;{&#10;	virtual ~widget_geometrics() = default;&#10;	color_proxy activated{ static_cast<color_rgb>(0x60C8FD) };&#10;	color_proxy background{colors::button_face};&#10;	color_proxy foreground{colors::black};&#10;};">nana::widget_geometrics</code>, or a derived type which defines additional appearance properties, depending on the widget.</p></div>
