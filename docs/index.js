@@ -314,8 +314,16 @@ function scrollToSection(idx)
 		let sections = fdoc.querySelectorAll('section>section');
 		if(sections.length > idx)
 		{
-			expandSection(sections[idx]);
-			sections[idx].scrollIntoView();
+			let sec = sections[idx];
+			expandSection(sec);
+			sec.scrollIntoView();
+			sec.style['transition'] = "none";
+			sec.style['background-color'] = "moccasin";
+			setTimeout(function()
+			{
+				sec.style['transition'] = "background-color 2.5s cubic-bezier(.18,.89,.32,1.28)";
+				sec.style['background-color'] = "inherit";
+			}, 300);
 		}
 	}
 }
