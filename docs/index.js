@@ -337,7 +337,7 @@ function flashElement(el)
 	setTimeout(function()
 	{
 		el.style['transition'] = "background-color 2.5s cubic-bezier(.18,.89,.32,1.28)";
-		el.style['background-color'] = "revert";
+		el.style['background-color'] = "white";
 		for(let code of codes)
 		{
 			code.style['transition'] = "background-color 2.5s cubic-bezier(.18,.89,.32,1.28)";
