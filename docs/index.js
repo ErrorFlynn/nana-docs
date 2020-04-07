@@ -300,6 +300,7 @@ function scrollToFunction(name)
 				if(hiddenRow.hasAttribute('hidden'))
 					hiddenRow.removeAttribute('hidden');
 				hiddenRow.scrollIntoView({block: 'center'});
+				flashElement(hiddenRow);
 				return;
 			}
 		}
@@ -317,13 +318,7 @@ function scrollToSection(idx)
 			let sec = sections[idx];
 			expandSection(sec);
 			sec.scrollIntoView();
-			sec.style['transition'] = "none";
-			sec.style['background-color'] = "moccasin";
-			setTimeout(function()
-			{
-				sec.style['transition'] = "background-color 2.5s cubic-bezier(.18,.89,.32,1.28)";
-				sec.style['background-color'] = "inherit";
-			}, 300);
+			flashElement(sec);
 		}
 	}
 }
@@ -331,4 +326,22 @@ function scrollToSection(idx)
 function remToPix(rem)
 {
 	return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
+}
+
+function flashElement(el)
+{
+	el.style['background-color'] = "moccasin";
+	let codes = el.querySelectorAll('pre>code');
+	for(let code of codes)
+		code.style['background-color'] = "moccasin";
+	setTimeout(function()
+	{
+		el.style['transition'] = "background-color 2.5s cubic-bezier(.18,.89,.32,1.28)";
+		el.style['background-color'] = "revert";
+		for(let code of codes)
+		{
+			code.style['transition'] = "background-color 2.5s cubic-bezier(.18,.89,.32,1.28)";
+			code.style['background-color'] = "#f3f3f3";
+		}
+	}, 300);
 }
