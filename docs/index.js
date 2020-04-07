@@ -47,7 +47,7 @@ onload = function()
 
 	var iframe = document.getElementsByTagName('iframe')[0];
 	iframe.onload = iframeOnLoad;
-	iframe.setAttribute('src', startDoc);
+	iframe.src = startDoc;
 	
 	onresize = onResize;
 	onResize();
