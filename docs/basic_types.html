@@ -1,0 +1,408 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Basic types</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" href="page.css" media="all">
+	<link href="fonts/Oswald/Oswald.css" rel="stylesheet">
+	<link href="fonts/Arimo/Arimo.css" rel="stylesheet">
+	<link href="fonts/OxygenMono/OxygenMono.css" rel="stylesheet">
+	<link rel="stylesheet" href="highlight/default.css">
+	<script src="highlight/highlight.pack.js"></script>
+	<script>hljs.configure({ useBR: true }); hljs.initHighlightingOnLoad();</script>
+	<script src="page.js"></script>
+</head>
+
+<body>
+
+	<main>
+
+		<section>
+			<h1>Basic types</h1>
+			<p>
+				This page documents some of the common types that are used throughout the library.
+			</p>
+
+			<section>
+				<h2>nana::point</h2>
+				<p>The structure <code>nana::point</code> represents a point defined by <code>x</code> and <code>y</code> coordinates.</p>
+				<table>
+					<tr> <th>Data member</th> <th>Type</th> <th>Description</th> </tr>
+					<tr> <td>x</td> <td><code>int</code></td> <td>the x-coordinate of the point</td> </tr>
+					<tr> <td>y</td> <td><code>int</code></td> <td>the y-coordinate of the point</td> </tr>
+				</table>
+				<table class="functions">
+					<tr>
+						<td>(constructors)</td>
+						<td>construct a <code>point</code> object</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  point() = default;<br>(1)  point(int x, int y);</code></pre>
+							<ol>
+								<li>default constructor; the coordinates are initialized to (0, 0)</li>
+								<li>constructs a <code>point</code> object with the specified coordinates</li>
+							</ol>
+						</td>
+					</tr>
+
+					<tr>
+						<td>operator==</td>
+						<td>tests whether this point has the same position as another point</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>bool operator==(const point&amp; other) const noexcept;</code></pre>
+							<p>Equality operator, for testing whether this <code>point</code> object has the same coordinates as another. Returns the result of this expression:</p>
+							<pre><code>(x == other.x &amp;&amp; y == other.y)</code></pre>
+						</td>
+					</tr>
+					<tr>
+						<td>operator!=</td>
+						<td>tests whether this point has a different position than another point</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>bool operator!=(const point& other) const noexcept;</code></pre>
+							<p>Inequality operator, for testing whether this <code>point</code> object and another have at least one differing coordinate. Returns the result of the following expression:</p>
+							<pre><code>(x != other.x || y != other.y)</code></pre>
+						</td>
+					</tr>
+					<tr>
+						<td>operator&lt;</td>
+						<td>tests whether this point is positioned before another point</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>bool operator&lt;(const point&amp; other) const noexcept;</code></pre>
+							<p><em>Less than</em> operator, for testing whether <code>*this</code> is positioned before another point in the <code>y</code> dimension, or whether <code>*this</code> is positioned before another point in the <code>x</code> dimension while having the same <code>y</code> coordinate. Returns the result of the following expression:</p>
+							<pre><code>((y &lt; other.y) || (y == other.y &amp;&amp; x &lt; other.x))</code></pre>
+						</td>
+					</tr>
+					<tr>
+						<td>operator&lt;=</td>
+						<td>tests whether this point is positioned before another point or at the same position</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>bool operator&lt;=(const point& other) const noexcept;</code></pre>
+							<p><em>Less than or equal to</em> operator, for testing whether <code>*this</code> is positioned before another point in the <code>y</code> dimension, whether <code>*this</code> is positioned before another point in the <code>x</code> dimension while having the same <code>y</code> coordinate, or whether <code>*this</code> has the same position as the other point. Returns the result of the following expression:</p>
+							<pre><code>((y &#60; other.y) || (y == other.y &amp;&amp; x &#60;= other.x))</code></pre>
+						</td>
+					</tr>
+					<tr>
+						<td>operator&gt;</td>
+						<td>tests whether this point is positioned after another point</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>bool operator&gt;(const point& other) const noexcept;</code></pre>
+							<p><em>Greater than</em> operator, for testing whether <code>*this</code> is positioned after another point in the <code>y</code> dimension, or whether <code>*this</code> is positioned after another point in the <code>x</code> dimension while having the same <code>y</code> coordinate. Returns the result of the following expression:</p>
+							<pre><code>((y &#62; other.y) || (y == other.y &amp;&amp; x &#62; other.x))</code></pre>
+						</td>
+					</tr>
+					<tr>
+						<td>operator&gt;=</td>
+						<td>tests whether this point is positioned after another point or at the same position</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>bool operator&gt;=(const point&amp; other) const noexcept;</code></pre>
+							<p><em>Greater than or equal to</em> operator, for testing whether <code>*this</code> is positioned after another point in the <code>y</code> dimension, whether <code>*this</code> is positioned after another point in the <code>x</code> dimension while having the same <code>y</code> coordinate, or whether <code>*this</code> has the same position as the other point. Returns the result of the following expression:</p>
+							<pre><code>((y &#62; other.y) || (y == other.y &amp;&amp; x &#62;= other.x))</code></pre>
+						</td>
+					</tr>
+					<tr>
+						<td>operator-</td>
+						<td>returns the difference between the coordinates of this point and another</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>point operator-(const point&amp; other) const noexcept;</code></pre>
+							<p>Subtraction operator, returns a new <code>point</code> object constructed as follows:</p>
+							<pre><code>{ x - other.x, y - other.y }</code></pre>
+						</td>
+					</tr>
+					<tr>
+						<td>operator+</td>
+						<td>returns the sum of the coordinates of this point and another</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>point operator+(const point&amp; other) const noexcept;</code></pre>
+							<p>Addition operator, returns a new <code>point</code> object constructed as follows:</p>
+							<pre><code>{ x + other.x, y + other.y }</code></pre>
+						</td>
+					</tr>
+					<tr>
+						<td>operator-=</td>
+						<td>subtracts the coordinates of another point from those of this point</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>point operator-=(const point&amp; other) const noexcept;</code></pre>
+							<p>Subtraction assignment operator, defined as follows:</p>
+							<pre><code>x -= other.x;<br>y -= other.y;<br>return *this;</code></pre>
+						</td>
+					</tr>
+					<tr>
+						<td>operator+=</td>
+						<td>adds the coordinates of another point to those of this point</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>point operator+=(const point&amp; other) const noexcept;</code></pre>
+							<p>Addition assignment operator, defined as follows:</p>
+							<pre><code>x += other.x;<br>y += other.y;<br>return *this;</code></pre>
+						</td>
+					</tr>
+
+				</table>
+			</section>
+
+			<section>
+				<h2>nana::size</h2>
+				<p>The structure <code>nana::size</code> represents a two-dimensional size defined by width and height.</p>
+				<table>
+					<tr> <th>Data member</th> <th>Type</th> <th>Description</th> </tr>
+					<tr> <td>width</td> <td><code>unsigned</code></td> <td>the horizontal extent of the size</td> </tr>
+					<tr> <td>height</td> <td><code>unsigned</code></td> <td>the vertical extent of the size</td> </tr>
+				</table>
+				<table class="functions">
+					<tr>
+						<td>(constructors)</td>
+						<td>construct a <code>size</code> object</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  size();<br>(1)  size(unsigned width, unsigned height);</code></pre>
+							<ol>
+								<li>default constructor; the width and height are initialized to zero</li>
+								<li>constructs a <code>size</code> object with the specified <code>width</code> and <code>height</code> values</li>
+							</ol>
+						</td>
+					</tr>
+
+					<tr>
+						<td>empty</td>
+						<td>tests whether width * height == 0</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>bool empty() const;</code></pre>
+							<p>This method returns <code>true</code> if either <code>width</code> or <code>height</code> equals zero.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>is_hit</td>
+						<td>tests whether the specified coordinates fall inside the area defined by this <code>size</code></td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>bool is_hit(const point&amp;) const;</code></pre>
+							<p>This method returns <code>true</code> if the specified <code>point</code> represents a position inside the imaginary rectangle with an upper-left vertex at coordinates (0, 0), and a lower-right vertex at (<code>width-1</code>, <code>height-1</code>).</p>
+						</td>
+					</tr>
+					<tr>
+						<td>shift</td>
+						<td>swaps the values of <code>width</code> and <code>height</code></td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>size&amp; shift();</code></pre>
+							<p>This method swaps the values of <code>width</code> and <code>height</code>, and returns a reference to <code>*this</code>.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>operator==</td>
+						<td>tests whether the <code>width</code> and <code>height</code> of this object are equal to those of another</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>bool operator==(const size&amp; rhs) const;</code></pre>
+							<p>Equality operator, returns the result of this expression:</p>
+							<pre><code>(width == rhs.width) && (height == rhs.height)</code></pre>
+						</td>
+					</tr>
+					<tr>
+						<td>operator!=</td>
+						<td>tests whether the <code>width</code> and <code>height</code> of this object are different from those of another</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>bool operator!=(const size&amp; rhs) const;</code></pre>
+							<p>Inequality operator, returns the result of this expression:</p>
+							<pre><code>(width != rhs.width) || (height != rhs.height)</code></pre>
+						</td>
+					</tr>
+					<tr>
+						<td>operator+</td>
+						<td>returns the sum of this object and another</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>size operator+(const size&amp; sz) const;</code></pre>
+							<p>Addition operator, returns a new <code>size</code> object constructed as follows:</p>
+							<pre><code>{width + sz.width, height + sz.height}</code></pre>
+						</td>
+					</tr>
+
+				</table>
+			</section>
+
+			<section>
+				<h2>nana::rectangle</h2>
+				<p>The structure <code>nana::rectangle</code> represents a rectangle defined by the position of its upper-left vertex, and width and height values.</p>
+				<table>
+					<tr> <th>Data member</th> <th>Type</th> <th>Description</th> </tr>
+					<tr> <td>x</td> <td><code>int</code></td> <td>the x-coordinate of the upper-left vertex</td> </tr>
+					<tr> <td>y</td> <td><code>int</code></td> <td>the y-coordinate of the upper-left vertex</td> </tr>
+					<tr> <td>width</td> <td><code>unsigned</code></td> <td>the width of the rectangle</td> </tr>
+					<tr> <td>height</td> <td><code>unsigned</code></td> <td>the height of the rectangle</td> </tr>
+				</table>
+				<table class="functions">
+					<tr>
+						<td>(constructors)</td>
+						<td>construct a <code>rectangle</code> object</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  rectangle();<br>(1)  rectangle(int x, int y, unsigned width, unsigned height);<br>(2)  explicit rectangle(const size &amp;);<br>(3)  explicit rectangle(const point&amp;, const size&amp; = size());</code></pre>
+							<ol>
+								<li>default constructor; all data members are initialized to zero</li>
+								<li>constructs a <code>rectangle</code> object with the specified values</li>
+								<li>constructs a <code>rectangle</code> object with the specified size, and coordinates (0, 0)</li>
+								<li>constructs a <code>rectangle</code> object with zero size, and the specified coordinates</li>
+							</ol>
+						</td>
+					</tr>
+					<tr>
+						<td>bottom</td>
+						<td>returns (y+height)</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>int rectangle::bottom() const noexcept<br>{<br>&#9;return y + static_cast&#60;int&#62;(height);<br>}</code></pre>
+							<p>This method returns the <code>y</code> coordinate just below the bottom side of the rectangle.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>dimension</td>
+						<td>sets or gets the size of the rectangle</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  size dimension() const noexcept;<br>(1)  rectangle&amp; dimension(const size&amp;) noexcept;</code></pre>
+							<ol>
+								<li>returns the size of the rectangle</li>
+								<li>sets the size of the rectangle, and returns a reference to <code>*this</code></li>
+							</ol>
+						</td>
+					</tr>
+					<tr>
+						<td>empty</td>
+						<td>tests whether the size of the rectangle is zero</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>bool rectangle::empty() const<br>{<br>&#9;return (0 == width) || (0 == height);<br>}</code></pre>
+						</td>
+					</tr>
+					<tr>
+						<td>is_hit</td>
+						<td>tests whether a specified point falls within the area of the rectangle</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>bool is_hit(int x, int y) const;<br>bool is_hit(const point&amp; pos) const;</code></pre>
+							<p>This method returns <code>true</code> if the given coordinates correspond to a point inside the area of the rectangle.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>operator==</td>
+						<td>tests whether this rectangle has the same position and size as another</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>bool rectangle::operator==(const rectangle&amp; rhs) const<br>{<br>&#9;return (width == rhs.width) &amp;&amp; (height == rhs.height) &amp;&amp; (x == rhs.x) &amp;&amp; (y == rhs.y);<br>}</code></pre>
+						</td>
+					</tr>
+					<tr>
+						<td>operator!=</td>
+						<td>tests whether this rectangle has a different position or size than another</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>bool rectangle::operator!=(const rectangle&amp; rhs) const<br>{<br>&#9;return (width != rhs.width) || (height != rhs.height) || (x != rhs.x) || (y != rhs.y);<br>}</code></pre>
+						</td>
+					</tr>
+					<tr>
+						<td>pare_off</td>
+						<td>shrinks the rectangle by a number of pixels, without moving its centre</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>rectangle& pare_off(int pixels);</code></pre>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>pixels</th></tr>
+								<tr>
+									<td><p>The number of pixels by which to shrink the rectangle. This value is added to the <code>x</code> and <code>y</code> coordinates, and twice this value is subtracted from <code>width</code> and <code>height</code>.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>A reference to <code>*this</code>.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>position</td>
+						<td>sets or gets the position of the rectangle</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  point position() const noexcept;<br>(1)  rectangle&amp; position(const point&amp;) noexcept;</code></pre>
+							<ol>
+								<li>returns the position of the rectangle</li>
+								<li>sets the position of the rectangle, and returns a reference to <code>*this</code></li>
+							</ol>
+						</td>
+					</tr>
+					<tr>
+						<td>right</td>
+						<td>returns (x+width)</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>int rectangle::right() const noexcept<br>{<br>&#9;return x + static_cast&#60;int&#62;(width);<br>}</code></pre>
+							<p>This method returns the <code>x</code> coordinate just after the right side of the rectangle.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>shift</td>
+						<td>swaps the values of <code>x</code> and <code>y</code>, and the values of <code>width</code> and <code>height</code></td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>rectangle&amp; rectangle::shift()<br>{<br>&#9;std::swap(x, y);<br>&#9;std::swap(width, height);<br>&#9;return *this;<br>}</code></pre>
+						</td>
+					</tr>
+
+				</table>
+			</section>
+
+			<section expanded>
+				<h2>nana::native_window_type</h2>
+				<p>The type <code>nana::native_window_type</code> represents a native window handle in a platform-agnostic way. In order to be able to use such a handle with platform-specific code (after obtaining one by calling <code>form::native_handle</code> for example), it must first be cast to the platform-specific type.</p>
+				<p>Windows:</p>
+				<pre><code>&#9;nana::form fm;<br>&#9;auto hwnd {reinterpret_cast&#60;HWND&#62;(fm.native_handle())};</code></pre>
+				<p>X11:</p>
+				<pre><code>&#9;nana::form fm;<br>&#9;auto window {reinterpret_cast&#60;Window&#62;(fm.native_handle())};</code></pre>
+				<p>Conversely, if a library function requires a <code>nana::native_window_type</code> argument, an <code>HWND</code> or <code>Window</code> value can be cast to <code>nana::native_window_type</code> and passed to the function.</p>
+			</section>
+
+		</section>
+	</main>
+
+</body>
+</html>

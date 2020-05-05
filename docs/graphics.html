@@ -1,0 +1,855 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>nana::paint::graphics</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" href="page.css" media="all">
+	<link href="fonts/Oswald/Oswald.css" rel="stylesheet">
+	<link href="fonts/Arimo/Arimo.css" rel="stylesheet">
+	<link href="fonts/OxygenMono/OxygenMono.css" rel="stylesheet">
+	<link rel="stylesheet" href="highlight/default.css">
+	<script src="highlight/highlight.pack.js"></script>
+	<script>hljs.configure({ useBR: true }); hljs.initHighlightingOnLoad();</script>
+	<script src="page.js"></script>
+</head>
+
+<body>
+
+	<main>
+
+		<section>
+			<h1>Class nana::paint::graphics</h1>
+			<p>
+				The class <code>paint::graphics</code> is a 2D graphics renderer that manages an off-screen buffer, being foundational to the library's ability to display anything on screen (all widgets are drawn using this class). It provides a number of methods for rendering 2D shapes, text, and images into the off-screen buffer. Ownership of the buffer can be shared among multiple <code>graphics</code> objects (when a <code>graphics</code> object is destructed, it deallocates the off-screen buffer if no other objects own it).
+			</p>
+			<p>The class is defined in header <code>nana/paint/graphics.hpp</code> (automatically included by <code>nana/gui.hpp</code>).</p>
+
+			<section>
+				<h2>Member functions</h2>
+
+				<table class="functions">
+					<tr>
+						<td>(constructors)</td>
+						<td>construct a <code>paint::graphics</code> object</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  graphics();<br>(1)  graphics(const graphics&amp; other);<br>(2)  graphics(graphics&amp;&amp; other);<br>(3)  graphics(const nana::size&amp; sz);</code></pre>
+							<ol>
+								<li>default constructor; creates an empty object (without a buffer)</li>
+								<li>copy constructor; shares ownership of the other object's buffer</li>
+								<li>move constructor; ownership of the other object's buffer is transfered to this object (the other object becomes empty)</li>
+								<li>constructs an object with a buffer that accommodates a graphics resource with the specified dimensions (in pixels)</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>other</th></tr>
+								<tr>
+									<td><p>Another <code>paint::graphics</code> object.</p></td>
+								</tr>
+								<tr><th>sz</th></tr>
+								<tr>
+									<td><p>The desired size of the graphics resource in pixels, as a <a href="index.html#basic_types::1" target="_blank">nana::size</a> structure.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr> <th>Bit blit functions</th> </tr>
+					<tr>
+						<td>bitblt</td>
+						<td>transfers a rectangle of pixels from an external source into <code>*this</code></td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  void bitblt(int x, int y, const graphics&amp; src_graph);<br>(1)  void bitblt(const rectangle&amp; r_dst, native_window_type src_wd);<br>(2)  void bitblt(const rectangle&amp; r_dst, const graphics&amp; src_graph);<br>(3)  void bitblt(const rectangle&amp; r_dst, native_window_type src_wd, const point&amp; p_src);<br>(4)  void bitblt(const rectangle&amp; r_dst, const graphics&amp; src_graph, const point&amp; p_src);</code></pre>
+							<p>
+								Performs a bit-block transfer of the color data corresponding to a rectangle of pixels from the specified source into <code>*this</code>.
+							</p>
+							<p>(0) Transfers all color data from source coordinates (0, 0) to coordinates (x, y) inside <code>*this</code>.<br />(1, 2) Transfers color data from source coordinates (0, 0) to the specified rectangle inside <code>*this</code>.<br />(3, 4) Transfers color data from source coordinates (p_src.x, p_src.y) to the specified rectangle inside <code>*this</code>.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>x</th></tr>
+								<tr>
+									<td><p>x-coordinate that defines the destination position of the transfered block (inside the buffer of <code>*this</code>)</p></td>
+								</tr>
+								<tr><th>y</th></tr>
+								<tr>
+									<td><p>y-coordinate that defines the destination position of the transfered block (inside the buffer of <code>*this</code>)</p></td>
+								</tr>
+								<tr><th>src_graph</th></tr>
+								<tr>
+									<td><p>the source buffer</p></td>
+								</tr>
+								<tr><th>src_wd</th></tr>
+								<tr>
+									<td><p>the <a href="index.html#basic_types::3" target="_blank">handle</a> of a native window whose graphics buffer should be the source of the transfer</p></td>
+								</tr>
+								<tr><th>r_dst</th></tr>
+								<tr>
+									<td><p>a <a href="index.html#basic_types::2" target="_blank">nana::rectangle</a> structure that defines the size and destination position of the transfered block</p></td>
+								</tr>
+								<tr><th>p_src</th></tr>
+								<tr>
+									<td><p>a <a href="index.html#basic_types::0" target="_blank">nana::point</a> structure indicating the source coordinates</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>paste</td>
+						<td>transfers a rectangle of pixels from <code>*this</code> into an external destination</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  void paste(graphics&amp; dst, int x, int y) const;<br>(1)  void paste(native_window_type dst, const nana::rectangle&amp; r_dst, int sx, int sy) const;<br>(2)  void paste(native_window_type dst, int dx, int dy, unsigned width, unsigned height, int sx, int sy) const;<br>(3)  void paste(drawable_type dst, int x, int y) const;<br>(4)  void paste(const nana::rectangle&amp; r_src, graphics&amp; dst, int x, int y) const;</code></pre>
+							<p>
+								Transfers the color data corresponding to a rectangle of pixels from <code>*this</code> to a specified external destination.
+							</p>
+							<ol>
+								<li>Transfers color data from <code>*this</code> coordinates (0, 0) to coordinates (x, y) inside the destination buffer.</li>
+								<li>Transfers color data from <code>*this</code> coordinates (sx, sy) to the specified rectangle inside the destination buffer.</li>
+								<li>Like (1), but with the rectangle defined by discrete values rather than a <a href="index.html#basic_types::2" target="_blank">nana::rectangle</a> structure.</li>
+								<li>Transfers color data from <code>*this</code> coordinates (0, 0) to coordinates (x, y) inside the buffer of the <code>graphics</code> object identified by the specified handle.</li>
+								<li>Transfers the specified rectangle of pixels from <code>*this</code> to coordinates (x, y) inside the destination buffer.</li>
+							</ol>
+						</td>
+					</tr>
+					<tr>
+						<td>stretch</td>
+						<td>transfers a rectangle of pixels from <code>*this</code> into an external destination, with scaling</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  void stretch(const nana::rectangle&amp; r_src, graphics&amp; dst, const nana::rectangle&amp; r_dst);<br>(1)  void stretch(graphics&amp; dst, const nana::rectangle&amp; r_dst);</code></pre>
+							<p>
+								This method transfers the color data corresponding to a rectangle of pixels from <code>*this</code> to a specified external destination, scaling the transferred image to an arbitrary size.
+							</p>
+							<ol>
+								<li>Transfers a rectangle of pixels from <code>*this</code> to the specified external buffer.</li>
+								<li>Transfers all the pixels from <code>*this</code> to the specified external buffer.</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>r_src</th></tr>
+								<tr>
+									<td><p>A <a href="index.html#basic_types::2" target="_blank">nana::rectangle</a> structure that defines the rectangle of pixels to be transfered from <code>*this</code> to the destination.</p></td>
+								</tr>
+								<tr><th>r_dst</th></tr>
+								<tr>
+									<td><p>A <a href="index.html#basic_types::2" target="_blank">nana::rectangle</a> structure that defines the area inside the destination buffer to which the transferred pixels should be scaled.</p></td>
+								</tr>
+								<tr><th>dst</th></tr>
+								<tr>
+									<td><p>The destination buffer.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr> <th>Drawing operations</th> </tr>
+					<tr>
+						<td>bidi_extent_size</td>
+						<td>computes the width and height of bidirectional text</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  nana::size bidi_extent_size(std::string_view utf8_text) const;<br>(1)  nana::size bidi_extent_size(std::wstring_view text) const;</code></pre>
+							<p>
+								This method computes the width and height of text, using the currently selected font (the font can be changed by calling <code>graphics::typeface</code>). Can return a precise result if the text contains BIDI language.
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>utf8_text</th></tr>
+								<tr>
+									<td><p>A view to a UTF-8 encoded string that holds the text whose extent to measure.</p></td>
+								</tr>
+								<tr><th>text</th></tr>
+								<tr>
+									<td><p>A view to a wide character string that holds the text whose extent to measure.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div><p>A <a href="index.html#basic_types::1" target="_blank">nana::size</a> structure representing the extent that the specified text would have if rendered with the currently selected font.</p></div>
+						</td>
+					</tr>
+					<tr>
+						<td>bidi_string</td>
+						<td>draws bidirectional text with reordering</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  unsigned bidi_string(const point&amp; pos, std::string_view utf8str);<br>(1)  unsigned bidi_string(const point&amp; pos, std::wstring_view str);</code></pre>
+							<p>
+								This method draws bidirectional text at the specified coordinates. When the text contains RTL (right-to-left) language words, the RTL language words are reordered.
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>pos</th></tr>
+								<tr>
+									<td><p>A <a href="index.html#basic_types::0" target="_blank">nana::point</a> structure representing the position at which to draw the text.</p></td>
+								</tr>
+								<tr><th>utf8str</th></tr>
+								<tr>
+									<td><p>A view to a UTF-8 encoded string that holds the text to render.</p></td>
+								</tr>
+								<tr><th>str</th></tr>
+								<tr>
+									<td><p>A view to a wide character string that holds the text to render.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div><p>The width of the rendered string, in pixels.</p></div>
+						</td>
+					</tr>
+					<tr>
+						<td>frame_rectangle</td>
+						<td>draws a hollow rectangle, optionally using a different color for each side</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  void frame_rectangle(const rectangle&amp; r, const color&amp; left, const color&amp; top, const color&amp; right, const color&amp; bottom);<br>(1)  void frame_rectangle(const rectangle&amp; r, const color&amp; clr, unsigned gap);</code></pre>
+							<ol>
+								<li>draws a hollow rectangle using a different color for each side</li>
+								<li>draws a hollow rectangle using the specified color, optionally displaying a gap at each corner</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>r</th></tr>
+								<tr>
+									<td><p>A <a href="index.html#basic_types::2" target="_blank">nana::rectangle</a> structure that defines the size and position of the rectangle.</p></td>
+								</tr>
+								<tr><th>left, top, right, bottom</th></tr>
+								<tr>
+									<td><p>The different colors that the sides of the rectangle should have.</p></td>
+								</tr>
+								<tr><th>clr</th></tr>
+								<tr>
+									<td><p>The color that the rectangle should have.</p></td>
+								</tr>
+								<tr><th>gap</th></tr>
+								<tr>
+									<td><p>The number of pixels to omit drawing at the corners (pass <code>0</code> for no gap).</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>gradual_rectangle</td>
+						<td>draws a rectangle filled with a color gradient</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void gradual_rectangle(const rectangle&amp; r, const color&amp; from, const color&amp; to, bool vertical);</code></pre>
+							<p>This method draws a color gradient inside a rectangular area.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>r</th></tr>
+								<tr>
+									<td><p>A <a href="index.html#basic_types::2" target="_blank">nana::rectangle</a> structure that defines the size and position of the area to fill with the color gradient.</p></td>
+								</tr>
+								<tr><th>from</th></tr>
+								<tr>
+									<td><p>The starting color of the gradient.</p></td>
+								</tr>
+								<tr><th>to</th></tr>
+								<tr>
+									<td><p>The ending color of the gradient.</p></td>
+								</tr>
+								<tr><th>vertical</th></tr>
+								<tr>
+									<td><p>The orientation of the gradient (<code>true</code> means from top to bottom, <code>false</code> means from left to right).</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>glyph_pixels</td>
+						<td>computes the width of each glyph in a specified text, using the current font</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>std::unique_ptr&#60;unsigned[]&#62; glyph_pixels(std::wstring_view text) const;</code></pre>
+							<p>This method computes the width of each glyph in a specified text, using the currently selected font (the font can be changed by calling <code>graphics::typeface</code>).</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>text</th></tr>
+								<tr>
+									<td><p>A view to a wide character string that holds the text whose glyph widths to compute.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>An array of <code>unsigned</code> values representing the widths of each glyph in the provided text.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>line</td>
+						<td>draws a straight line</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  void line(const nana::point&amp; pos1, const nana::point&amp; pos2);<br>(1)  void line(const nana::point&amp; pos1, const nana::point&amp; pos2, const nana::color&amp; color);</code></pre>
+							<ol>
+								<li>draws a line from <code>pos1</code> to <code>pos2</code></li>
+								<li>like (0), but using the specified color</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>pos1</th></tr>
+								<tr>
+									<td><p>A <a href="index.html#basic_types::0" target="_blank">nana::point</a> structure representing the position of the first point in the line.</p></td>
+								</tr>
+								<tr><th>pos2</th></tr>
+								<tr>
+									<td><p>A <a href="index.html#basic_types::0" target="_blank">nana::point</a> structure representing the position of the last point in the line.</p></td>
+								</tr>
+								<tr><th>color</th></tr>
+								<tr>
+									<td><p>The <a href="index.html#color" target="_blank">color</a> with which to draw the line.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>line_begin / line_to</td>
+						<td>draw a series of connected line segments, one at a time</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  void line_begin(int x, int y);<br>(1)  void line_to(const point&amp; pos);<br>(2)  void line_to(const point&amp; pos, const nana::color&amp; color);</code></pre>
+							<p>These methods can be used to easily draw a series of connected line segments, without the need to specify (from, to) points for each segment.</p>
+							<p>First <code>line_begin</code> is called to set the starting point for the first line segment, and then <code>line_to</code> is called repeatedly to draw each segment in the series. A segment is drawn up to, but not including <code>pos</code>, and each call to <code>line_to</code> sets the starting point of the next segment to <code>pos</code>.</p>
+							<ol>
+								<li>sets the starting point of the line segment drawn by <code>line_to</code></li>
+								<li>draws a line segment from the starting point up to (but not including) <code>pos</code>, and then updates the starting point to <code>pos</code></li>
+								<li>like (1), but uses the specified color to draw the line segment</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>x, y</th></tr>
+								<tr>
+									<td><p>The coordinates of the starting point.</p></td>
+								</tr>
+								<tr><th>pos</th></tr>
+								<tr>
+									<td><p>A <a href="index.html#basic_types::0" target="_blank">nana::point</a> structure representing the position of the next point after the last in the line segment, and the first point of the next line segment.</p></td>
+								</tr>
+								<tr><th>color</th></tr>
+								<tr>
+									<td><p>The <a href="index.html#color" target="_blank">color</a> with which to draw the line segment.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>rectangle</td>
+						<td>draws a hollow or solid rectangle</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  void rectangle(bool solid);<br>(1)  void rectangle(bool solid, const nana::color&amp; color);<br>(2)  void rectangle(const nana::rectangle&amp; r, bool solid);<br>(3)  void rectangle(const nana::rectangle&amp; r, bool solid, const nana::color&amp; color);</code></pre>
+							<ol>
+								<li>draws a rectangle the size of the buffer, using the currently selected color (the color used by the previous draw operation)</li>
+								<li>draws a rectangle the size of the buffer, using the specified color</li>
+								<li>draws a rectangle with the specified size and position, using the currently selected color</li>
+								<li>draws a rectangle with the specified size and position, using the specified color</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>r</th></tr>
+								<tr>
+									<td><p>A <a href="index.html#basic_types::2" target="_blank">nana::rectangle</a> structure representing the position and size of the drawn rectangle.</p></td>
+								</tr>
+								<tr><th>solid</th></tr>
+								<tr>
+									<td><p>A flag that specifies whether the rectangle should be filled with a solid color (<code>true</code>), or whether only the sides should be drawn (<code>false</code>).</p></td>
+								</tr>
+								<tr><th>color</th></tr>
+								<tr>
+									<td><p>The <a href="index.html#color" target="_blank">color</a> with which to draw the rectangle.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>round_rectangle</td>
+						<td>draws a hollow or solid rectangle with rounded corners</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void round_rectangle(const nana::rectangle&amp; r, unsigned radius_x, unsigned radius_y, const nana::color&amp; color, bool solid, const nana::color&amp; color_if_solid);</code></pre>
+							<p>This method draws a rectangle with rounded corners, optionally using a different color for the sides than for the interior (when drawing a solid rectangle).</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>r</th></tr>
+								<tr>
+									<td><p>A <a href="index.html#basic_types::2" target="_blank">nana::rectangle</a> structure that specifies the position and size of the drawn rectangle.</p></td>
+								</tr>
+								<tr><th>radius_x, radius_y</th></tr>
+								<tr>
+									<td><p>Radii that define the curvature of the corners.</p></td>
+								</tr>
+								<tr><th>color</th></tr>
+								<tr>
+									<td><p>The <a href="index.html#color" target="_blank">color</a> with which to draw the sides of the rectangle.</p></td>
+								</tr>
+								<tr><th>solid</th></tr>
+								<tr>
+									<td><p>A flag that specifies whether the interior of the rectangle should be filled with a solid color (<code>true</code>), or whether only the sides and corners should be drawn (<code>false</code>).</p></td>
+								</tr>
+								<tr><th>color_if_solid</th></tr>
+								<tr>
+									<td><p>The <a href="index.html#color" target="_blank">color</a> with which to fill the interior of the rectangle (when the <code>solid</code> parameter is <code>true</code>).</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>set_pixel</td>
+						<td>sets the color of a pixel</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  void set_pixel(int x, int y, const nana::color&amp; color);<br>(1)  void set_pixel(int x, int y);</code></pre>
+							<ol>
+								<li>sets a pixel with the specified color</li>
+								<li>sets a pixel with the currently selected color (set by a previous drawing operation)</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>x, y</th></tr>
+								<tr>
+									<td><p>the coordinates that identify the pixel whose color to set</p></td>
+								</tr>
+								<tr><th>color</th></tr>
+								<tr>
+									<td><p>the <a href="index.html#color" target="_blank">color</a> to set</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>string</td>
+						<td>draws text at the specified coordinates</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  void string(const point&amp; pos, std::string_view utf8str);<br>(1)  void string(const point&amp; pos, std::string_view utf8str, const nana::color&amp; color);<br>(2)  void string(const point&amp; pos, std::wstring_view str);<br>(3)  void string(const point&amp; pos, std::wstring_view str, const nana::color&amp; color);</code></pre>
+							<ol>
+								<li>Draws a UTF-8 encoded string at the specified position, using the currently selected color.</li>
+								<li>Draws a UTF-8 encoded string at the specified position, using the specified color.</li>
+								<li>Draws a wide character string at the specified position, using the currently selected color.</li>
+								<li>Draws a wide character string at the specified position, using the specified color.</li>
+							</ol>
+							<p>To set the font used for drawing the text, call <code>graphics::typeface</code>.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>pos</th></tr>
+								<tr>
+									<td><p>a <a href="index.html#basic_types::0" target="_blank">nana::point</a> structure that specifies the position at which to draw the text</p></td>
+								</tr>
+								<tr><th>color</th></tr>
+								<tr>
+									<td><p>the <a href="index.html#color" target="_blank">color</a> with which to draw the text</p></td>
+								</tr>
+								<tr><th>utf8str</th></tr>
+								<tr>
+									<td><p>a view to a UTF-8 encoded string that holds the text to draw</p></td>
+								</tr>
+								<tr><th>str</th></tr>
+								<tr>
+									<td><p>a view to a wide character string that holds the text to draw</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>text_extent_size</td>
+						<td>computes the width and height of a given text</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  nana::size text_extent_size(std::string_view utf8str) const;<br>(1)  nana::size text_extent_size(std::wstring_view str) const;</code></pre>
+							<ol>
+								<li>measures the text represented by a UTF-8 encoded string</li>
+								<li>measures the text represented by a wide character string</li>
+							</ol>
+							<p>This method computes the width and height of the given text, using the currently selected font (to change the font, call <code>graphics::typeface</code>).</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>utf8str</th></tr>
+								<tr>
+									<td><p>a view to a UTF-8 encoded string that represents the text to measure</p></td>
+								</tr>
+								<tr><th>str</th></tr>
+								<tr>
+									<td><p>a view to a wide character string that represents the text to measure</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div><p>A <a href="index.html#basic_types::1" target="_blank">nana::size</a> structure that indicates the width and height of the text.</p></div>
+							<h4>Exception</h4>
+							<div><p>This method can throw an exception of type <code>nana::utf8_Error</code> (derived from <code>std::runtime_error</code>) when <code>utf8str</code> is not UTF-8 encoded, but only if exception throwing is enabled first.</p><p>The structure <code>nana::utf8_Error</code> has the data member <code>static bool use_throw;</code> which can be set to <code>true</code> to enable exception throwing. By default, this member is set to <code>false</code>, and the error string is output to <code>std::cerr</code> instead of an exception being thrown.</p></div>
+						</td>
+					</tr>
+					<tr>
+						<td>text_metrics</td>
+						<td>gets font metrics</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>bool text_metrics(unsigned&amp; ascent, unsigned&amp; descent, unsigned&amp; internal_leading) const;</code></pre>
+							<p>This method gets some of the metrics of the currently selected font (to change the font, call <code>graphics::typeface</code>).</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>ascent</th></tr>
+								<tr>
+									<td><p>a reference to the unsigned integer that should receive the ascent of the currently selected font</p></td>
+								</tr>
+								<tr><th>descent</th></tr>
+								<tr>
+									<td><p>a reference to the unsigned integer that should receive the descent of the currently selected font</p></td>
+								</tr>
+								<tr><th>internal_leading</th></tr>
+								<tr>
+									<td><p>a reference to the unsigned integer that should receive the leading of the currently selected font</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p><code>true</code> if successful, or <code>false</code> otherwise</p>
+						</td>
+					</tr>
+
+					<tr> <th>Image processing</th> </tr>
+					<tr>
+						<td>blend</td>
+						<td>blends graphics</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  void blend(const rectangle&amp; r, const nana::color&amp; color, double fade_rate);<br>(1)  void blend(const rectangle&amp; r, const graphics&amp; blend_graph, const point&amp; blend_graph_point, double fade_rate);</code></pre>
+							<p>
+								This method blends a rectangular area of <code>*this</code> with either a color, or an area of another graphics buffer.
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>r</th></tr>
+								<tr>
+									<td><p>A <a href="index.html#basic_types::2" target="_blank">nana::rectangle</a> structure representing the area inside <code>*this</code> to use for the blending operation.</p></td>
+								</tr>
+								<tr><th>color</th></tr>
+								<tr>
+									<td><p>A <a href="index.html#color" target="_blank">color</a> to blend into <code>*this</code>.</p></td>
+								</tr>
+								<tr><th>fade_rate</th></tr>
+								<tr>
+									<td><p>The blending rate, in the range [0, 1].</p></td>
+								</tr>
+								<tr><th>blend_graph</th></tr>
+								<tr>
+									<td><p>Another <code>graphics</code> object to blend into <code>*this</code>.</p></td>
+								</tr>
+								<tr><th>blend_graph_point</th></tr>
+								<tr>
+									<td><p>The position of a rectangle into <code>blend_graph</code> that represents the area to use for the blending operation.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>blur</td>
+						<td>blurs a specified area</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void blur(const nana::rectangle&amp; r, std::size_t radius);</code></pre>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>r</th></tr>
+								<tr>
+									<td><p>A <a href="index.html#basic_types::2" target="_blank">nana::rectangle</a> structure representing the area to blur.</p></td>
+								</tr>
+								<tr><th>radius</th></tr>
+								<tr>
+									<td><p>The blur radius (the higher the value, the stronger the blur effect). Higher values result in more processing time.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>rgb_to_wb</td>
+						<td>transforms color graphics into monochrome graphics</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void rgb_to_wb();</code></pre>
+							<p>Transforms <code>*this</code> into monochrome graphics.</p>
+						</td>
+					</tr>
+
+					<tr> <th>Miscellaneous</th> </tr>
+					<tr>
+						<td>flush</td>
+						<td>flushes the GDI batch queue (Windows)</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void flush();</code></pre>
+							<p>This method calls the WINAPI function <a href="https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-gdiflush" target="_blank">GdiFlush</a>.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>operator=</td>
+						<td>assigns the buffer of another <code>graphics</code> object to this one</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  graphics&amp; operator=(const graphics&amp; other);<br>(1)  graphics&amp; operator=(graphics&amp;&amp; other);</code></pre>
+							<p>This method replaces the buffer owned by <code>*this</code> with the buffer of another <code>graphics</code> object.</p>
+							<ol>
+								<li>Shares ownership of the off-screen buffer owned by the other object.</li>
+								<li>Move-assigns the other object's buffer. After the assignment, the other object is empty.</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>other</th></tr>
+								<tr>
+									<td><p>Another <code>graphics</code> object whose buffer to assign to <code>*this</code>.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>a reference to <code>*this</code></p>
+						</td>
+					</tr>
+					<tr>
+						<td>palette</td>
+						<td>selects a color for subsequent drawing operations, or gets the currently selected color</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  nana::color palette(bool for_text) const;<br>(1)  graphics&amp; palette(bool for_text, const nana::color&amp; color);</code></pre>
+							<p>A <code>graphics</code> object stores two color values internally, one used for drawing text, and one used for all other drawing operations. The <code>palette</code> method can be used to access (get/set) these colors.</p>
+							<ol>
+								<li>gets the currently selected color</li>
+								<li>selects the specified color</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>for_text</th></tr>
+								<tr>
+									<td><p>A flag that indicates whether to access the color used for drawing text (<code>true</code>), or the color used for all other drawing operations (<code>false</code>).</p></td>
+								</tr>
+								<tr><th>color</th></tr>
+								<tr>
+									<td><p>The <a href="index.html#color" target="_blank">color</a> to select as the color used by subsequent drawing operations.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div>
+								<ol>
+									<li>the requested <a href="index.html#color" target="_blank">color</a></li>
+									<li>a reference to <code>*this</code></li>
+								</ol>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>release</td>
+						<td>releases ownership of the buffer</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void release();</code></pre>
+							<p>This method releases ownership of the off-screen buffer (and deallocates the memory if no other objects own the buffer). <code>*this</code> becomes empty once this method is called.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>resize</td>
+						<td>resizes the buffer</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void resize(const nana::size&amp; sz);</code></pre>
+							<p>This method resizes the buffer while preserving its content. A possible implementation:</p>
+							<pre><code>void graphics::resize(const nana::size&amp; sz)<br>{<br>&#9;graphics duplicate {std::move(*this)};<br>&#9;make(sz);<br>&#9;bitblt(0, 0, duplicate);<br>}</code></pre>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>sz</th></tr>
+								<tr>
+									<td><p>the desired new <a href="index.html#basic_types::1" target="_blank">size</a>, in pixels</p></td>
+								</tr>
+							</table>
+							<h4>Exception</h4>
+							<div><p>An <code>std::bad_alloc</code> exception is thrown when out of memory.</p></div>
+						</td>
+					</tr>
+					<tr>
+						<td>save_as_file</td>
+						<td>saves the content of the buffer to a Windows bitmap file</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void save_as_file(const char* file_utf8) const noexcept;</code></pre>
+							<p>As of Nana v1.7, this method has no implementation for the X11 platform (it can be called, but doesn't do anything on X11).</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>file_utf8</th></tr>
+								<tr>
+									<td><p>The name of the file to which to save the buffer content.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>swap (Nana 1.5.6)</td>
+						<td>swaps buffers with another <code>graphics</code> object</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void swap(graphics&amp; other) noexcept;</code></pre>
+							<p>This method exchanges buffer ownership with another <code>graphics</code> object (assuming the other object doesn't own the same buffer). After this method is called, <code>*this</code> owns the buffer previously owned by the other object, and the other object owns the buffer previously owned by <code>*this</code>.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>other</th></tr>
+								<tr>
+									<td><p>another <code>graphics</code> object to swap buffers with</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>typeface</td>
+						<td>gets / sets the font used for drawing tetxt</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  paint::font typeface() const;<br>(1)  void typeface(const paint::font&amp; font);</code></pre>
+							<ol>
+								<li>gets the current font</li>
+								<li>sets a new font</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>font</th></tr>
+								<tr>
+									<td><p>a new <a href="index.html#font" target="_blank">font</a> to be used by subsequent text drawing operations</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div><p>(0)  the <a href="index.html#font" target="_blank">font</a> currently used for drawing text</p></div>
+						</td>
+					</tr>
+					<tr> <th>Observers</th> </tr>
+					<tr>
+						<td>context</td>
+						<td>gets the native context</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>const void* context() const;</code></pre>
+							<p>This method returns the native context handle, as a pointer to <code>const void</code>. This pointer must be cast to the native context type, before it can be used with platform-dependent code.</p>
+							<p>Windows:</p>
+							<pre><code>reinterpret_cast&#60;HDC&#62;(const_cast&#60;void*&#62;(graph.context()));</code></pre>
+							<p>X11:</p>
+							<pre><code>reinterpret_cast&#60;GC&#62;(const_cast&#60;void*&#62;(graph.context()));</code></pre>
+							<h4>Return value</h4>
+							<div>
+								<p>A pointer representing the native context handle, which must be cast to the native type.</p>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>empty</td>
+						<td>determines whether the object if empty (not currently owning a buffer)</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>bool empty() const;</code></pre>
+							<h4>Return value</h4>
+							<div><p><code>true</code> if the object doesn't own a buffer, or <code>false</code> otherwise</p></div>
+						</td>
+					</tr>
+					<tr>
+						<td>operator bool (Nana 1.5.6)</td>
+						<td>tests whether the object is not empty</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>explicit operator bool() const noexcept;</code></pre>
+							<p>Equivalent to <code>!this->empty()</code>.</p>
+							<h4>Return value</h4>
+							<div><p><code>true</code> if the object currently owns a buffer, or <code>false</code> otherwise</p></div>
+						</td>
+					</tr>
+					<tr>
+						<td>handle</td>
+						<td>returns a handle for the object</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>drawable_type handle() const;</code></pre>
+							<h4>Return value</h4>
+							<div><p>A handle for the object, which certain library functions require as an argument (for example, one of the <a href="index.html#font::(constructors)" target="_blank">font constructors</a>).</p></div>
+						</td>
+					</tr>
+					<tr>
+						<td>pixmap</td>
+						<td>returns the native pixmap</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>const void* pixmap() const;</code></pre>
+							<p>The native pixmap represents an image in memory. The type of the native pixmap depends on the platform, so the <code>const void</code> pointer returned by this method requires a cast before use.</p>
+							<p>Windows:</p>
+							<pre><code>reinterpret_cast&#60;HBITMAP&#62;(const_cast&#60;void*&#62;(graphics.pixmap()))</code></pre>
+							<p>X11:</p>
+							<pre><code>reinterpret_cast&#60;Pixmap&#62;(const_cast&#60;void*&#62;(graphics.pixmap()))</code></pre>
+							<h4>Return value</h4>
+							<div><p>A pointer to the native pixmap.</p></div>
+						</td>
+					</tr>
+					<tr>
+						<td>size / width / height</td>
+						<td>returns the size of the buffer</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  nana::size size() const;<br>(1)  unsigned width() const;<br>(2)  unsigned height() const;</code></pre>
+							<h4>Return value</h4>
+							<div>
+								<ol>
+									<li>the buffer <a href="index.html#basic_types::1" target="_blank">size</a></li>
+									<li>the buffer width</li>
+									<li>the buffer height</li>
+								</ol>
+							</div>
+						</td>
+					</tr>
+				</table>
+
+			</section>
+
+		</section>
+
+		<section>
+			<h1>Examples</h1>
+
+			<section>
+				<h2>Paste, stretch, blend</h2>
+				<p>This example uses the window of a <code>nana::panel</code> widget as a target for <code>paste</code>, <code>stretch</code>, and <code>blend</code> operations. Clicking a button registers a drawing function for the panel, which pastes, stretches, or blends a copy of that button's graphics buffer into the buffer of the panel. The drawing functions are called in sequence (in the order of registration) whenever the panel needs drawing.</p>
+				<img class="no-shadow" src="img/graphics1.png" alt="example #1 screenshot" />
+				<pre><code>#include &#60;nana/gui.hpp&#62;<br>#include &#60;nana/gui/widgets/button.hpp&#62;<br>#include &#60;nana/gui/widgets/panel.hpp&#62;<br>#include &#60;nana/gui/widgets/group.hpp&#62;<br>#include &#60;nana/paint/image_process_selector.hpp&#62;<br><br>int main()<br>{<br>&#9;using namespace nana;<br><br>&#9;form fm {API::make_center(430, 300)};<br>&#9;fm.div("vert margin=15 &#60;canvas&#62; &#60;weight=15&#62; &#60;group weight=50&#62; &#60;weight=15&#62; &#60;buttons weight=35 gap=15&#62;");<br>&#9;fm.bgcolor(color{"#e8e8e4"});<br><br>&#9;panel&#60;true&#62; pnl {fm};<br>&#9;fm["canvas"] &#60;&#60; pnl;<br>&#9;pnl.bgcolor(colors::white);<br><br>&#9;button btn_paste&#9;{fm, "Paste to panel"},<br>&#9;&#9;   btn_stretch&#9;{fm, "Stretch to panel"}, <br>&#9;&#9;   btn_blend&#9;{fm, "Blend with panel"};<br>&#9;fm["buttons"] &#60;&#60; btn_paste &#60;&#60; btn_stretch &#60;&#60; btn_blend;<br>&#9;btn_stretch.enabled(false);<br>&#9;btn_blend.enabled(false);<br><br>&#9;group gp {fm, "Stretch algorithm"};<br>&#9;fm["group"] &#60;&#60; gp;<br>&#9;gp.div("&#60;cboxes margin=[6,0,0,15] arrange=[57%,variable]&#62;");<br>&#9;checkbox cb1 {gp, "bilinear interpolation (default)"}, cb2 {gp, "proximal interpolation"};<br>&#9;gp["cboxes"] &#60;&#60; cb1 &#60;&#60; cb2;<br>&#9;gp.collocate();<br><br>&#9;radio_group rg;<br>&#9;rg.add(cb1); rg.add(cb2);<br>&#9;rg.on_checked([&amp;](const arg_checkbox&amp; arg)<br>&#9;{<br>&#9;&#9;if(arg.widget-&#62;checked())<br>&#9;&#9;{<br>&#9;&#9;&#9;if(rg.checked() == 0) // if checkbox at position 0 in the radio group was checked, which is `cb1`<br>&#9;&#9;&#9;&#9;paint::image_process::selector().stretch("bilinear interpolation");<br>&#9;&#9;&#9;else paint::image_process::selector().stretch("proximal interpolation");<br>&#9;&#9;&#9;API::refresh_window(pnl);<br>&#9;&#9;}<br>&#9;});<br>&#9;cb1.check(true);<br><br>&#9;btn_paste.events().click([&amp;]<br>&#9;{<br>&#9;&#9;btn_paste.enabled(false);<br>&#9;&#9;btn_stretch.enabled(true);<br><br>&#9;&#9;// use the helper class `drawing` to register a drawing function for the panel widget<br>&#9;&#9;// this function (a lambda object in this case) is called whenever the panel window needs drawing<br>&#9;&#9;drawing{pnl}.draw([&amp;](paint::graphics &amp;g) // `g` is a reference to the panel's graphics object<br>&#9;&#9;{<br>&#9;&#9;&#9;paint::graphics g_btn_paste;<br>&#9;&#9;&#9;API::window_graphics(btn_paste, g_btn_paste); // obtain a copy of the graphics buffer of the button<br>&#9;&#9;&#9;g_btn_paste.paste(g, 15, 15);<br>&#9;&#9;});<br>&#9;&#9;API::refresh_window(pnl);<br>&#9;});<br><br>&#9;btn_stretch.events().click([&amp;]<br>&#9;{<br>&#9;&#9;btn_stretch.enabled(false);<br>&#9;&#9;btn_blend.enabled(true);<br>&#9;&#9;drawing{pnl}.draw([&amp;](paint::graphics &amp;g)<br>&#9;&#9;{<br>&#9;&#9;&#9;paint::graphics g_btn_stretch;<br>&#9;&#9;&#9;API::window_graphics(btn_stretch, g_btn_stretch);<br>&#9;&#9;&#9;g_btn_stretch.stretch(g, rectangle&#123;{15, 65}, {btn_stretch.size().width*3, btn_stretch.size().height*2}});<br>&#9;&#9;});<br>&#9;&#9;API::refresh_window(pnl);<br>&#9;});<br><br>&#9;btn_blend.events().click([&amp;]<br>&#9;{<br>&#9;&#9;btn_blend.enabled(false);<br>&#9;&#9;drawing{pnl}.draw([&amp;](paint::graphics &amp;g)<br>&#9;&#9;{<br>&#9;&#9;&#9;paint::graphics g_btn_blend;<br>&#9;&#9;&#9;API::window_graphics(btn_blend, g_btn_blend);<br>&#9;&#9;&#9;rectangle r_dst &#123;{static_cast&#60;int&#62;(15+g_btn_blend.size().width/2), 40}, g_btn_blend.size()};<br>&#9;&#9;&#9;g.blend(r_dst, g_btn_blend, {0, 0}, .5);<br>&#9;&#9;});<br>&#9;&#9;API::refresh_window(pnl);<br>&#9;});<br><br>&#9;fm.collocate();<br>&#9;fm.show();<br>&#9;exec();<br>}</code></pre>
+				<hr />
+			</section>
+			<section expanded>
+				<h2>Lines, rectangles, blur</h2>
+				<p>The following example uses the window of a <code>nana::panel</code> widget as a canvas on which to draw the word "NANA" using lines, scaled to window size.</p>
+				<img class="no-shadow" src="img/graphics2.png" alt="example #2 screenshot" />
+				<pre><code>#include &#60;nana/gui.hpp&#62;<br>#include &#60;nana/gui/widgets/button.hpp&#62;<br>#include &#60;nana/gui/widgets/panel.hpp&#62;<br><br>using namespace nana;<br><br>// this function draws the word "NANA" using lines<br>void draw_nana(paint::graphics &amp;g, point pos, size sz, color clr = colors::blue)<br>{<br>&#9;auto draw_n = [&amp;g, &amp;clr](const point pos, const size sz) // draw letter "N"<br>&#9;{<br>&#9;&#9;const int x {pos.x}, y {pos.y}; // coordinates of the upper-left corner of the letter area<br>&#9;&#9;const int w {static_cast&#60;int&#62;(sz.width)}, h {static_cast&#60;int&#62;(sz.height)}; // letter dimensions<br>&#9;&#9;g.line_begin(x, y+h);<br>&#9;&#9;g.line_to({x, y}, clr); // selects `clr` as the color used by subsequent drawing operations<br>&#9;&#9;g.line_to({x+w, y+h});<br>&#9;&#9;g.line_to({x+w, y});<br>&#9;};<br><br>&#9;auto draw_a = [&amp;g](const point pos, const size sz) // draw letter "A"<br>&#9;{<br>&#9;&#9;const int x {pos.x}, y {pos.y}; // coordinates of the upper-left corner of the letter area<br>&#9;&#9;const int w {static_cast&#60;int&#62;(sz.width)}, h {static_cast&#60;int&#62;(sz.height)}; // letter dimensions<br>&#9;&#9;g.line_begin(x, y+h);<br>&#9;&#9;g.line_to({x+w/2, y});<br>&#9;&#9;g.line_to({x+w, y+h});<br>&#9;&#9;g.line({x+w/4, y+h/2}, {x+w-w/4, y+h/2});<br>&#9;};<br><br>&#9;const int x {pos.x}, y {pos.y}; // coordinates of the upper-left corner of the word area<br>&#9;const int w {static_cast&#60;int&#62;(sz.width)}, h {static_cast&#60;int&#62;(sz.height)}; // word dimensions<br>&#9;const int kerning {static_cast&#60;int&#62;(w*.08)}; // space between letters, proportional to word width<br>&#9;const unsigned lw {(sz.width - 3*kerning) / 4}; // letter width<br><br>&#9;while(pos.x &#60; x+w) // draw letters "NA" twice<br>&#9;{<br>&#9;&#9;draw_n(pos, {lw, sz.height});<br>&#9;&#9;pos.x += lw+kerning;<br>&#9;&#9;draw_a(pos, {lw, sz.height});<br>&#9;&#9;pos.x += lw+kerning;<br>&#9;}<br>}<br><br>int main()<br>{<br>&#9;bool blurred_outline {true};<br><br>&#9;form fm {API::make_center(543, 345)};<br>&#9;fm.div("vert margin=15 &#60;canvas&#62; &#60;weight=15&#62; &#60;button weight=40&#62;");<br><br>&#9;panel&#60;true&#62; pnl {fm};<br>&#9;fm["canvas"] &#60;&#60; pnl;<br><br>&#9;button btn {fm, "Toggle blurred outline"};<br>&#9;fm["button"] &#60;&#60; btn;<br>&#9;btn.typeface({"", 14}); // default font, size 14<br>&#9;btn.fgcolor(color{"#204070"});<br><br>&#9;btn.events().click([&amp;]<br>&#9;{<br>&#9;&#9;blurred_outline = !blurred_outline;<br>&#9;&#9;API::refresh_window(pnl);<br>&#9;});&#9;<br><br>&#9;// use the helper class `drawing` to register a drawing function for the panel widget<br>&#9;// this function (a lambda object in this case) is called whenever the panel window needs drawing<br>&#9;drawing{pnl}.draw([&amp;](paint::graphics &amp;g)<br>&#9;{<br>&#9;&#9;const rectangle r_graph &#123;{0, 0}, g.size()};<br>&#9;&#9;g.gradual_rectangle(r_graph, colors::light_goldenrod_yellow, colors::light_salmon, false);<br><br>&#9;&#9;// make the word size and position relative to buffer size (which is the size of the panel window)<br>&#9;&#9;size size_word {static_cast&#60;unsigned&#62;(g.width()*.8), static_cast&#60;unsigned&#62;(g.height()*.3)};<br>&#9;&#9;point pos_word {static_cast&#60;int&#62;((g.width()-size_word.width)/2), // center word horizontally<br>&#9;&#9;&#9;static_cast&#60;int&#62;((g.height()-size_word.height)/2)}; // center word vertically<br>&#9;&#9;int val {static_cast&#60;int&#62;(size_word.width*.06)}; // value proportional to word width<br><br>&#9;&#9;// draw a rounded rectangle around the word<br>&#9;&#9;rectangle r_word {pos_word, size_word};<br>&#9;&#9;r_word.pare_off(-val); // inflate the rectangle by `val` pixels<br>&#9;&#9;g.round_rectangle(r_word, val/2, val/2, colors::rosy_brown, true, colors::rosy_brown);<br>&#9;&#9;r_word.pare_off(1); // deflate by 1 pixel<br>&#9;&#9;g.round_rectangle(r_word, val/2, val/2, colors::rosy_brown, true, colors::white);<br><br>&#9;&#9;if(blurred_outline)<br>&#9;&#9;{<br>&#9;&#9;&#9;const color clr {"#e74"};<br>&#9;&#9;&#9;draw_nana(g, {pos_word.x-1, pos_word.y}, size_word, clr);<br>&#9;&#9;&#9;draw_nana(g, {pos_word.x-1, pos_word.y-1}, size_word, clr);<br>&#9;&#9;&#9;draw_nana(g, {pos_word.x, pos_word.y-1}, size_word, clr);<br>&#9;&#9;&#9;draw_nana(g, {pos_word.x+1, pos_word.y}, size_word, clr);<br>&#9;&#9;&#9;draw_nana(g, {pos_word.x+1, pos_word.y+1}, size_word, clr);<br>&#9;&#9;&#9;draw_nana(g, {pos_word.x, pos_word.y+1}, size_word, clr);<br>&#9;&#9;&#9;draw_nana(g, {pos_word.x-1, pos_word.y+1}, size_word, clr);<br>&#9;&#9;&#9;draw_nana(g, pos_word, size_word, colors::black);<br>&#9;&#9;&#9;g.blur(r_word.pare_off(val-4), 2);<br>&#9;&#9;&#9;draw_nana(g, pos_word, size_word, colors::white);<br>&#9;&#9;}<br>&#9;&#9;else draw_nana(g, pos_word, size_word, colors::black);<br>&#9;});<br><br>&#9;fm.collocate();<br>&#9;fm.show();<br>&#9;exec();<br>}</code></pre>
+			</section>
+		</section>
+	</main>
+
+</body>
+</html>

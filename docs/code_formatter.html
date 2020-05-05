@@ -8,7 +8,7 @@
 		function format(text)
 		{
 			var out = document.getElementById('out');
-			if(text.length) out.textContent = '<pre><code>' + text.replace(/&/g, '&amp;').replace(/</g, '&#60;').replace(/>/g, '&#62;').replace(/\n/g, '<br>').replace(/\t/g, '&#9;') + '</code></pre>';
+			if(text.length) out.textContent = '<pre><code>' + text.replace(/&/g, '&amp;').replace(/</g, '&#60;').replace(/>/g, '&#62;').replace(/\n/g, '<br>').replace(/\t/g, '&#9;').replace(/{\{/g, '&#123;{') + '</code></pre>';
 			else out.textContent = '';
 		}
 	</script>
