@@ -127,6 +127,19 @@
 							</table>
 						</td>
 					</tr>
+					<tr><th>Observers</th></tr>
+					<tr>
+						<td>empty</td>
+						<td>checks whether the associated widget is an invalid drawing target</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>bool empty() const;</code></pre>
+							<p>This method checks whether the handle passed to the constructor identifies a window that can't be drawn into.</p>
+							<h4>Return value</h4>
+							<p><code>true</code> if the window can't be drawn into, which can happen if it has been closed (the window of any widget can be closed by calling <a href="index.html#widget::close" target="_blank">widget::close</a>), or if the form containing the widget is zero-sized.</p>
+						</td>
+					</tr>
 				</table>
 			</section>
 
