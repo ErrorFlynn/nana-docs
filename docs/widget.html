@@ -129,13 +129,13 @@
 						<td>
 							<pre><code>virtual window handle() const = 0;</code></pre>
 							<p>
-								Each widget is identified by a unique window handle of type <code>nana::window</code>, which can be accessed by calling this method. Many methods and free functions throughout the library take window handles as arguments, but as mentioned in the introduction at the top of this page, <strong>it's not necessary to call this method directly</strong>.
+								Each widget is identified by a unique window handle of type <code>nana::window</code>, which can be accessed by calling this method. Many methods and free functions throughout the library take window handles as arguments, but as mentioned on the <a href="index.html#widget_intro" target="_blank">introduction to widgets</a> page, <strong>it's not necessary to call this method directly</strong>.
 							</p>
 							<p>
 								The <code>nana::widget</code> class also defines a <a href="https://en.cppreference.com/w/cpp/language/cast_operator" target="_blank">cast operator</a> that enables the <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicit conversion</a> of widget objects to the <code>nana::window</code> type (the operator calls this method to obtain the window handle). That means that the widget object itself can be passed to functions that expect a window handle.
 							</p>
 							<h4>Return value</h4>
-							<div><p>This method returns the window handle if the widget object corresponds to an existing UI element, or <code>nullptr</code> otherwise (if the widget's window has been closed, or if the UI element has not yet been created). Most widgets have a default constructor that constructs an "empty" object, allowing for a later creation of the UI element by calling <code>widget_object::create</code>.</p></div>
+							<div><p>This method returns the window handle if the widget object corresponds to an existing UI element, or <code>nullptr</code> otherwise (if the widget's window has been closed, or if the UI element has not yet been created). Most widgets have a default constructor that constructs an "empty" object, allowing for a later creation of the UI element by calling <a href="index.html#widget_object::create" target="_blank">widget_object::create</a>.</p></div>
 						</td>
 					</tr>
 

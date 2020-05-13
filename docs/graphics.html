@@ -26,6 +26,111 @@
 			<p>The class is defined in header <code>nana/paint/graphics.hpp</code> (automatically included by <code>nana/gui.hpp</code>).</p>
 
 			<section>
+				<h2>nana::drawing</h2>
+				<p>The class <code>nana::drawing</code> allows for custom drawing fuctions to be registered for any widget. Such functions do not replace a widget's default drawing in any way, but rather add to it (first the library draws a widget, and then it calls any registered drawing functions). Multiple drawing functions can be registered for the same widget (they are called in sequence, in the order of registration). The examples at the bottom of this page show how the class <code>nana::drawing</code> can be used to register functions that draw in the window of a widget.</p>
+				<table class="functions">
+					<tr>
+						<td>(constructor)</td>
+						<td>instantiates the class</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>drawing(nana::window handle);</code></pre>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>handle</th></tr>
+								<tr>
+									<td><p>The <a href="index.html#widget::handle" target="_blank">handle</a> of the widget for which to register custom drawing functions.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>update</td>
+						<td>causes the widget to redraw</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void update() const;</code></pre>
+							<p>This method causes the window of the associated widget to redraw, by calling <code>API::refresh_window</code>.</p>
+						</td>
+					</tr>
+					<tr><th>Modifiers</th></tr>
+					<tr>
+						<td>clear</td>
+						<td>unregisters all functions registered via <code>draw</code></td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void clear();</code></pre>
+							<p>This method unregisteres non-diehard functions (those registered via <code>draw</code>, rather than <code>draw_diehard</code>).</p>
+						</td>
+					</tr>
+					<tr>
+						<td>draw</td>
+						<td>registers a drawing function</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0) void draw(const draw_fn_t&amp; fn);<br>(1) void draw(draw_fn_t&amp;&amp; fn);</code></pre>
+							<ol>
+								<li>registers the specified function by copying the function object</li>
+								<li>registers the specified function by moving the function object</li>
+							</ol>
+							<p>This method registers a drawing function that will be called whenever the window of the associated widget (whose handle was provided to the constructor) needs to be drawn. The window may not need to be redrawn immediately after a drawing function is registered, so <code>API::refresh_window</code> should be called if the newly registered function is to be called immediately.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>fn</th></tr>
+								<tr>
+									<td><p>An <code>lvalue</code> or <code>rvalue</code> reference to the callable object to register as a drawing function. The object need not be permanent, since it is either moved or copied to the widget's internal storage, being subsequently owned by the widget. The type <code>draw_fn_t</code> is an alias for <code>std::function&#60;void(paint::graphics&amp;)&#62;</code>.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>draw_diehard</td>
+						<td>registers a diehard drawing function (which cannot be unregistered by <code>clear</code>)</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  diehard_t draw_diehard(const draw_fn_t&amp; fn);<br>(1)  diehard_t draw_diehard(draw_fn_t&amp;&amp; fn);</code></pre>
+							<ol>
+								<li>registers the specified function by copying the function object</li>
+								<li>registers the specified function by moving the function object</li>
+							</ol>
+							<p>This method does the same thing as <code>draw</code>, except that the functions registered via this method cannot be unregistered using <code>clear</code>. To unregister a diehard drawing function, <code>erase</code> must be called with the handle of the function (which is returned by this method).</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>fn</th></tr>
+								<tr>
+									<td><p>An <code>lvalue</code> or <code>rvalue</code> reference to the callable object to register as a drawing function. The object need not be permanent, since it is either moved or copied to the widget's internal storage, being subsequently owned by the widget. The type <code>draw_fn_t</code> is an alias for <code>std::function&#60;void(paint::graphics&amp;)&#62;</code>.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>A handle to the newly registered function, which can be passed to the method <code>erase</code> to unregister the function.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>erase</td>
+						<td>unregisters a diehard drawing function</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void erase(diehard_t handle);</code></pre>
+							<p>This method unregisteres a diehard function (one registered via <code>draw_diehard</code>).</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>handle</th></tr>
+								<tr>
+									<td><p>The handle of the diehard drawing function to unregister (such a handle is returned by the registration method <code>draw_diehard</code>).</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</section>
+
+			<section expanded>
 				<h2>Member functions</h2>
 
 				<table class="functions">
@@ -350,7 +455,7 @@
 						<td>
 							<pre><code>(0)  void rectangle(bool solid);<br>(1)  void rectangle(bool solid, const nana::color&amp; color);<br>(2)  void rectangle(const nana::rectangle&amp; r, bool solid);<br>(3)  void rectangle(const nana::rectangle&amp; r, bool solid, const nana::color&amp; color);</code></pre>
 							<ol>
-								<li>draws a rectangle the size of the buffer, using the currently selected color (the color used by the previous draw operation)</li>
+								<li>draws a rectangle the size of the buffer, using the currently selected color (see <a href="index.html#graphics::palette" target="_blank">palette</a>)</li>
 								<li>draws a rectangle the size of the buffer, using the specified color</li>
 								<li>draws a rectangle with the specified size and position, using the currently selected color</li>
 								<li>draws a rectangle with the specified size and position, using the specified color</li>
@@ -414,7 +519,7 @@
 							<pre><code>(0)  void set_pixel(int x, int y, const nana::color&amp; color);<br>(1)  void set_pixel(int x, int y);</code></pre>
 							<ol>
 								<li>sets a pixel with the specified color</li>
-								<li>sets a pixel with the currently selected color (set by a previous drawing operation)</li>
+								<li>sets a pixel with the currently selected color (see <a href="index.html#graphics::palette" target="_blank">palette</a>)</li>
 							</ol>
 							<h4>Parameters</h4>
 							<table>
