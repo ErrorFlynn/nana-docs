@@ -264,7 +264,8 @@ function makeSideBar()
 	{
 		headers[0].style.display = 'none';
 		let separators = fdoc.querySelectorAll('ul#nav-list .separator');
-		separators[0].style.display = 'none';
+		if(separators.length)
+			separators[0].style.display = 'none';
 	}
 }
 
