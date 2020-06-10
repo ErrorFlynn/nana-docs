@@ -57,6 +57,8 @@ function onTOCLink(e)
 {
 	if(!this.classList.contains('selected'))
 	{
+		fnTarget = "";
+		secTarget = -1;
 		let href = this.getAttribute('data-href');
 		if(e.which == 1) // left button
 		{
