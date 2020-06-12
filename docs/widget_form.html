@@ -195,7 +195,7 @@
 				</table>
 				<p>For example, the following code creates a resizable window with a "minimize" button (the "close" button is always implicit and doesn't need specifying):</p>
 				<pre><code>&#9;form fm {rectangle{0, 0, 543, 345}, appear::decorate&#60;appear::sizable, appear::minimize&#62;{}};</code></pre>
-				<p>Omitting all template arguments (leaving all template parameters to be initialized with a default value) results in a window with a non-sizing border and only the close button:</p>
+				<p>An important feature of these templates is that <strong>the number of arguments and their order is not fixed</strong> (any number of arguments can be passed to a template in any order). For <code>appear::decorate</code>, omitting all arguments (leaving all template parameters to be initialized with a default value) results in a window with a non-sizing border and only the close button:</p>
 				<pre><code>&#9;form fm {rectangle{0, 0, 543, 345}, appear::decorate{}};</code></pre>
 				<hr />
 				<p>The class template <code>nana::appear::bald</code> is used when creating a window without a title bar, that optionally has a button in the task bar, and optionally has a sizing border (as opposed to no border at all). The following template arguments can be used when instantiating it:</p>
