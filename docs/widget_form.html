@@ -21,7 +21,7 @@
 		<section>
 			<h1>Class nana::form</h1>
 			<p>
-				The class <code>nana::form</code> is one of the two widget classes in the <em>root</em> category (the other being <code>nana::nested_form</code>). It is the only widget class that wraps a top-level (non-child) OS native window, and can be used as the main application window, or as a dialog box (modal or non-modal).
+				The class <code>nana::form</code> is one of the two widget classes in the <em>root</em> category (the other being <code>nana::nested_form</code>). It is the only widget class that wraps a top-level (non-child) OS native window, and can be used as the main application window, or as a dialog box (modal or modeless).
 			</p>
 			<p>
 				Like all Nana classes that wrap system resources, <code>nana::form</code> makes available the native handle of the resource it wraps (OS native window). That means that platform-specific code can be used to manipulate or otherwise interact with the wrapped native window (although it is usually not necessary to do so, since the library provides extensive functionality).
