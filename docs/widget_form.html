@@ -24,23 +24,62 @@
 				The class <code>nana::form</code> is one of the two widget classes in the <em>root</em> category (the other being <code>nana::nested_form</code>). It is the only widget class that wraps a top-level (non-child) OS native window, and can be used as the main application window, or as a dialog box (modal or non-modal).
 			</p>
 			<p>
-				Like most Nana classes that wrap system resources (such as graphics contexts, fonts, etc), <code>nana::form</code> makes available the native handle of the resource it wraps (OS native window). That means that platform-specific code can be used to manipulate or otherwise interact with the native window (although it is usually not necessary to do so, since the library provides extensive functionality).
+				Like all Nana classes that wrap system resources, <code>nana::form</code> makes available the native handle of the resource it wraps (OS native window). That means that platform-specific code can be used to manipulate or otherwise interact with the wrapped native window (although it is usually not necessary to do so, since the library provides extensive functionality).
 			</p>
 
 			<section>
-				<h2>Collapsable subsection containing table</h2>
+				<h2>Events</h2>
+				<p>In addition to the <a href="index.html#general_events" target="_blank">general events</a> that all widgets support, a form also has the specialized event <code>basic_event&#60;arg_unload&#62; unload;</code>, which triggers when the form is about to close. The structure <code>arg_unload</code> (derived from <a href="index.html#general_events::3" target="_blank">nana::event_arg</a>) defines the following data members:</p>
 				<table>
-					<tr> <th>First column</th> <th>Second column</th> </tr>
+					<tr> <th>Data member</th> <th>Type</th> <th>Description</th> </tr>
+					<tr> <td>window_handle</td> <td><code>nana::window</code></td> <td>a handle to the form widget that is the event target</td> </tr>
+					<tr> <td>cancel</td> <td><code>bool</code></td> <td>this flag can be set to <code>true</code> to cancel the closing of the form</td> </tr>
+				</table>
+			</section>
+
+			<section expanded>
+				<h2>form_base</h2>
+				<p>The class <code>nana::drawerbase::form::form_base</code> (derived from <a href="index.html#widget_object::1" target="_blank">nana::widget_object&lt;root_tag, ...&gt;</a>) is the base class of <code>nana::form</code> and <code>nana::nested_form</code>. It encapsulates a <a href="index.html#place" target="_blank">nana::place</a> object (for managing the layout of child widgets in the form window), along with a few methods that provide access to the <code>place</code> object. This internal <code>place</code> object is only provided for convenience, to avoid the need for a user-owned object (one can still be used instead, if desired).</p>
+				<p>The class defines the following member functions:</p>
+				<table class="functions">
+					<tr><td>collocate</td><td>calls the <a href="index.html#place::collocate" target="_blank">collocate</a> method of the <code>place</code> object</td></tr>
 					<tr>
-						<td>first cell</td>
-						<td>second cell</td>
+						<td>
+							<pre><code>void collocate() noexcept;</code></pre>
+							<p>This method is provided for convenience, to avoid the need to explicitly call <code>get_place().collocate()</code>.</p>
+							<pre><code>&#9;form fm;<br>&#9;/* define div string and assign widgets to fields */<br>&#9;fm.collocate(); // instead of fm.get_place().collocate();</code></pre>
+						</td>
+					</tr>
+					<tr><td>div</td><td>calls the <a href="index.html#place::div" target="_blank">div</a> method of the <code>place</code> object</td></tr>
+					<tr>
+						<td>
+							<pre><code>void div(std::string div_text);</code></pre>
+							<p>This method is provided for convenience, to avoid the need to explicitly call <code>get_place().div()</code>.</p>
+							<pre><code>&#9;form fm;<br>&#9;fm.div(" -&#62; define layout rules here &#60;- "); // instead of fm.get_place().div("...");</code></pre>
+						</td>
+					</tr>
+					<tr><td>get_place</td><td>returns a reference to the <code>place</code> object</td></tr>
+					<tr>
+						<td>
+							<pre><code>place &amp; get_place();</code></pre>
+							<h4>Return value</h4>
+							<p>A reference to the internal <code>place</code> object.</p>
+						</td>
+					</tr>
+					<tr><td>operator[]</td><td>calls the <a href="index.html#place::field" target="_blank">operator[]</a> method of the <code>place</code> object</td></tr>
+					<tr>
+						<td>
+							<pre><code>place::field_interface&amp; operator[](const char* field_name);</code></pre>
+							<p>This method is provided for convenience, to avoid the need to explicitly call <code>get_place()[]</code>.</p>
+							<pre><code>&#9;form fm;<br>&#9;/* define div string here */<br>&#9;button btn {fm, "button caption"};<br>&#9;fm["field_name"] &#60;&#60; btn; // instead of fm.get_place()["field_name"] &#60;&#60; btn;</code></pre>
+						</td>
 					</tr>
 				</table>
 			</section>
 
 			<section expanded>
 				<h2>Member functions</h2>
-				<p>In addition to the methods inherited from <a href="index.html#widget" target="_blank">nana::widget</a> and <a href="index.html#widget_object" target="_blank">nana::widget_object&lt;root_tag, ...&gt;</a>, the class <code>nana::form</code> defines the following methods:</p>
+				<p>In addition to the methods inherited from <a href="index.html#widget" target="_blank">nana::widget</a>, <a href="index.html#widget_object::1" target="_blank">nana::widget_object&lt;root_tag, ...&gt;</a>, and <code>form_base</code> (documented above), the class <code>nana::form</code> defines the following methods:</p>
 
 				<table class="functions">
 					<tr>
@@ -63,19 +102,19 @@
 							<table>
 								<tr><th>rect</th></tr>
 								<tr>
-									<td><p>A rectangle indicating the desired position and dimensions for the window. The structure <code>nana::rectangle</code> has the members <code>x</code> and <code>y</code> of type <code>int</code>, and <code>width</code> and <code>height</code> of type <code>unsigned</code>.</p></td>
+									<td><p>A <a href="index.html#basic_types::2" target="_blank">nana::rectangle</a> structure indicating the desired position and dimensions for the window.</p></td>
 								</tr>
 								<tr><th>owner</th></tr>
 								<tr>
-									<td><p>The <code>nana::form</code> widget whose window should own this window. An owner window always stays under the window it owns, in the z-order.</p></td>
+									<td><p>The <code>nana::form</code> widget whose window should own this window. An owner window always stays under the window it owns.</p></td>
 								</tr>
 								<tr><th>size</th></tr>
 								<tr>
-									<td><p>The desired window size (the window will be centered on the screen). The structure <code>nana::size</code> has the members <code>width</code> and <code>height</code> of type <code>unsigned</code>.</p><p>This parameter controls the size of the <em title="the area of the window that the application draws on">client area</em>. To set the size of the entire window, including the <em title="the elements painted and controlled&#10;by the system (title bar and border)">decorations</em> (nonclient area), call <a href="index.html#api_form::window_outline_size" target="_blank">API::window_outline_size</a>.</p></td>
+									<td><p>The desired window size (the window will be centered on the screen), as a <a href="index.html#basic_types::1" target="_blank">nana::size</a> structure. This parameter controls the size of the <em title="the area of the window that the application draws on">client area</em>. To set the size of the entire window, including the <em title="the elements painted and controlled&#10;by the system (title bar and border)">decorations</em> (nonclient area), call <a href="index.html#api_form::window_outline_size" target="_blank">API::window_outline_size</a>.</p></td>
 								</tr>
 								<tr><th>appear</th></tr>
 								<tr>
-									<td><p>The appearance attributes that the window should have, as a <code title="struct appearance&#10;{&#10;	bool taskbar;&#10;	bool floating;&#10;	bool no_activate;&#10;&#10;	bool minimize;&#10;&#9;bool maximize;&#10;&#9;bool sizable;&#10;&#9;bool decoration;&#10;};">nana::appearance</code> structure.</p></td>
+									<td><p>The appearance properties that the window should have, as a <code title="struct appearance&#10;{&#10;	bool taskbar;&#10;	bool floating;&#10;	bool no_activate;&#10;&#10;	bool minimize;&#10;&#9;bool maximize;&#10;&#9;bool sizable;&#10;&#9;bool decoration;&#10;};">nana::appearance</code> structure. If this parameter is omitted, the window is created with a title bar, sizing border, a button in the taskbar, and all system buttons (minimize, maximize, close).</p></td>
 								</tr>
 							</table>
 						</td>
@@ -100,42 +139,107 @@
 						<td>
 							<pre><code>void wait_for_this();</code></pre>
 							<p>
-								This method blocks the calling routine, returning only when the form is closed. Message pumping continues to work, allowing the user to interact with the form.
+								This method blocks the calling routine, returning only when the form is closed. The event loop continues to work, allowing the user to interact with the form.
 							</p>
 						</td>
 					</tr>
-
-					<tr> <th>Layout management</th> </tr>
-					<tr>
-						<td>function 2</td>
-						<td>brief description 2</td>
-					</tr>
-					<tr>
-						<td>
-							<pre><code>(0)  void function2(bool param);<br>(1)  bool function2() const;</code></pre>
-							<p>
-								General description.
-							</p>
-							<ol>
-								<li>brief description of overload</li>
-								<li>brief description of overload</li>
-							</ol>
-							<h4>Parameters</h4>
-							<table>
-								<tr><th>param</th></tr>
-								<tr>
-									<td><p>Description of parameter.</p></td>
-								</tr>
-							</table>
-							<h4>Return value</h4>
-							<p>Description of return value.</p>
-						</td>
-					</tr>
-
 				</table>
+			</section>
+		</section>
 
+		<section>
+			<h1>Class nana::nested_form</h1>
+			<p>The class <code>nana::nested_form</code> is very similar to <code>nana::form</code> (both are derived from <code>form_base</code>), the only difference being that <code>nested_form</code> wraps an OS child window, instead of a top-level window. A child window (or "subwindow" on X11) is confined to the area of the parent window, being clipped to that area when moved.</p>
+			<p>This class doesn't have any member functions, other than the following constructors:</p>
+			<table class="functions">
+				<tr>
+					<td>
+						<pre><code>(0)  nested_form(const form&amp; parent, const rectangle&amp; r = {}, const appearance&amp; appear = {});<br>(1)  nested_form(const nested_form&amp; parent, const rectangle&amp; r = {}, const appearance&amp; appear = {});<br>(2)  nested_form(window parent, const appearance&amp; appear);<br>(3)  nested_form(window parent, const rectangle&amp; r = {}, const appearance&amp; appear = {});</code></pre>
+						<h4>Parameters</h4>
+						<table>
+							<tr><th>parent</th></tr>
+							<tr>
+								<td><p>The parent of the nested form, which can be either a <code>form</code>, or another <code>nested_form</code>.</p></td>
+							</tr>
+							<tr><th>r</th></tr>
+							<tr>
+								<td><p>A <a href="index.html#basic_types::2" target="_blank">nana::rectangle</a> structure indicating the desired position and dimensions for the window. The position is relative to the parent window (coordinates {0, 0} represent the upper-left corner of the parent window).</p></td>
+							</tr>
+							<tr><th>appear</th></tr>
+							<tr>
+								<td><p>The appearance properties that the window should have, as a <code title="struct appearance&#10;{&#10;	bool taskbar;&#10;	bool floating;&#10;	bool no_activate;&#10;&#10;	bool minimize;&#10;&#9;bool maximize;&#10;&#9;bool sizable;&#10;&#9;bool decoration;&#10;};">nana::appearance</code> structure. If this parameter is omitted, the window is created with a title bar, sizing border, and all system buttons (minimize, maximize, close).</p></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</section>
+
+		<section>
+			<h1>Usage details and examples</h1>
+
+			<section>
+				<h2>Controlling native window properties</h2>
+				<p>In order to set the appearance properties of the native window that a <code>nana::form</code> or <code>nana::nested_form</code> object wraps, a <code title="struct appearance&#10;{&#10;	bool taskbar;&#10;	bool floating;&#10;	bool no_activate;&#10;&#10;	bool minimize;&#10;&#9;bool maximize;&#10;&#9;bool sizable;&#10;&#9;bool decoration;&#10;};">nana::appearance</code> structure must be passed to a constructor. For example, a call to a constructor might look like this:</p>
+				<pre><code>&#9;form fm {rectangle{0, 0, 543, 345}, appearance{true, true, false, false, true, true, true}};</code></pre>
+				<p>That's not very readable or easy to write, so the library provides three helper class templates that generate an appearance object: <code>nana::appear::decorate</code>, <code>nana::appear::bald</code>, and <code>nana::appear::optional</code>. Each of these classes provides a <a href="https://en.cppreference.com/w/cpp/language/cast_operator" target="_blank">cast operator</a> that returns a <code>nana::appearance</code> with predefined values.</p>
+				<hr />
+				<p>The class template <code>nana::appear::decorate</code> is used when creating a window with a title bar (the term "decorate" refers to <a href="https://en.wikipedia.org/wiki/Window_%28computing%29#Window_decoration" target="_blank">window decoration</a>), that has a button in the task bar. The following template arguments can be used when instantiating it:</p>
+				<table>
+					<tr> <th>Template argument</th> <th>Description</th> </tr>
+					<tr> <td>appear::floating</td> <td>the window is a topmost window, which always stays on top of non-topmost windows</td> </tr>
+					<tr> <td>appear::no_activate</td> <td>the window is not automatically activated after being created (is not given input focus)</td> </tr>
+					<tr> <td>appear::minimize</td> <td>the window has a "minimize" button</td> </tr>
+					<tr> <td>appear::maximize</td> <td>the window has a "maximize" button</td> </tr>
+					<tr> <td>appear::sizable</td> <td>the window has a border that allows the user to resize it (omission results in a non-sizing border)</td> </tr>
+				</table>
+				<p>For example, the following code creates a resizable window with a "minimize" button (the "close" button is always implicit and doesn't need specifying):</p>
+				<pre><code>&#9;form fm {rectangle{0, 0, 543, 345}, appear::decorate&#60;appear::sizable, appear::minimize&#62;{}};</code></pre>
+				<p>Omitting all template arguments (leaving all template parameters to be initialized with a default value) results in a window with a non-sizing border and only the close button:</p>
+				<pre><code>&#9;form fm {rectangle{0, 0, 543, 345}, appear::decorate{}};</code></pre>
+				<hr />
+				<p>The class template <code>nana::appear::bald</code> is used when creating a window without a title bar, that optionally has a button in the task bar, and optionally has a sizing border (as opposed to no border at all). The following template arguments can be used when instantiating it:</p>
+				<table>
+					<tr> <th>Template argument</th> <th>Description</th> </tr>
+					<tr> <td>appear::taskbar</td> <td>the window has a button in the taskbar (omission results in no button in the taskbar)</td> </tr>
+					<tr> <td>appear::floating</td> <td>the window is a topmost window, which always stays on top of non-topmost windows</td> </tr>
+					<tr> <td>appear::no_activate</td> <td>the window is not automatically activated after being created (is not given input focus)</td> </tr>
+					<tr> <td>appear::sizable</td> <td>the window has a border that allows the user to resize it (omission results in no border at all)</td> </tr>
+				</table>
+				<p>For example, the following code creates a window without title bar, but with a sizing border and a button in the taskbar:</p>
+				<pre><code>&#9;form fm {rectangle{0, 0, 543, 345}, appear::bald&#60;appear::sizable, appear::taskbar&#62;{}};</code></pre>
+				<p>Omitting all template arguments (leaving all template parameters to be initialized with a default value) results in a borderless window without a taskbar button:</p>
+				<pre><code>&#9;form fm {rectangle{0, 0, 543, 345}, appear::bald{}};</code></pre>
+				<hr />
+				<p>The class template <code>nana::appear::optional</code> creates a window with or without a title bar, depending on the <code>bool</code> template parameter. If the <code>bool</code> parameter is <code>true</code>, the window has a title bar. In that case, the minimize and maximize buttons are present if <code>appear::taskbar</code> is used, otherwise the window only has the close button. The following template arguments can be used when instantiating it:</p>
+				<table>
+					<tr> <th>Template argument</th> <th>Description</th> </tr>
+					<tr> <td>appear::taskbar</td> <td>the window has a button in the taskbar</td> </tr>
+					<tr> <td>appear::floating</td> <td>the window is a topmost window, which always stays on top of non-topmost windows</td> </tr>
+					<tr> <td>appear::no_activate</td> <td>the window is not automatically activated after being created (is not given input focus)</td> </tr>
+					<tr> <td>appear::sizable</td> <td>the window has a border that allows the user to resize it</td> </tr>
+				</table>
+				<p>For example, the following code creates a resizable window with a button in the task bar, and all system buttons:</p>
+				<pre><code>&#9;form fm {rectangle{0, 0, 543, 345}, appear::optional&#60;true, appear::taskbar, appear::sizable&#62;{}};</code></pre>
+				<p>To create a window without title bar, pass <code>false</code> to the <code>bool</code> parameter:</p>
+				<pre><code>&#9;form fm {rectangle{0, 0, 543, 345}, appear::optional&#60;false, appear::taskbar, appear::sizable&#62;{}};</code></pre>
+				<hr />
+				<p>And finally, it should be noted that the library provides a helper function in the <code>API</code> namespace, that returns a rectangle that's centered on the screen. For example, the following code creates a 543x345 window centered on the screen:</p>
+				<pre><code>&#9;form fm {API::make_center(543, 345), appear::optional&#60;true, appear::taskbar, appear::sizable&#62;{}};</code></pre>
+				<hr />
 			</section>
 
+			<section>
+				<h2>Nested form example</h2>
+				<img src="img/nested_form.png" class="no-shadow" />
+				<pre><code>#include &#60;nana/gui.hpp&#62;<br><br>int main()<br>{<br>&#9;using namespace nana;<br>&#9;form fm {API::make_center(765, 567)};<br>&#9;fm.caption("Main form (top-level window)");<br><br>&#9;nested_form nfm1 {fm, API::make_center(fm, 654, 456)},<br>&#9;&#9;nfm2 {nfm1, API::make_center(nfm1, 543, 345)};<br>&#9;nfm1.caption("Child form #1 (nested inside the main form)");<br>&#9;nfm2.caption("Child form #2 (nested inside child form #1)");<br>&#9;nfm1.bgcolor(colors::light_goldenrod_yellow);<br>&#9;nfm2.bgcolor(colors::white);<br><br>&#9;nfm1.show();<br>&#9;nfm2.show();<br>&#9;fm.show();<br>&#9;nana::exec();<br>}</code></pre>
+				<hr />
+			</section>
+			<section expanded>
+				<h2>Modal and modeless forms</h2>
+				<p>A <code>nana::form</code> window can behave as a <a href="https://en.wikipedia.org/wiki/Modal_window" target="_blank">modal window</a> when it is owned by another <code>nana::form</code> (an owner can be designated when the object is constructed). To make an owned form modal, the method <code>form::modality</code> must be called, as shown in this example:</p>
+				<pre><code>#include &#60;nana/gui.hpp&#62;<br>#include &#60;nana/gui/widgets/button.hpp&#62;<br><br>int main()<br>{<br>&#9;using namespace nana;<br><br>&#9;form fm {API::make_center(543, 345)};<br>&#9;fm.caption("Main form");<br>&#9;fm.div("vert margin=15 &#60;&#62; &#60;buttons weight=30 gap=15&#62; &#60;&#62;");<br><br>&#9;button btn1 {fm, "Open modal form"}, btn2 {fm, "Open modeless form"};<br>&#9;fm["buttons"] &#60;&#60; btn1 &#60;&#60; btn2;<br><br>&#9;btn1.events().click([&amp;]<br>&#9;{<br>&#9;&#9;form modfm {fm};<br>&#9;&#9;modfm.caption("Modal form");<br><br>&#9;&#9;// `modfm.modality()` returns only when the window of `modfm` closes, preventing <br>&#9;&#9;// `modfm` from going out of scope before the its window is closed by the user<br>&#9;&#9;modfm.modality();<br>&#9;});<br><br>&#9;btn2.events().click([&amp;]<br>&#9;{<br>&#9;&#9;// the form object below can't be constructed on the stack, because it would<br>&#9;&#9;// immediately go out of scope and be destructed; instead, the helper class<br>&#9;&#9;// `form_loader` is used to dynamically allocate a `form` object that is managed<br>&#9;&#9;// by the library, and is automatically deallocated when the form window closes<br>&#9;&#9;auto &amp;newfm {form_loader&#60;form&#62;{}(API::make_center(321, 123))};<br>&#9;&#9;newfm.caption("Modeless form");<br>&#9;&#9;newfm.show();<br>&#9;});<br>&#9;<br>&#9;fm.collocate();<br>&#9;fm.show();<br>&#9;nana::exec();<br>}</code></pre>
+			</section>
 		</section>
 	</main>
 

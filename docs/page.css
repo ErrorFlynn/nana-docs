@@ -295,17 +295,23 @@ table.functions > tbody > tr > td {
 	padding : 8px 25px 9px 25px;
 }
 
+main > section > table.functions
+{
+	width : inherit;
+	margin : 0 23px 20px 23px;
+}
+
 /*table.functions:not(:nth-child(2)) > tbody > tr:first-child td {
 	border-top : 1px solid #e3e3e3;
 	padding-top : 8px;
 }*/
 
-table.functions > tbody > tr:first-child td {
+table.functions > tbody > tr:first-child>td {
 	border-top : 1px solid #e3e3e3;
 	padding-top : 8px;
 }
 
-h2+table.functions > tbody > tr:first-child td {
+h2+table.functions > tbody > tr:first-child>td {
 	border-top : none;
 	padding-top : 0;
 }
@@ -321,6 +327,10 @@ table.functions h3 {
 table.functions pre > code {
 	padding-left : 10px;
 	font-size : /*.8125rem*/13px;
+}
+
+table.functions table > tbody > tr > th {
+	text-align : left!important;
 }
 
 table.functions > tbody > tr > th {

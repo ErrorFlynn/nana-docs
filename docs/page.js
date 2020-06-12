@@ -59,7 +59,7 @@ function makeCollapsableRows()
 			var hiddenCell = rows[n].querySelector('td:only-child');
 			if(hiddenCell)
 			{
-				var linkCell = rows[n-1].querySelector('td:first-child');
+				var linkCell = (n>0) ? rows[n-1].querySelector('td:first-child') : 0;
 				if(linkCell)
 				{
 					rows[n-1].className = 'clickable-row';
@@ -101,7 +101,7 @@ function makeCollapsableRows()
 				}
 			}
 		}
-	});	
+	});
 }
 
 function makeCollapsableSections()
@@ -111,7 +111,7 @@ function makeCollapsableSections()
 	{
 		let sections = topSection.querySelectorAll('section');
 		let expanded = topSection.querySelectorAll('section[expanded]');
-		if(sections.length == expanded.length) break;
+		if(sections.length == expanded.length) continue;
 		if(sections.length < 2) continue;
 		sections.forEach(section =>
 		{
