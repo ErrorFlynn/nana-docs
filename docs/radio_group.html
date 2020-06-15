@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>nana::radio_group</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" href="page.css" media="all">
+	<link href="fonts/Oswald/Oswald.css" rel="stylesheet">
+	<link href="fonts/Arimo/Arimo.css" rel="stylesheet">
+	<link href="fonts/OxygenMono/OxygenMono.css" rel="stylesheet">
+	<link rel="stylesheet" href="highlight/default.css">
+	<script src="highlight/highlight.pack.js"></script>
+	<script>hljs.configure({ useBR: true }); hljs.initHighlightingOnLoad();</script>
+	<script src="page.js"></script>
+</head>
+
+<body>
+
+	<main>
+
+		<section>
+			<h1>Class nana::radio_group</h1>
+			<p>The class <code>nana::checkbox</code> provides a mode that draws the checkbox with the appearance of a radio button, but it doesn't provide the behavior of a radio button, so that behavior would have to be implemented by the user via event handling (see the example further below).</p>
+			<p>The class <code>nana::radio_group</code> frees the user from having to write the code that implements the radio group logic, providing a simple and convenient way to create a group of radio buttons out of checkboxes.</p>
+			<p>The class is defined in header <code>nana/gui/widgets/checkbox.hpp</code>.</p>
+
+			<section expanded>
+				<h2>Member functions</h2>
+
+				<table class="functions">
+					<tr><td>add</td><td>adds a checkbox to the radio group</td></tr>
+					<tr>
+						<td>
+							<pre><code>void add(checkbox&amp; cbox);</code></pre>
+							<p>Adds a checkbox to the group.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>cbox</th></tr>
+								<tr> <td><p>A reference to the checkbox to add.</p></td> </tr>
+							</table>
+						</td>
+					</tr>
+					<tr><td>checked</td><td>gets the index of the checked checkbox</td></tr>
+					<tr>
+						<td>
+							<pre><code>std::size_t checked() const;</code></pre>
+							<h4>Return value</h4>
+							<p>The index of checked checkbox, or <code>radio_group::npos</code> if no checkbox is checked.</p>
+						</td>
+					</tr>
+					<tr><td>size</td><td>gets the number of checkboxes in the group</td></tr>
+					<tr>
+						<td>
+							<pre><code>std::size_t size() const;</code></pre>
+							<h4>Return value</h4>
+							<p>the number of checkboxes in the group</p>
+						</td>
+					</tr>
+
+					<tr> <th>Events</th> </tr>
+					<tr> <td>on_clicked</td> <td>registers a click event handler for the group</td> </tr>
+					<tr>
+						<td>
+							<pre><code>template&#60;typename Function&#62; void on_clicked(Function&amp;&amp; fn);</code></pre>
+							<p>This method registers a callback function to handle the click event for all the checkboxes currently part of the radio group.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>fn</th></tr>
+								<tr>
+									<td><p>A function to handle the <a href="index.html#general_events::click" target="_blank">click event</a>. The function can have the prototype <code>void(void)</code>, or <code>void(const arg_click&amp;)</code>.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr> <td>on_checked</td> <td>registers a handler for the <code>checked</code> event</td> </tr>
+					<tr>
+						<td>
+							<pre><code>template&#60;typename Function&#62; void on_checked(Function&amp;&amp; fn);</code></pre>
+							<p>This method registers a callback function to handle the <code>checked</code> event for all the checkboxes currently part of the radio group.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>fn</th></tr>
+								<tr>
+									<td><p>A function to handle the <a href="index.html#widget_checkbox::0" target="_blank">checked event</a> for all the checkboxes currently in the group. The function can have the prototype <code>void(void)</code>, or <code>void(const arg_checkbox&amp;)</code>.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+				</table>
+
+			</section>
+
+			<section expanded>
+				<h2>Examples</h2>
+				<p>The following example shows how to use <code>nana::radio_group</code> to turn several checkboxes into a group of radio buttons:</p>
+				<div><pre><code>#include &#60;nana/gui.hpp&#62;<br>#include &#60;nana/gui/widgets/checkbox.hpp&#62;<br>#include &#60;nana/gui/widgets/button.hpp&#62;<br>#include &#60;iostream&#62;<br><br>int main()<br>{<br>&#9;using namespace nana;<br><br>&#9;form fm;<br>&#9;fm.div("\<br>&#9;&#9;&#9;vert margin=15 \<br>&#9;&#9;&#9;&#60; &#60;weight=95 &#60;cboxes vert arrange=[18,repeated] gap=5&#62;&#62; &#62; \<br>&#9;");<br><br>&#9;radio_group rgp;<br><br>&#9;std::vector&#60;std::unique_ptr&#60;checkbox&#62;&#62; cboxes;<br>&#9;for(int n {0}; n&#60;5; n++)<br>&#9;{<br>&#9;&#9;cboxes.push_back(std::make_unique&#60;checkbox&#62;(fm, "Checkbox " + std::to_string(n)));<br>&#9;&#9;fm["cboxes"] &#60;&#60; *cboxes.back();<br>&#9;&#9;rgp.add(*cboxes.back());<br>&#9;}<br><br>&#9;rgp.on_checked([](const arg_checkbox &amp;arg)<br>&#9;{<br>&#9;&#9;if(arg.widget-&#62;checked())<br>&#9;&#9;&#9;std::cout &#60;&#60; arg.widget-&#62;caption() &#60;&#60; " checked\n";<br>&#9;});<br><br>&#9;cboxes.front()-&#62;check(true); // check the first checkbox<br><br>&#9;fm.collocate();<br>&#9;fm.show();<br>&#9;nana::exec();<br>}</code></pre></div>
+				<p>The following example shows what it would take to implement the radio group logic "manually", without the help of <code>nana::radio_group</code>:</p>
+				<div><pre><code>#include &#60;nana/gui.hpp&#62;<br>#include &#60;nana/gui/widgets/checkbox.hpp&#62;<br>#include &#60;nana/gui/widgets/button.hpp&#62;<br>#include &#60;iostream&#62;<br><br>int main()<br>{<br>&#9;using namespace nana;<br><br>&#9;form fm;<br>&#9;fm.div("\<br>&#9;&#9;&#9;vert margin=15 \<br>&#9;&#9;&#9;&#60; &#60;weight=95 &#60;cboxes vert arrange=[18,repeated] gap=5&#62;&#62; &#62; \<br>&#9;&#9;&#9;&#60;&#62; \<br>&#9;&#9;&#9;&#60;button weight=30&#62; \<br>&#9;");<br><br>&#9;std::vector&#60;std::unique_ptr&#60;checkbox&#62;&#62; cboxes;<br>&#9;for(int n {0}; n&#60;5; n++)<br>&#9;{<br>&#9;&#9;cboxes.push_back(std::make_unique&#60;checkbox&#62;(fm, "Checkbox" + std::to_string(n)));<br>&#9;&#9;fm["cboxes"] &#60;&#60; *cboxes.back();<br>&#9;}<br><br>&#9;bool radio {false};<br><br>&#9;button btn {fm, "Toggle radio group logic"};<br>&#9;fm["button"] &#60;&#60; btn;<br>&#9;btn.events().click([&amp;]<br>&#9;{<br>&#9;&#9;radio = !radio;<br>&#9;&#9;if(radio)<br>&#9;&#9;{<br>&#9;&#9;&#9;// make sure only one checkbox is checked when switching to radio mode<br>&#9;&#9;&#9;for(auto &amp;cb : cboxes)<br>&#9;&#9;&#9;&#9;cb-&#62;check(false);<br>&#9;&#9;&#9;cboxes.front()-&#62;check(true);<br>&#9;&#9;}<br>&#9;&#9;else<br>&#9;&#9;{<br>&#9;&#9;&#9;for(auto &amp;cb : cboxes)<br>&#9;&#9;&#9;&#9;cb-&#62;react(true);<br>&#9;&#9;}<br><br>&#9;&#9;// switch between radio button appearance and normal checkbox appearance<br>&#9;&#9;for(auto &amp;cb : cboxes)<br>&#9;&#9;&#9;cb-&#62;radio(radio);<br>&#9;});<br><br>&#9;// check event handler that implements the radio group logic<br>&#9;auto check_handler = [&amp;](const arg_checkbox &amp;arg)<br>&#9;{<br>&#9;&#9;if(arg.widget-&#62;checked())<br>&#9;&#9;{<br>&#9;&#9;&#9;if(radio)<br>&#9;&#9;&#9;{<br>&#9;&#9;&#9;&#9;arg.widget-&#62;react(false);<br>&#9;&#9;&#9;&#9;for(auto &amp;cb : cboxes)<br>&#9;&#9;&#9;&#9;{<br>&#9;&#9;&#9;&#9;&#9;if(cb-&#62;handle() != arg.widget-&#62;handle())<br>&#9;&#9;&#9;&#9;&#9;{<br>&#9;&#9;&#9;&#9;&#9;&#9;cb-&#62;react(true);<br>&#9;&#9;&#9;&#9;&#9;&#9;cb-&#62;check(false);<br>&#9;&#9;&#9;&#9;&#9;}<br>&#9;&#9;&#9;&#9;}<br>&#9;&#9;&#9;&#9;std::cout &#60;&#60; arg.widget-&#62;caption() &#60;&#60; " checked (radio button mode)\n";<br>&#9;&#9;&#9;}<br>&#9;&#9;&#9;else std::cout &#60;&#60; arg.widget-&#62;caption() &#60;&#60; " checked\n";<br>&#9;&#9;}<br>&#9;&#9;else<br>&#9;&#9;{<br>&#9;&#9;&#9;if(!radio) std::cout &#60;&#60; arg.widget-&#62;caption() &#60;&#60; " unchecked\n";<br>&#9;&#9;}<br>&#9;};<br><br>&#9;for(auto &amp;cb : cboxes)<br>&#9;&#9;cb-&#62;events().checked(check_handler);<br><br>&#9;fm.collocate();<br>&#9;fm.show();<br>&#9;nana::exec();<br>}</code></pre></div>
+			</section>
+
+		</section>
+	</main>
+
+</body>
+</html>
