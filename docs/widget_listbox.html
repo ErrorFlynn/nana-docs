@@ -173,15 +173,15 @@
 			<table>
 				<tr> <th>Event</th> <th>Description</th> </tr>
 				<tr>
-					<td>checked(const arg_listbox&)</td>
+					<td>checked(const arg_listbox&amp;)</td>
 					<td>occurs when an item is checked or unchecked</td>
 				</tr>
 				<tr>
-					<td>selected(const arg_listbox&)</td>
+					<td>selected(const arg_listbox&amp;)</td>
 					<td>occurs when an item is selected or deselected</td>
 				</tr>
 				<tr>
-					<td>category_dbl_click(const arg_listbox_category&)</td>
+					<td>category_dbl_click(const arg_listbox_category&amp;)</td>
 					<td>occurs when a category is double clicked</td>
 				</tr>
 			</table>
@@ -359,7 +359,7 @@
 						<h4>Return value</h4>
 						<p>a reference to the column at the requested position</p>
 						<h4>Exception</h4>
-						<p><code>std::out_of_range</code> if !(pos < column_size())</p>
+						<p><code>std::out_of_range</code> if !(pos &lt; column_size())</p>
 					</td>
 				</tr>
 
@@ -478,7 +478,7 @@
 				</tr>
 				<tr>
 					<td>
-						<pre><code>void reorder_columns(size_type first_col,<br>						size_type last_col,<br>						index_pair row, bool reverse,<br>						std::function&#60;bool(const std::string &cell1, size_type col1,<br>										const std::string &cell2, size_type col2,<br>										const nana::any *rowval,<br>										bool reverse)&#62; comp);</code></pre>
+						<pre><code>void reorder_columns(size_type first_col,<br>						size_type last_col,<br>						index_pair row, bool reverse,<br>						std::function&#60;bool(const std::string &amp;cell1, size_type col1,<br>										const std::string &amp;cell2, size_type col2,<br>										const nana::any *rowval,<br>										bool reverse)&#62; comp);</code></pre>
 						<p>
 							This function reorders the columns in the range [first_col, last_col], using a row. More specifically, it sorts the group of cells at the intersection of the column range and the row, and repositions the columns in accordance with the new order of the cells.
 						</p>
@@ -510,7 +510,7 @@
 										A <a href="https://en.wikipedia.org/wiki/Weak_ordering" target="_blank">weak ordering</a>
 										comparer function. Here's an example of what it could look like:
 									</p>
-									<pre><code>using size_type = nana::listbox::size_type;<br>auto comparer = [](const std::string &cell1, size_type col1, <br>					const std::string &cell2, size_type col2, <br>					const nana::any *rowval, bool reverse)<br>{<br>	return reverse ? cell1 &#62; cell2 : cell1 &#60; cell2;<br>};</code></pre>
+									<pre><code>using size_type = nana::listbox::size_type;<br>auto comparer = [](const std::string &amp;cell1, size_type col1, <br>					const std::string &amp;cell2, size_type col2, <br>					const nana::any *rowval, bool reverse)<br>{<br>	return reverse ? cell1 &#62; cell2 : cell1 &#60; cell2;<br>};</code></pre>
 								</td>
 							</tr>
 						</table>
@@ -675,7 +675,7 @@
 				<tr><td>avoid_drawing (Nana 1.4)</td><td>temporarily suspends automatic drawing and executes a function</td></tr>
 				<tr>
 					<td>
-						<pre><code>template&#60typename Function&#62 void avoid_drawing(Function fn);</code></pre>
+						<pre><code>template&#60;typename Function&#62; void avoid_drawing(Function fn);</code></pre>
 						<p>This is a simple helper function that disables automatic drawing before calling a user function, and then re-enables automatic drawing when the user function returns. Implementation as of Nana v1.7:</p>
 						<pre><code>template&#60;typename Function&#62;<br>void avoid_drawing(Function fn)<br>{<br>	this-&#62;auto_draw(false);<br>	try<br>	{<br>		fn();<br>	}<br>	catch (...)<br>	{<br>		this-&#62;auto_draw(true);<br>		throw;<br>	}<br>	this-&#62;auto_draw(true);<br>}</code></pre>
 
@@ -885,7 +885,7 @@
 						<h4>Example</h4>
 						<div>
 							<p>The following example shows how the predicate could be used to suppress the deselection of items when the user right-clicks on a selected item. This would be needed when implementing a pop-up menu for the listbox, with commands that target the selected items.</p>
-							<pre><code>list_box.set_deselect([&](nana::mouse btn) {<br>	return !(btn == nana::mouse::right_button && !list_box.hovered(false).empty());<br>});</code></pre>
+							<pre><code>list_box.set_deselect([&amp;](nana::mouse btn) {<br>	return !(btn == nana::mouse::right_button && !list_box.hovered(false).empty());<br>});</code></pre>
 						</div>
 					</td>
 				</tr>
@@ -1076,7 +1076,7 @@
 				<tr><td>set_sort_compare</td><td>sets a strict weak ordering comparer for item sorting</td></tr>
 				<tr>
 					<td>
-						<pre><code>void set_sort_compare(	size_type col,<br>						std::function&#60;bool(const std::string&, nana::any*,<br>								            const std::string&, nana::any*, bool reverse)&#62; compare);</code></pre>
+						<pre><code>void set_sort_compare(	size_type col,<br>						std::function&#60;bool(const std::string&amp;, nana::any*,<br>								            const std::string&amp;, nana::any*, bool reverse)&#62; compare);</code></pre>
 						<p>Sets a custom <a href="https://en.wikipedia.org/wiki/Weak_ordering#Strict_weak_orderings">strict weak ordering</a> comparer function to be used when sorting the items by a specific column.</p>
 						<h4>Parameters</h4>
 						<table>
@@ -1094,7 +1094,7 @@
 							<p>This function compares items using the cell text:</p>
 							<pre><code>bool compare(const std::string& text_l, nana::any*, const std::string& text_r, nana::any*, bool reverse)<br>{<br>	return (reverse ? text_l &#62; text_r : text_l &#60; text_r);<br>}<br></code></pre>
 							<p>This function compares items using the custom data associated with them:</p>
-							<pre><code>bool compare(const std::string&, nana::any* any_l, const std::string&, nana::any* any_r, bool reverse)<br>{<br>	if(any_l && any_r) 	// some items may not have any associated custom data<br>	{<br>		int * il = nana::any_cast&#60;int&#62;(any_l);<br>		int * ir = nana::any_cast&#60;int&#62;(any_r);<br>		return (il && ir && (reverse ? *il &#62; *ir : *il &#60; *ir));<br> 		// ^ some types may not be int<br>	}<br>	return false;<br>}<br><br>auto cat = listbox.at(0);<br>cat.at(0).value(10); // 10 is custom data<br>cat.at(1).value(20); // 20 is custom data</code></pre>
+							<pre><code>bool compare(const std::string&amp;, nana::any* any_l, const std::string&amp;, nana::any* any_r, bool reverse)<br>{<br>	if(any_l && any_r) 	// some items may not have any associated custom data<br>	{<br>		int * il = nana::any_cast&#60;int&#62;(any_l);<br>		int * ir = nana::any_cast&#60;int&#62;(any_r);<br>		return (il && ir && (reverse ? *il &#62; *ir : *il &#60; *ir));<br> 		// ^ some types may not be int<br>	}<br>	return false;<br>}<br><br>auto cat = listbox.at(0);<br>cat.at(0).value(10); // 10 is custom data<br>cat.at(1).value(20); // 20 is custom data</code></pre>
 						</div>
 					</td>
 				</tr>
@@ -1234,7 +1234,7 @@
 			<p>
 				Since <a href="index.html#widget_listbox::selected" target="_blank">listbox::selected</a> returns a sequence container, it's very easy to iterate through it using a range-based <code>for</code> loop. This is shown in the following example, which changes the color of all selected items when a button is pressed:
 			</p>
-			<pre><code>#include &#60;nana/gui.hpp&#62;<br>#include &#60;nana/gui/widgets/button.hpp&#62;<br>#include &#60;nana/gui/widgets/listbox.hpp&#62;<br>#include &#60;random&#62;<br><br>int main()<br>{<br>&#9;nana::form fm {nana::API::make_center(300, 420)};<br>&#9;fm.div("vert margin=15 &#60;listbox&#62;&#60;weight=15&#62;&#60;button weight=30&#62;");<br><br>&#9;nana::listbox list_box {fm};<br>&#9;fm["listbox"] &#60;&#60; list_box;<br><br>&#9;// add two columns and three categories<br>&#9;list_box.append_header("column zero");<br>&#9;list_box.append_header("column one");<br>&#9;list_box.append({"category one", "category two", "category three"});<br><br>&#9;// add three items to each category<br>&#9;for(unsigned cat_count = 0; cat_count &#60; list_box.size_categ(); cat_count++)<br>&#9;{<br>&#9;&#9;for(unsigned item_count = 0; item_count &#60; 3; item_count++)<br>&#9;&#9;{<br>&#9;&#9;&#9;auto str {"item " + std::to_string(item_count)};<br>&#9;&#9;&#9;list_box.at(cat_count).append({str + " cell zero", str + " cell one"});<br>&#9;&#9;}<br>&#9;}<br><br>&#9;nana::button btn {fm, "Change the color of selected items"};<br>&#9;fm["button"] &#60;&#60; btn;<br><br>&#9;btn.events().click([&]<br>&#9;{<br>&#9;&#9;// generate a random color to apply to each selected item<br>&#9;&#9;std::mt19937 eng {std::random_device {}()};<br>&#9;&#9;std::uniform_int_distribution&#60;unsigned&#62; distr {0, 0xffffff};<br>&#9;&#9;nana::color_rgb clr {distr(eng)};<br><br>&#9;&#9;// iterate though all selected items using a range-based for loop<br>&#9;&#9;for(const auto &cat_item : list_box.selected()) // `cat_item` is of type listbox::index_pair<br>&#9;&#9;&#9;list_box.at(cat_item).fgcolor(clr); // change the color of each selected item<br>&#9;});<br><br>&#9;fm.collocate();<br>&#9;fm.show();<br>&#9;nana::exec();<br>}</code></pre>
+			<pre><code>#include &#60;nana/gui.hpp&#62;<br>#include &#60;nana/gui/widgets/button.hpp&#62;<br>#include &#60;nana/gui/widgets/listbox.hpp&#62;<br>#include &#60;random&#62;<br><br>int main()<br>{<br>&#9;nana::form fm {nana::API::make_center(300, 420)};<br>&#9;fm.div("vert margin=15 &#60;listbox&#62;&#60;weight=15&#62;&#60;button weight=30&#62;");<br><br>&#9;nana::listbox list_box {fm};<br>&#9;fm["listbox"] &#60;&#60; list_box;<br><br>&#9;// add two columns and three categories<br>&#9;list_box.append_header("column zero");<br>&#9;list_box.append_header("column one");<br>&#9;list_box.append({"category one", "category two", "category three"});<br><br>&#9;// add three items to each category<br>&#9;for(unsigned cat_count = 0; cat_count &#60; list_box.size_categ(); cat_count++)<br>&#9;{<br>&#9;&#9;for(unsigned item_count = 0; item_count &#60; 3; item_count++)<br>&#9;&#9;{<br>&#9;&#9;&#9;auto str {"item " + std::to_string(item_count)};<br>&#9;&#9;&#9;list_box.at(cat_count).append({str + " cell zero", str + " cell one"});<br>&#9;&#9;}<br>&#9;}<br><br>&#9;nana::button btn {fm, "Change the color of selected items"};<br>&#9;fm["button"] &#60;&#60; btn;<br><br>&#9;btn.events().click([&amp;]<br>&#9;{<br>&#9;&#9;// generate a random color to apply to each selected item<br>&#9;&#9;std::mt19937 eng {std::random_device {}()};<br>&#9;&#9;std::uniform_int_distribution&#60;unsigned&#62; distr {0, 0xffffff};<br>&#9;&#9;nana::color_rgb clr {distr(eng)};<br><br>&#9;&#9;// iterate though all selected items using a range-based for loop<br>&#9;&#9;for(const auto &amp;cat_item : list_box.selected()) // `cat_item` is of type listbox::index_pair<br>&#9;&#9;&#9;list_box.at(cat_item).fgcolor(clr); // change the color of each selected item<br>&#9;});<br><br>&#9;fm.collocate();<br>&#9;fm.show();<br>&#9;nana::exec();<br>}</code></pre>
 			<hr />
 		</section>
 
@@ -1243,7 +1243,7 @@
 			<p>
 				In addition to the textual data contained by the item cells, the listbox can also store data of any type for each item. The <a href="index.html#item_proxy::value" target="_blank">item_proxy::value</a> method allows the user to associate an object of any type with the item. The following example shows how this feature can be used:
 			</p>
-			<pre><code>#include &#60;nana/gui.hpp&#62;<br>#include &#60;nana/gui/widgets/button.hpp&#62;<br>#include &#60;nana/gui/widgets/listbox.hpp&#62;<br><br>struct item_data<br>{<br>&#9;std::string str;<br>&#9;unsigned uint {0};<br>&#9;double dbl {0};<br>};<br><br>int main()<br>{<br>&#9;nana::form fm {nana::API::make_center(300, 200)};<br>&#9;fm.div("vert margin=15 &#60;listbox&#62;&#60;weight=15&#62;&#60;button weight=30&#62;");<br><br>&#9;nana::listbox list_box {fm};<br>&#9;fm["listbox"] &#60;&#60; list_box;<br>&#9;list_box.enable_single(true, false);<br>&#9;list_box.append_header("Col 0");<br>&#9;list_box.append({"Items with &#60;item_data&#62; values", "Items with &#60;item_data*&#62; values"});<br><br>&#9;auto cat1 {list_box.at(1)}, cat2 {list_box.at(2)};<br><br>&#9;// this value is a temporary object (rvalue) that gets moved to the listbox's internal storage<br>&#9;cat1.append("Category 1 Item 0").value(item_data {"Obj 0", 0, .0});<br><br>&#9;item_data idata {"Obj 1", 1, .1};<br>&#9;// this value is a pointer that gets copied to the listbox's internal storage<br>&#9;cat2.append("Category 2 Item 0").value(&idata);<br><br>&#9;nana::button btn {fm, "Print the value of the selected item"};<br>&#9;fm["button"] &#60;&#60; btn;<br><br>&#9;btn.events().click([&]<br>&#9;{<br>&#9;&#9;auto sel {list_box.selected()};<br>&#9;&#9;if(!sel.empty())<br>&#9;&#9;{<br>&#9;&#9;&#9;auto idx_pair {sel.front()};<br>&#9;&#9;&#9;auto item {list_box.at(idx_pair)};<br><br>&#9;&#9;&#9;if(idx_pair.cat == 1)<br>&#9;&#9;&#9;{<br>&#9;&#9;&#9;&#9;// obtain a reference to the `item_data` object that's stored in the listbox<br>&#9;&#9;&#9;&#9;auto &valref {item.value&#60;item_data&#62;()};<br>&#9;&#9;&#9;&#9;printf("cat1 - item%llu value: { \"%s\", %u, %f }\n", <br>&#9;&#9;&#9;&#9;&#9;idx_pair.item, valref.str.data(), valref.uint, valref.dbl);<br>&#9;&#9;&#9;}<br>&#9;&#9;&#9;else if(idx_pair.cat == 2)<br>&#9;&#9;&#9;{<br>&#9;&#9;&#9;&#9;// obtain the pointer to `item_data` that's stored in the listbox<br>&#9;&#9;&#9;&#9;auto val {item.value&#60;item_data*&#62;()};<br>&#9;&#9;&#9;&#9;printf("cat2 - item%llu value: { \"%s\", %u, %f }\n", <br>&#9;&#9;&#9;&#9;&#9;idx_pair.item, val-&#62;str.data(), val-&#62;uint, val-&#62;dbl);<br>&#9;&#9;&#9;}<br>&#9;&#9;}<br>&#9;});<br><br>&#9;fm.collocate();<br>&#9;list_box.column_at(0).width(list_box.size().width-16);<br>&#9;fm.show();<br>&#9;nana::exec();<br>}</code></pre>
+			<pre><code>#include &#60;nana/gui.hpp&#62;<br>#include &#60;nana/gui/widgets/button.hpp&#62;<br>#include &#60;nana/gui/widgets/listbox.hpp&#62;<br><br>struct item_data<br>{<br>&#9;std::string str;<br>&#9;unsigned uint {0};<br>&#9;double dbl {0};<br>};<br><br>int main()<br>{<br>&#9;nana::form fm {nana::API::make_center(300, 200)};<br>&#9;fm.div("vert margin=15 &#60;listbox&#62;&#60;weight=15&#62;&#60;button weight=30&#62;");<br><br>&#9;nana::listbox list_box {fm};<br>&#9;fm["listbox"] &#60;&#60; list_box;<br>&#9;list_box.enable_single(true, false);<br>&#9;list_box.append_header("Col 0");<br>&#9;list_box.append({"Items with &#60;item_data&#62; values", "Items with &#60;item_data*&#62; values"});<br><br>&#9;auto cat1 {list_box.at(1)}, cat2 {list_box.at(2)};<br><br>&#9;// this value is a temporary object (rvalue) that gets moved to the listbox's internal storage<br>&#9;cat1.append("Category 1 Item 0").value(item_data {"Obj 0", 0, .0});<br><br>&#9;item_data idata {"Obj 1", 1, .1};<br>&#9;// this value is a pointer that gets copied to the listbox's internal storage<br>&#9;cat2.append("Category 2 Item 0").value(&idata);<br><br>&#9;nana::button btn {fm, "Print the value of the selected item"};<br>&#9;fm["button"] &#60;&#60; btn;<br><br>&#9;btn.events().click([&amp;]<br>&#9;{<br>&#9;&#9;auto sel {list_box.selected()};<br>&#9;&#9;if(!sel.empty())<br>&#9;&#9;{<br>&#9;&#9;&#9;auto idx_pair {sel.front()};<br>&#9;&#9;&#9;auto item {list_box.at(idx_pair)};<br><br>&#9;&#9;&#9;if(idx_pair.cat == 1)<br>&#9;&#9;&#9;{<br>&#9;&#9;&#9;&#9;// obtain a reference to the `item_data` object that's stored in the listbox<br>&#9;&#9;&#9;&#9;auto &valref {item.value&#60;item_data&#62;()};<br>&#9;&#9;&#9;&#9;printf("cat1 - item%llu value: { \"%s\", %u, %f }\n", <br>&#9;&#9;&#9;&#9;&#9;idx_pair.item, valref.str.data(), valref.uint, valref.dbl);<br>&#9;&#9;&#9;}<br>&#9;&#9;&#9;else if(idx_pair.cat == 2)<br>&#9;&#9;&#9;{<br>&#9;&#9;&#9;&#9;// obtain the pointer to `item_data` that's stored in the listbox<br>&#9;&#9;&#9;&#9;auto val {item.value&#60;item_data*&#62;()};<br>&#9;&#9;&#9;&#9;printf("cat2 - item%llu value: { \"%s\", %u, %f }\n", <br>&#9;&#9;&#9;&#9;&#9;idx_pair.item, val-&#62;str.data(), val-&#62;uint, val-&#62;dbl);<br>&#9;&#9;&#9;}<br>&#9;&#9;}<br>&#9;});<br><br>&#9;fm.collocate();<br>&#9;list_box.column_at(0).width(list_box.size().width-16);<br>&#9;fm.show();<br>&#9;nana::exec();<br>}</code></pre>
 			<hr />
 		</section>
 

@@ -29,7 +29,7 @@
 					<tr><th>Member type</th><th>Description</th></tr>
 					<tr><td>inline_notifier_interface</td><td>interface for the inline widget notifier</td></tr>
 					<tr><td>template&#60;typename Value&#62; using value_translator</td><td>Function to translate cells into <code>Value</code>. Called when the category has a user-set STL sequence container assigned for storage. Template typedef name of <code>std::function&#60;Value(const std::vector&#60;cell&#62;& cells)&#62;</code></td></tr>
-					<tr><td>template&#60;typename Value&#62; using cell_translator</td><td>Function to translate <code>Value</code> into cells. Called when the category has a user-set STL sequence container assigned for storage. Template typedef name of <code>std::function&#60;std::vector&#60;cell&#62;(const Value&)&#62;</code></td></tr>
+					<tr><td>template&#60;typename Value&#62; using cell_translator</td><td>Function to translate <code>Value</code> into cells. Called when the category has a user-set STL sequence container assigned for storage. Template typedef name of <code>std::function&#60;std::vector&#60;cell&#62;(const Value&amp;)&#62;</code></td></tr>
 				</table>
 			</section>
 
@@ -103,7 +103,7 @@
 							</table>
 							<h4>Exception</h4>
 							<p>
-								<code>std::out_of_range</code> if !(column < columns())
+								<code>std::out_of_range</code> if !(column &lt; columns())
 							</p>
 						</td>
 					</tr>

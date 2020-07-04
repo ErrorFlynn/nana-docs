@@ -339,11 +339,11 @@ function flashElement(el)
 		code.style['background-color'] = "moccasin";
 	setTimeout(function()
 	{
-		el.style['transition'] = "background-color 2.5s cubic-bezier(.18,.89,.32,1.28)";
+		el.style['transition'] = "background-color 3.5s cubic-bezier(.18,.89,.32,1.28)";
 		el.style['background-color'] = "white";
 		for(let code of codes)
 		{
-			code.style['transition'] = "background-color 2.5s cubic-bezier(.18,.89,.32,1.28)";
+			code.style['transition'] = "background-color 3.5s cubic-bezier(.18,.89,.32,1.28)";
 			code.style['background-color'] = "#f3f3f3";
 		}
 	}, 300);
