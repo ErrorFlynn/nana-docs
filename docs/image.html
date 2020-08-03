@@ -1,0 +1,211 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>nana::paint::image</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" href="page.css" media="all">
+	<link href="fonts/Oswald/Oswald.css" rel="stylesheet">
+	<link href="fonts/Arimo/Arimo.css" rel="stylesheet">
+	<link href="fonts/OxygenMono/OxygenMono.css" rel="stylesheet">
+	<link rel="stylesheet" href="highlight/default.css">
+	<script src="highlight/highlight.pack.js"></script>
+	<script>hljs.configure({ useBR: true }); hljs.initHighlightingOnLoad();</script>
+	<script src="page.js"></script>
+</head>
+
+<body>
+
+	<main>
+
+		<section>
+			<h1>Class nana::paint::image</h1>
+			<p>The class <code>paint::image</code> represents an image resource, and is mainly used by widgets that can display an image as part of their appearance (for example, buttons can display an icon to the left of their caption). The supported image formats are Windows Bitmap, ICO, PNG, and JPEG (the library must be configured to <a href="https://github.com/cnjinhao/nana/wiki/Configuration-of-Third-Party-Libraries-for-Nana" target="_blank">enable support for PNG and JPEG</a>, before those formats can be used).</p>
+			<p>The class is defined in header <code>nana/paint/image.hpp</code> (automatically included by <code>nana/gui.hpp</code>).</p>
+
+			<section expanded>
+				<h2>Member functions</h2>
+
+				<table class="functions">
+					<tr>
+						<td>(constructors)</td>
+						<td>construct a <code>paint::image</code> instance</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  image() noexcept;<br>(1)  image(const image&amp;);<br>(2)  image(image&amp;&amp;);<br>(3)  explicit image(const std::string&amp; file);<br>(4)  explicit image(const std::wstring&amp; file);</code></pre>
+							<p>
+								(0) default constructor<br />(1) copy constructor<br />(2) move constructor<br />(3, 4) loads the specified image file
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>file</th></tr>
+								<tr>
+									<td><p>A UTF-8 encoded or wide character string that contains the name of the image file to load.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>operator=</td>
+						<td>assigns another <code>image</code> object to this one</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  image&amp; operator=(const image&amp; other);<br>(1)  image&amp; operator=(image&amp;&amp; other);</code></pre>
+							<p>These assignment operator overloads allow another <code>image</code> object to be assigned to this one, either copying or moving the image resource from the other object to this one.</p>
+							<ol>
+								<li>copy assignment operator</li>
+								<li>move assignment operator</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>other</th></tr>
+								<tr>
+									<td><p>The other object from which to copy or move an image resource.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>A reference to <code>*this</code>.</p>
+						</td>
+					</tr>
+
+					<tr> <th>File operations</th> </tr>
+					<tr>
+						<td>close</td>
+						<td>releases the currently loaded image resource</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void close() noexcept;</code></pre>
+							<p>This method releases the currently loaded image resource, bringing the object to an "empty" state.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>open</td>
+						<td>loads an image</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  bool open(const std::string&amp; file);<br>(2)  bool open(const std::wstring&amp; file);<br>(2)  bool open(const void* data, std::size_t bytes);</code></pre>
+							<p>(0, 1) opens an image from a file<br />(2) opens an image from a memory buffer</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>file</th></tr>
+								<tr>
+									<td><p>The path to the image file to load, as a UTF-8 encoded or wide character string.</p></td>
+								</tr>
+								<tr><th>data</th></tr>
+								<tr>
+									<td><p>A pointer to the image data. The data must be a complete representation of a supported image format, as it would exist in a valid image file (header and any other such format data must be present, not just the color data). A tool like <a href="https://github.com/ErrorFlynn/FileToCArray" target="_blank">File To C Array</a> can be used to create C arrays from image files.</p></td>
+								</tr>
+								<tr><th>bytes</th></tr>
+								<tr>
+									<td><p>The size of the image data, in bytes.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p><code>true</code> if the image was loaded successfully, or <code>false</code> otherwise.</p>
+						</td>
+					</tr>
+
+					<tr><th>Observers</th></tr>
+					<tr>
+						<td>alpha</td>
+						<td>determines whether the image has an alpha channel</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>bool alpha() const noexcept;</code></pre>
+							<h4>Return value</h4>
+							<p><code>true</code> if the image has an alpha channel, or <code>false</code> otherwise.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>empty</td>
+						<td>determines whether the object is empty (no image is loaded)</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>bool empty() const noexcept;</code></pre>
+							<h4>Return value</h4>
+							<p><code>false</code> if an image is loaded, or <code>true</code> otherwise.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>size</td>
+						<td>returns the dimensions of the image</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>nana::size size() const noexcept;</code></pre>
+							<h4>Return value</h4>
+							<p>The image width and height in pixels, as a <a href="index.html#basic_types::1" target="_blank">nana::size</a> structure.</p>
+						</td>
+					</tr>
+
+					<tr> <th>Operations</th> </tr>
+					<tr>
+						<td>paste</td>
+						<td>pastes pixels from the image into the buffer of a <a href="index.html#graphics" target="_blank">graphics</a> object</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  void paste(graphics&amp; dst, const point&amp; p_dst) const;<br>(1)  void paste(const rectangle&amp; r_src, graphics&amp; dst, const point&amp; p_dst) const;</code></pre>
+							<ol>
+								<li>pastes the entire image at the specified destination coordinates</li>
+								<li>pastes an area of the image at the specified destination coordinates</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>dst</th></tr>
+								<tr>
+									<td><p>The <a href="index.html#graphics" target="_blank">graphics</a> object whose buffer is the destination of the paste operation.</p></td>
+								</tr>
+								<tr><th>p_dst</th></tr>
+								<tr>
+									<td><p>The destination coordinates, as a <a href="index.html#basic_types::0" target="_blank">nana::point</a> structure.</p></td>
+								</tr>
+								<tr><th>r_src</th></tr>
+								<tr>
+									<td><p>The source area to copy and paste into the destination, as a <a href="index.html#basic_types::2" target="_blank">nana::rectangle</a> structure.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>stretch</td>
+						<td>like <code>paste</code>, but with scaling</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void stretch(const nana::rectangle&amp; r_src, graphics&amp; dst, const nana::rectangle&amp; r_dst) const;</code></pre>
+							<p>This method does the same thing as <code>paste</code>, but also scales the image area copied from the source, to fit the destination area. Despite the name <code>stretch</code>, the scaling can also be done to a smaller size.</p>
+							<p>The scaling algorithm used by default is bilinear interpolation, but proximal interpolation can be used instead, if desired. The library allows a scaling algorithm to be selected "globally" (for all stretch operations, regardless of which class the operation is effectuated through). To see how that's done, see <a href="index.html#graphics::2" target="_blank">this example</a>.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>dst</th></tr>
+								<tr>
+									<td><p>The <a href="index.html#graphics" target="_blank">graphics</a> object whose buffer is the destination of the stretch operation.</p></td>
+								</tr>
+								<tr><th>r_dst</th></tr>
+								<tr>
+									<td><p>The destination area into which to stretch the copied area, as a <a href="index.html#basic_types::2" target="_blank">nana::rectangle</a> structure.</p></td>
+								</tr>
+								<tr><th>r_src</th></tr>
+								<tr>
+									<td><p>The source area to copy and stretch into the destination, as a <a href="index.html#basic_types::2" target="_blank">nana::rectangle</a> structure.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+				</table>
+
+			</section>
+
+		</section>
+	</main>
+
+</body>
+</html>
