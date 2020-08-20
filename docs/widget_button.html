@@ -1,0 +1,331 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>nana::button</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" href="page.css" media="all">
+	<link href="fonts/Oswald/Oswald.css" rel="stylesheet">
+	<link href="fonts/Arimo/Arimo.css" rel="stylesheet">
+	<link href="fonts/OxygenMono/OxygenMono.css" rel="stylesheet">
+	<link rel="stylesheet" href="highlight/default.css">
+	<script src="highlight/highlight.pack.js"></script>
+	<script>hljs.configure({ useBR: true }); hljs.initHighlightingOnLoad();</script>
+	<script src="page.js"></script>
+</head>
+
+<body>
+
+	<main>
+
+		<section>
+			<h1>Class nana::button</h1>
+			<p>The class <code>nana::button</code> implements a simple button control that displays text, and optionally an icon.</p>
+			<p>The class is defined in header <code>nana/gui/widgets/button.hpp</code>.</p>
+
+			<section>
+				<h2>element::bground</h2>
+				<p>The class <code>nana::element::bground</code> is used by <code>button::set_bground</code> to give a button an image-based background.</p>
+				<table class="functions">
+					<tr>
+						<td>image</td>
+						<td>sets a composite image for the background</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  bground&amp; image(const paint::image&amp; img, bool vertical, const nana::rectangle&amp; valid_area);<br>(1)  bground&amp; image(const paint::graphics&amp; graph, bool vertical, const nana::rectangle&amp; valid_area);</code></pre>
+							<ol>
+								<li>sets the image using an <a href="index.html#image" target="_blank">image</a> object</li>
+								<li>sets the image using a <a href="index.html#graphics" target="_blank">graphics</a> object</li>
+							</ol>
+							<p>
+								This method sets an image to be used as the background for a button. The image must be a composite of multiple images representing the different states of a button (see the example at the bottom of this page).
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>img</th></tr>
+								<tr><td><p>an <a href="index.html#image" target="_blank">image</a> object that represents the image resource to set</p></td></tr>
+								<tr><th>graph</th></tr>
+								<tr><td><p>a <a href="index.html#graphics" target="_blank">graphics</a> object that represents the image resource to set</p></td></tr>
+							</table>
+							<h4>Return value</h4>
+							<p>a reference to <code>*this</code></p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>states</td>
+						<td>specifies the sequence of the button states in the composite image</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void states(const std::vector&#60;element_state&#62; &amp;es);</code></pre>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>es</th></tr>
+								<tr><td><p>The sequence of the button states found in the composite image, as an <code>element_state</code> enumeration:</p><pre><code>enum class element_state<br>{<br>&#9;normal,<br>&#9;hovered,<br>&#9;focus_normal,<br>&#9;focus_hovered,<br>&#9;pressed,<br>&#9;disabled<br>};</code></pre></td></tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr>
+						<td>reset_states</td>
+						<td>resets the sequence of the button states to the default order</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void reset_states();</code></pre>
+							<p>This method resets the sequence of the states to the order in which they are defined in the <code>element_state</code> enumeration.</p>
+						</td>
+					</tr>
+
+					<tr>
+						<td>join</td>
+						<td>specifies two states that use the same image</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void join(element_state target, element_state joiner);</code></pre>
+							<p>This method causes the same image to be used for two different button states, allowing the composite image to contain fewer images than the total number of states.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>target</th></tr>
+								<tr><td><p>The state whose image should also be used by the state specified by parameter <code>joiner</code>.</p></td></tr>
+								<tr><th>joiner</th></tr>
+								<tr><td><p>The state that should use the same image used by the state specified by parameter <code>target</code>.</p></td></tr>
+							</table>
+						</td>
+					</tr>
+
+				</table>
+			</section>
+
+			<section expanded>
+				<h2>Member functions</h2>
+				<p>In addition to the methods inherited from <a href="index.html#widget" target="_blank">nana::widget</a> and <a href="index.html#widget_object" target="_blank">nana::widget_object&lt;widget_tag, ...&gt;</a>, the class <code>nana::button</code> defines the following methods:</p>
+				<table class="functions">
+					<tr>
+						<td>(constructors)</td>
+						<td>construct a <code>nana::button</code> instance</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  button();<br>(1)  button(window parent, bool visible);<br>(2)  button(window parent, std::string_view title, bool visible = true);<br>(3)  button(window parent, std::wstring_view title, bool visible = true);<br>(4)  button(window parent, std::u8string_view title, bool visible = false); // C++20<br>(5)  button(window parent, const nana::rectangle&amp; r = rectangle(), bool visible = true);</code></pre>
+							<p>
+								(0) Default constructor, constructs an "empty" <code>button</code> object without a window. Since this constructor does not create a UI element, <a href="index.html#widget_object::create" target="_blank">widget_object::create</a> must be subsequently called before the object can be used as a widget.<br />(1, 2, 3) Construct a button with a zero-size window and the specified caption.<br />(4) Construct a button with a blank caption and the specified position and dimensions.
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>parent</th></tr>
+								<tr>
+									<td><p>A handle to a parent widget (such as a <a href="index.html#widget_form" target="_blank">nana::form</a> or a <code>nana::panel</code>). Keep in mind that all widget objects have a <a href="https://en.cppreference.com/w/cpp/language/cast_operator" target="_blank">conversion operator</a> that returns a <code>nana::window</code>, making widget objects <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code>. That means you can pass a widget object directly to these constructors (no need to call <a href="index.html#widget::handle" target="_blank">widget::handle</a> to obtain the handle).</p></td>
+								</tr>
+								<tr><th>visible</th></tr>
+								<tr>
+									<td><p>Indicates whether the button should be visible when created (pass <code>false</code> if the button should be hidden).</p></td>
+								</tr>
+								<tr><th>title</th></tr>
+								<tr>
+									<td><p>The text that should be displayed in the center of the button, as a UTF-8 encoded string (1, 3) or a wide character string (2). This text can be set at any time by calling <a href="index.html#widget::caption" target="_blank">widget::caption</a>.</p></td>
+								</tr>
+								<tr><th>r</th></tr>
+								<tr>
+									<td><p>A <a href="index.html#basic_types::2" target="_blank">nana::rectangle</a> structure indicating the desired size and position of the button inside the parent widget's window.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>edge_effects</td>
+						<td>enables or disables the "edge nimbus" effect around the button</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>button&amp; edge_effects(bool enable);</code></pre>
+							<p>This method enables or disables the outline that highlights the button when it has the input focus or when it is hovered with the mouse.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>enable</th></tr>
+								<tr>
+									<td><p>Specifies whether to enable the edge effect (<code>true</code>) or disable it (<code>false</code>).</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>(1) <code>true</code> of the background is transparent, or <code>false</code> otherwise</p>
+						</td>
+					</tr>
+					<tr>
+						<td>enable_focus_color</td>
+						<td>enables or disables a different caption color when the buton is focused</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>button&amp; enable_focus_color(bool enable);</code></pre>
+							<p>This method can disable the focus color with which the caption is displayed by default.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>enable</th></tr>
+								<tr>
+									<td><p>A flag indicating whether to enable the focus color (<code>true</code>), or disable it (<code>false</code>).</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>A reference to <code>*this</code>.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>enable_pushed</td>
+						<td>enables or disables a mode in which the button behaves like a two-state checkbox</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>button&amp; enable_pushed(bool enable);</code></pre>
+							<p>This method causes the button to behave like a two-state checkbox, meaning that when the button is pushed, it stays pushed until the next user input.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>enable</th></tr>
+								<tr>
+									<td><p>A flag indicating whether to enable the mode (<code>true</code>), or disable it (<code>false</code>).</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>A reference to <code>*this</code>.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>icon</td>
+						<td>sets an image to be displayed to the left of the caption</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>button&amp; icon(const nana::paint::image&amp; image);</code></pre>
+							<p>This method causes the button to display the specified image to the left of the caption.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>image</th></tr>
+								<tr>
+									<td><p>The image to set, as a <a href="image.html" target="_blank">paint::image</a> object.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>A reference to <code>*this</code>.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>omitted</td>
+						<td>enables or disables a mode in which the caption displays ellipsis when the text is too long</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>button&amp; omitted(bool enable);</code></pre>
+							<p>This method causes the button to display ellipsis (<code>...</code>) when the caption text is too long to fit in the caption area in its entirety.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>enable</th></tr>
+								<tr>
+									<td><p>A flag indicating whether to enable the displaying of ellipsis (<code>true</code>), or whether to disable it (<code>false</code>).</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>A reference to <code>*this</code>.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>pushed</td>
+						<td>sets or gets the "pushed" state of the button</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  bool pushed() const;<br>(1)  button&amp; pushed(bool enable);</code></pre>
+							<p>This method can force the button into a "pushed" state, which works even if <code>enable_pushed</code> was not called.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>enable</th></tr>
+								<tr>
+									<td><p>A flag indicating whether to put the button into a pushed state (<code>true</code>), or a normal state (<code>false</code>).</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div>
+								<ol>
+									<li><code>true</code> if the button is in a pushed state, or <code>false</code> otherwise</li>
+									<li>a reference to <code>*this</code></li>
+								</ol>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>set_bground</td>
+						<td>sets a custom background</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  button&amp; set_bground(const pat::cloneable&#60;element::element_interface&#62;&amp; el);<br>(1)  button&amp; set_bground(const std::string&amp; name);</code></pre>
+							<p>This method can set a custom background using either state images, or a user-provided draw function.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>el</th></tr>
+								<tr>
+									<td><p>a user-provided draw function (see the example "custom drawn background" at the bottom of this page)</p></td>
+								</tr>
+								<tr><th>name</th></tr>
+								<tr>
+									<td><p>a name used with <code>element::set_bground</code> (see the example "custom background from images" at the bottom of this page)</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>A reference to <code>*this</code>.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>transparent</td>
+						<td>sets or gets the transparency state of the background</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  button&amp; transparent(bool enable);<br>(1)  bool transparent() const;</code></pre>
+							<p>This method can enable transparency for the button background, which can be useful if the form has an image as background, for example.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>enable</th></tr>
+								<tr>
+									<td><p>Specifies whether to enable a transparent background or not. Passing a <code>true</code> argument to this parameter is equivalent to:</p><pre><code>API::effects_bground(*this, effects::bground_transparent(0), 0.0);</code></pre><p>For more about <code>API::effects_bground</code>, see <a href="http://qpcr4vir.github.io/nana-doxy/html/d5/d9f/background-effects_8cpp-example.html" target="_blank">this example</a>.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div>
+								<ol>
+									<li>a reference to <code>*this</code></li>
+									<li><code>true</code> if the  background is transparent, or <code>false</code> otherwise</li>
+								</ol>
+							</div>
+						</td>
+					</tr>
+
+				</table>
+
+			</section>
+
+		</section>
+
+		<section>
+			<h1>Usage details and examples</h1>
+
+			<section>
+				<h2>Custom background from images</h2>
+				<p>This example uses the class <code>nana::element::bground</code> to display a background that uses a different <a href="image.html" target="_blank">image</a> for each button state (normal, hovered, pressed). All state images are stored in one file, which can be found <a href="img/button_states.bmp" target="_blank">here</a>.</p>
+				<pre><code>#include &#60;nana/gui.hpp&#62;<br>#include &#60;nana/gui/widgets/button.hpp&#62;<br><br>int main()<br>{<br>&#9;using namespace nana;<br><br>&#9;form fm;<br>&#9;fm.div("vert margin=15 &#60;&#62;&#60;button weight=40&#62;&#60;&#62;");<br><br>&#9;button btn {fm, "Big orange button"};<br>&#9;fm["button"] &#60;&#60; btn;<br>&#9;btn.scheme().activated = colors::dark_orange; // color of "edge nimbus" effect<br>&#9;btn.typeface({"", 13, {700}}); // default font family, size 13, weight 700 (bold)<br>&#9;btn.fgcolor(colors::saddle_brown);<br>&#9;btn.enable_focus_color(false);<br><br>&#9;if(std::filesystem::exists("button_states.bmp"))<br>&#9;{<br>&#9;&#9;element::bground bg;<br>&#9;&#9;bg.image(paint::image{"button_states.bmp"}, true /*the states are arranged vertically in the image file*/, {});<br><br>&#9;&#9;// the order of the states in the image file<br>&#9;&#9;bg.states({element_state::normal, element_state::hovered, element_state::pressed});<br><br>&#9;&#9;bg.join(element_state::hovered, element_state::focus_hovered); // these two states use the same image<br>&#9;&#9;bg.join(element_state::normal, element_state::focus_normal); // these two states use the same image<br>&#9;&#9;element::set_bground("my_button_bg", bg); // register the element using the name "my_button_bg"<br>&#9;&#9;btn.set_bground("my_button_bg");<br>&#9;}<br>&#9;else puts("button_states.bmp not found!");<br><br>&#9;fm.collocate();<br>&#9;fm.show();<br>&#9;nana::exec();<br>}</code></pre>
+			</section>
+
+			<section expanded>
+				<h2>Custom drawn background</h2>
+				<p>The abstract class <code>element::element_interface</code> only has one member function, the pure virtual function <code>draw</code>. Classes derived from <code>element::element_interface</code> must implement that function, to provide custom background drawing for buttons. The following example shows how to do that:</p>
+				<div><pre><code>#include &#60;nana/gui.hpp&#62;<br>#include &#60;nana/gui/widgets/button.hpp&#62;<br><br>class btn_bg : public nana::element::element_interface<br>{<br>public:<br>&#9;// this implementation ignores the arguments for `bg` and `fg`<br>&#9;// (which are just the background and foreground colors of the button)<br>    bool draw(nana::paint::graphics &amp;g, const nana::color &amp;bg, <br>&#9;&#9;const nana::color &amp;fg, const nana::rectangle &amp;r, nana::element_state state) override<br>    {<br>        // gradient colors for the bg<br>        nana::colors from = nana::colors::light_goldenrod_yellow,<br>&#9;&#9;               to = nana::colors::light_coral;<br><br>        // draw the custom background<br>        if(state != nana::element_state::pressed)<br>            g.gradual_rectangle(r, from, to, true);<br>        else g.gradual_rectangle(r, to, from, true);<br><br>        // draw the frame like the library does<br>        g.rectangle(r, false, static_cast&#60;nana::color_rgb&#62;(0x7f7f7f));<br>        g.palette(false, nana::colors::button_face);<br>        nana::paint::draw draw(g);<br>        draw.corner(r, 1);<br>        g.palette(false, static_cast&#60;nana::color_rgb&#62;(0x919191));<br>        draw.corner(nana::rectangle(r).pare_off(1), 1);<br><br>        return true;<br>    }<br>};<br><br>int main()<br>{<br>    using namespace nana;<br><br>    form fm(API::make_center(300, 300));<br>    fm.div("vert margin=15 &#60;&#62;&#60;btn weight=30&#62;&#60;&#62;");<br><br>    button btn(fm, "Button");<br>    fm["btn"] &#60;&#60; btn;<br>    btn.set_bground(btn_bg());<br><br>    fm.collocate();<br>    fm.show();<br>    nana::exec();<br>}</code></pre></div>
+				<p>The class <code>nana::element::bground</code> used by the previous example ("Custom background from images"), is also derived from <code>element::element_interface</code>.</p>
+			</section>
+
+		</section>
+	</main>
+
+</body>
+</html>
