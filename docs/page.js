@@ -16,7 +16,8 @@ onload = function()
 	headers.forEach(header =>
 	{
 		header.setAttribute("colspan", "1");
-		header.style["text-align"] = "center";
+		//header.style["text-align"] = "center";
+		header.style = "text-align: center!important";
 	});
 
 	var cfimgs = document.querySelectorAll('div.crossfade img:last-child');
