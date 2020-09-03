@@ -50,7 +50,6 @@ onload = function()
 	iframe.src = startDoc;
 	
 	onresize = onResize;
-	onResize();
 };
 
 function onTOCLink(e)
@@ -269,6 +268,7 @@ function makeSideBar()
 		if(separators.length)
 			separators[0].style.display = 'none';
 	}
+	onResize();
 }
 
 function expandSection(section)
