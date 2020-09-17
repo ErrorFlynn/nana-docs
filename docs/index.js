@@ -1,6 +1,6 @@
 onload = function()
 {
-	//alert(devicePixelRatio);
+	document.getElementById('toc').style.display = 'block';
 	var toggler = document.getElementsByClassName('caret');
 	var i;
 
@@ -48,6 +48,26 @@ onload = function()
 	var iframe = document.getElementsByTagName('iframe')[0];
 	iframe.onload = iframeOnLoad;
 	iframe.src = startDoc;
+
+	onResize.tocHidden = false;
+	onResize.navHidden = false;
+
+	var showToc = document.querySelector('#show-toc');
+	var toc = document.getElementById('toc');
+	showToc.addEventListener('mouseenter', function(event)
+	{
+		event.target.style.display = 'none';
+		toc.style.display = 'block';
+	});
+
+	toc.addEventListener('mouseleave', function(event)
+	{
+		if(onResize.tocHidden)
+		{
+			event.target.style.display = 'none';
+			showToc.style.display = 'block';
+		}
+	});
 	
 	onresize = onResize;
 };
@@ -73,29 +93,26 @@ function onTOCLink(e)
 
 function onResize()
 {
+	var scrw = screen.width * devicePixelRatio;
 	var fdoc = frames[0].document;
 	var main = fdoc.getElementsByTagName('main')[0];
 	var nav = fdoc.getElementsByTagName('nav')[0];
+
 	if(nav)
 	{
-		if(typeof onResize.navHidden == 'undefined')
-			onResize.navHidden = false;
-		if(document.getElementById('frame').clientWidth < remToPix(82.81)/*1325*/)
+		if(devicePixelRatio >= 1.5 && scrw <= 1920 || devicePixelRatio >= 1.25 && scrw <= 1920 && tocVisible())
 		{
-			if(!onResize.navHidden)
-			{
-				onResize.navHidden = true;
-				nav.style.display = 'none';
-				main.style.paddingRight = '0';
-			}
+			onResize.navHidden = true;
+			nav.style.display = 'none';
+			main.style.paddingRight = '0';
 		}
-		else if(onResize.navHidden)
+		else
 		{
 			onResize.navHidden = false;
 			nav.style.display = 'block';
 			main.style.paddingRight = '256px';
 		}
-	
+
 		nav.style.overflowY = "scroll";
 		nav.style.top = '0';
 		nav.style.transform = 'none';
@@ -109,6 +126,49 @@ function onResize()
 		{
 			nav.classList.remove('scroll');
 		}
+	}
+
+	if(devicePixelRatio >= 1.5)
+	{
+		if(scrw <= 1920)
+		{
+			if(tocVisible())
+				showToc(false);
+		}
+		else
+		{
+			alert("if(!tocVisible())");
+			if(!tocVisible())
+				showToc(true);
+		}
+	}
+}
+
+function tocVisible()
+{
+	return !onResize.tocHidden;
+}
+
+function showToc(show)
+{
+	var fdoc = frames[0].document;
+	var main = fdoc.getElementsByTagName('main')[0];
+	var toc = document.getElementById('toc');
+	var expander = document.getElementById('show-toc');
+
+	if(show)
+	{
+		onResize.tocHidden = false;
+		main.style.paddingRight = '256px';
+		toc.style.display = 'block';
+		expander.style.display = 'none';
+	}
+	else
+	{
+		onResize.tocHidden = true;
+		main.style.paddingRight = '0';
+		toc.style.display = 'none';
+		expander.style.display = 'block';
 	}
 }
 

@@ -4,6 +4,41 @@ body
 	background-color : #f7f6f5;
 }
 
+#show-toc>div 
+{
+	height : 100%;
+	position : relative;
+}
+
+#show-toc>div>div
+{
+	margin : 0;
+	position : absolute;
+	top : 50%;
+	-ms-transform : translateY(-50%);
+	transform : translateY(-50%);
+	margin : 0 0 0 7px;
+	width : 0; 
+	height : 0; 
+	border-top : 18px solid transparent;
+	border-bottom : 18px solid transparent;
+  
+	border-left : 18px solid #b8c0c8;
+}
+
+#show-toc
+{
+	display : none;
+	border-right : 1px solid #abc;
+	background-color : #e9e9e9;
+	height : 100%;
+	width : 30px;
+	position : fixed;
+	z-index : 1;
+	top : 0;
+	left : 0;
+}
+
 #toc
 {
 	border-right : 1px solid transparent;
