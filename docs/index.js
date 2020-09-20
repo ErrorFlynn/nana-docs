@@ -137,7 +137,6 @@ function onResize()
 		}
 		else
 		{
-			alert("if(!tocVisible())");
 			if(!tocVisible())
 				showToc(true);
 		}
