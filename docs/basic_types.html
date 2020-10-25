@@ -391,14 +391,20 @@
 				</table>
 			</section>
 
-			<section expanded>
+			<section>
 				<h2>nana::native_window_type</h2>
-				<p>The type <code>nana::native_window_type</code> represents a native window handle in a platform-agnostic way. In order to be able to use such a handle with platform-specific code (after obtaining one by calling <code>form::native_handle</code> for example), it must first be cast to the platform-specific type.</p>
+				<p>The type <code>nana::native_window_type</code> represents a native window handle in a platform-agnostic way. In order to be able to use such a handle with platform-specific code (after obtaining one by calling <a href="index.html#api_form::root" target="_blank">API::root</a> for example), it must first be cast to the platform-specific type.</p>
 				<p>Windows:</p>
 				<pre><code>&#9;nana::form fm;<br>&#9;auto hwnd {reinterpret_cast&#60;HWND&#62;(fm.native_handle())};</code></pre>
 				<p>X11:</p>
 				<pre><code>&#9;nana::form fm;<br>&#9;auto window {reinterpret_cast&#60;Window&#62;(fm.native_handle())};</code></pre>
 				<p>Conversely, if a library function requires a <code>nana::native_window_type</code> argument, an <code>HWND</code> or <code>Window</code> value can be cast to <code>nana::native_window_type</code> and passed to the function.</p>
+			</section>
+
+			<section expanded>
+				<h2>nana::keyboard</h2>
+				<p>The structure / enumeration <code>nana::keyboard</code> contains values that identify non-character keys. The library can pass these values to callback functions that take an argument of a character type (<code>char</code> or <code>wchar_t</code>) representing keyboard input.</p>
+				<pre><code>struct keyboard<br>{<br>&#9;enum{<br>&#9;&#9;//Control Code for ASCII<br>&#9;&#9;start_of_headline = 0x1,&#9;//Ctrl+A<br>&#9;&#9;end_of_text = 0x3,&#9;//Ctrl+C<br>&#9;&#9;backspace = 0x8, tab = 0x9,<br>&#9;&#9;alt = 0x12,<br>&#9;&#9;enter_n = 0xA, enter = 0xD, enter_r = 0xD,<br>&#9;&#9;sync_idel = 0x16,&#9;//Ctrl+V<br>&#9;&#9;cancel = 0x18,&#9;//Ctrl+X<br>&#9;&#9;end_of_medium = 0x19,&#9;//Ctrl+Y<br>&#9;&#9;substitute = 0x1A,&#9;//Ctrl+Z<br>&#9;&#9;escape = 0x1B,<br>&#9;&#9;space = 0x20,&#9;//Space<br>&#9;&#9;del = 0x7F,&#9;&#9;//Delete<br>&#9;&#9;os_del = del,&#9;//Deprecated<br><br>&#9;&#9;//The following names are intuitive name of ASCII control codes<br>&#9;&#9;select_all = start_of_headline,<br>&#9;&#9;copy = end_of_text,<br>&#9;&#9;paste = sync_idel,<br>&#9;&#9;cut = cancel,<br>&#9;&#9;redo = end_of_medium,<br>&#9;&#9;undo = substitute,<br><br>&#9;&#9;//System Code for OS<br>&#9;&#9;os_tab = 0x09,<br>&#9;&#9;os_shift = 0x10,<br>&#9;&#9;os_ctrl = 0x11,<br>&#9;&#9;os_pageup = 0x21, os_pagedown,<br>&#9;&#9;os_arrow_left = 0x25, os_arrow_up, os_arrow_right, os_arrow_down,<br>&#9;&#9;os_insert = 0x2D,<br>&#9;&#9;os_end = 0x23, os_home //Pos 1<br>&#9;};<br>};</code></pre>
 			</section>
 
 		</section>
