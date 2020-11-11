@@ -184,6 +184,10 @@
 							<p>The scaling algorithm used by default is bilinear interpolation, but proximal interpolation can be used instead, if desired. The library allows a scaling algorithm to be selected "globally" (for all stretch operations, regardless of which class the operation is effectuated through). To see how that's done, see <a href="index.html#graphics::2" target="_blank">this example</a>.</p>
 							<h4>Parameters</h4>
 							<table>
+								<tr><th>r_src</th></tr>
+								<tr>
+									<td><p>The source area to copy and stretch into the destination, as a <a href="index.html#basic_types::2" target="_blank">nana::rectangle</a> structure.</p></td>
+								</tr>
 								<tr><th>dst</th></tr>
 								<tr>
 									<td><p>The <a href="index.html#graphics" target="_blank">graphics</a> object whose buffer is the destination of the stretch operation.</p></td>
@@ -191,10 +195,6 @@
 								<tr><th>r_dst</th></tr>
 								<tr>
 									<td><p>The destination area into which to stretch the copied area, as a <a href="index.html#basic_types::2" target="_blank">nana::rectangle</a> structure.</p></td>
-								</tr>
-								<tr><th>r_src</th></tr>
-								<tr>
-									<td><p>The source area to copy and stretch into the destination, as a <a href="index.html#basic_types::2" target="_blank">nana::rectangle</a> structure.</p></td>
 								</tr>
 							</table>
 						</td>

@@ -1,0 +1,545 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>nana::combox</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" href="page.css" media="all">
+	<link href="fonts/Oswald/Oswald.css" rel="stylesheet">
+	<link href="fonts/Arimo/Arimo.css" rel="stylesheet">
+	<link href="fonts/OxygenMono/OxygenMono.css" rel="stylesheet">
+	<link rel="stylesheet" href="highlight/default.css">
+	<script src="highlight/highlight.pack.js"></script>
+	<script>hljs.configure({ useBR: true }); hljs.initHighlightingOnLoad();</script>
+	<script src="page.js"></script>
+</head>
+
+<body>
+
+	<main>
+
+		<section>
+			<h1>Class nana::combox</h1>
+			<p>The class <code>nana::combox</code> implements a <a href="https://en.wikipedia.org/wiki/Combo_box" target="_blank">combo box</a> widget, which is a combination of a textbox and a drop-down list.</p>
+			<p>The class is defined in header <code>nana/gui/widgets/combox.hpp</code>.</p>
+
+			<section>
+				<h2>Events</h2>
+				<p>In addition to the <a href="index.html#general_events" target="_blank">general events</a> that all widgets support, the combox also has the following specialized events:</p>
+				<table>
+					<tr> <th>Event</th> <th>Description</th> </tr>
+					<tr>
+						<td>basic_event&#60;arg_combox&#62;&#9;selected;</td>
+						<td>occurs when an item is selected in the drop-down list</td>
+					</tr>
+					<tr>
+						<td>basic_event&#60;arg_combox&#62; text_changed;</td>
+						<td>occurs when the content of the textbox changes</td>
+					</tr>
+				</table>
+				<p>The structure <code>arg_combox</code> (derived from <a href="index.html#general_events::3" target="_blank">event_arg</a>) only defines the data member <code>widget</code> of type <code>combox&</code>, which is a reference to the <code>combox</code> that is the event target.</p>
+			</section>
+
+			<section>
+				<h2>Scheme</h2>
+				<p>In addition to the <a href="index.html#widget_intro::0" target="_blank">basic appearance properties</a> that all widgets have, the scheme object of the <code>combox</code> widget also has the following data members:</p>
+				<table>
+					<tr> <th>Member</th> <th>Type</th> <th>Description</th> </tr>
+					<tr>
+						<td>selection</td>
+						<td><code>nana::color_proxy</code></td>
+						<td>background <a href="index.html#color" target="_blank">color</a> of selected text</td>
+					</tr>
+					<tr>
+						<td>selection_unfocused</td>
+						<td><code>nana::color_proxy</code></td>
+						<td>background color of selected text when the textbox is not focused</td>
+					</tr>
+					<tr>
+						<td>selection_text</td>
+						<td><code>nana::color_proxy</code></td>
+						<td>foreground color of selected text</td>
+					</tr>
+					<tr>
+						<td>mouse_wheel</td>
+						<td title="struct mouse_wheel&#10;{&#10;&#9;unsigned lines;&#10;&#9;unsigned characters;&#10;&#9;mouse_wheel();&#10;};"><code>parameters::mouse_wheel</code></td>
+						<td>the number of lines or characters to scroll when the mouse wheel is rolled or tilted</td>
+					</tr>
+				</table>
+			</section>
+
+			<section>
+				<h2>combox::item_proxy</h2>
+				<p>The class <code>combox::item_proxy</code> is an item manipulator based on the concept of <a href="http://stdcxx.apache.org/doc/stdlibug/2-2.html#221" target="_blank">input iterator</a>. It offers functions for changing item properties, and acts as an iterator for items.</p>
+				<h2>Member functions</h2>
+				<table class="functions">
+					<tr><td>icon</td><td>gets or sets the icon of the item pointed to by this iterator</td></tr>
+					<tr>
+						<td>
+							<pre><code>(0)  item_proxy&amp; icon(const nana::paint::image&amp; img);<br>(1)  nana::paint::image icon() const;</code></pre>
+							<ol>
+								<li>gets the icon</li>
+								<li>sets the icon</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>img</th></tr>
+								<tr>
+									<td><p>A <a href="index.html#image" target="_blank">paint::image</a> object that represents the image to set for the item.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div><p>(1) A <a href="index.html#image" target="_blank">paint::image</a> object that represents the image that is currently set for the item. The object is empty if the item doesn't have an image (test by calling <a href="index.html#image::empty" target="_blank">paint::image::empty</a>).</p></div>
+						</td>
+					</tr>
+
+					<tr><td>select / selected</td><td>gets or sets the selected status of the item</td></tr>
+					<tr>
+						<td>
+							<pre><code>(0)  item_proxy&amp; select();<br>(1)  bool selected() const;</code></pre>
+							<ol>
+								<li>selects the item</li>
+								<li>determines whether the item is selected</li>
+							</ol>
+							<h4>Return value</h4>
+							<div>
+								<ol>
+									<li>a reference to <code>*this</code></li>
+									<li><code>true</code> if the item is selected, or <code>false</code> otherwise</li>
+								</ol>
+							</div>
+						</td>
+					</tr>
+
+					<tr><td>text</td><td>gets or sets the text of the item</td></tr>
+					<tr>
+						<td>
+							<pre><code>(0)  std::string text() const;<br>(1)  item_proxy&amp; text(const std::string&amp; str);</code></pre>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>str</th></tr>
+								<tr><td><p>The text to set, as a UTF-8 encoded string.</p></td></tr>
+							</table>
+							<h4>Return value</h4>
+							<div>
+								<ol>
+									<li>The text that is currently set for this item.</li>
+									<li>A reference to <code>*this</code>.</li>
+								</ol>
+							</div>
+						</td>
+					</tr>
+
+					<tr><th>Associated value</th></tr>
+
+					<tr><td>value</td><td>gets or sets the value associated with the item</td></tr>
+					<tr>
+						<td>
+							<pre><code>(0)  template&#60;typename T&#62; T &amp; value() const;<br>(1)  template&#60;typename T&#62; item_proxy&amp; value(T&amp;&amp; val);</code></pre>
+							<ol>
+								<li>returns a reference to the associated value</li>
+								<li>sets the associated value</li>
+							</ol>
+							<p>Each drop-down list item can have a value associated with it. That allows the combox to store data of arbitrary types for each list item, in addition to the textual data.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>val</th></tr>
+								<tr>
+									<td><p>The value to set, which can be an rvalue or an lvalue (the parameter is a <a href="https://en.cppreference.com/w/cpp/language/reference#Forwarding_references" target="_blank">forwarding reference</a>, so the argument is either moved or copied, accordingly).</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div>
+								<ol>
+									<li>a reference to the stored value</li>
+									<li>a reference to <code>*this</code></li>
+								</ol>
+							</div>
+							<h4>Exceptions</h4>
+							<div><p>(0) An exception of type <code>std::runtime_error</code> is thrown if the item doesn't have a value associated with it, or if the type <code>T</code> is different from the type of the associated value.</p></div>
+						</td>
+					</tr>
+
+					<tr><td>value_ptr</td><td>returns a pointer to the value associated with the item</td></tr>
+					<tr>
+						<td>
+							<pre><code>template&#60;typename T&#62; T * value_ptr() const;</code></pre>
+							<h4>Return value</h4>
+							<p>A pointer to the value associated with the item, or <code>nullptr</code> if the item doesn't have a value associated with it.</p>
+						</td>
+					</tr>
+
+					<tr> <th>Iterator operations</th> </tr>
+
+					<tr><td>operator++</td><td>increment operator, advances the iterator to the next item</td></tr>
+					<tr>
+						<td>
+							<pre><code>(0)  item_proxy& operator++();<br>(1)  item_proxy operator++(int);</code></pre>
+							<ol>
+								<li>Prefix increment operator. Moves the iterator to the next item.</li>
+								<li>Postfix increment operator. Returns an iterator pointing to the current item, and this iterator moves to the next item.</li>
+							</ol>
+							<h4>Return value</h4>
+							<div>
+								<ol>
+									<li>a reference to <code>*this</code></li>
+									<li>an iterator pointing to the current item</li>
+								</ol>
+							</div>
+						</td>
+					</tr>
+
+					<tr><td>operator*</td><td>dereference operator</td></tr>
+					<tr>
+						<td>
+							<pre><code>(0)  item_proxy& operator*();<br>(1)  const item_proxy& operator*() const;</code></pre>
+							<p>Dereference operator, for the STL iterator syntax.</p>
+							<h4>Return value</h4>
+							<p>a reference to <code>*this</code></p>
+						</td>
+					</tr>
+
+					<tr><td>operator-></td><td>member access operator</td></tr>
+					<tr>
+						<td>
+							<pre><code>(0)  item_proxy* operator-&#62;();<br>(1)  item_proxy* operator-&#62;() const;</code></pre>
+							<p>Member access operator, for the STL iterator syntax.</p>
+							<h4>Return value</h4>
+							<p>a pointer to the iterator</p>
+						</td>
+					</tr>
+
+					<tr><td>operator== / operator!=</td><td>test whether two iterators point to the same item</td></tr>
+					<tr>
+						<td>
+							<pre><code>(0)  bool operator==(const item_proxy& other) const;<br>(1)  bool operator!=(const item_proxy& other) const;<br>(2)  bool operator==(std::string_view text) const;</code></pre>
+							<p>Equality and inequality operators, for testing whether this iterator points to the same item as another iterator, or whether the item's text is the same as another text.</p>
+							<h4>Return value</h4>
+							<div>
+								<ol>
+									<li><code>true</code> if the iterators point to the same item, or <code>false</code> otherwise.</li>
+									<li><code>true</code> if the iterators point to the different items, or <code>false</code> otherwise.</li>
+									<li><code>true</code> if <code>text</code> is the same as the item text, or <code>false</code> otherwise.</li>
+								</ol>
+							</div>
+						</td>
+					</tr>
+
+				</table>
+			</section>
+
+			<section expanded>
+				<h2>Member functions</h2>
+				<p>In addition to the methods inherited from <a href="index.html#widget" target="_blank">nana::widget</a> and <a href="index.html#widget_object" target="_blank">nana::widget_object&lt;widget_tag, ...&gt;</a>, the class <code>nana::combox</code> defines the following methods:</p>
+				<table class="functions">
+					<tr>
+						<td>(constructors)</td>
+						<td>construct a <code>nana::combox</code> instance</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  combox();<br>(1)  combox(window parent, std::string_view text, bool visible = true);<br>(2)  combox(window parent, std::wstring_view text, bool visible = true);<br>(3)  combox(window parent, std::u8string_view text, bool visible = true); // C++20<br>(4)  combox(window parent, const rectangle&amp; r = rectangle(), bool visible = true);</code></pre>
+							<p>
+								(0) Default constructor, constructs an "empty" <code>combox</code> object without a window. Since this constructor does not create a UI element, <a href="index.html#widget_object::create" target="_blank">widget_object::create</a> must be subsequently called before the object can be used as a widget.<br />(1, 2, 3) Construct a <code>combox</code> with a zero-size window and the specified caption.<br />(4) Constructs a <code>combox</code> with a blank caption and the specified position and dimensions.
+							</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>parent</th></tr>
+								<tr>
+									<td><p>A handle to a parent widget (such as a <a href="index.html#widget_form" target="_blank">nana::form</a> or a <code>nana::panel</code>). Keep in mind that all widget objects have a <a href="https://en.cppreference.com/w/cpp/language/cast_operator" target="_blank">conversion operator</a> that returns a <code>nana::window</code>, making widget objects <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code>. That means you can pass a widget object directly to these constructors (no need to call <a href="index.html#widget::handle" target="_blank">widget::handle</a> to obtain the handle).</p></td>
+								</tr>
+								<tr><th>visible</th></tr>
+								<tr>
+									<td><p>Indicates whether the <code>combox</code> should be visible when created (pass <code>false</code> if the <code>combox</code> should be hidden).</p></td>
+								</tr>
+								<tr><th>text</th></tr>
+								<tr>
+									<td><p>The text that should be displayed in the textbox, as a UTF-8 encoded string (1, 3) or a wide character string (2). This text can be set at any time by calling <a href="index.html#widget::caption" target="_blank">widget::caption</a>.</p></td>
+								</tr>
+								<tr><th>r</th></tr>
+								<tr>
+									<td><p>A <a href="index.html#basic_types::2" target="_blank">nana::rectangle</a> structure indicating the desired size and position of the <code>combox</code> inside the parent widget's window.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr>
+						<td>renderer</td>
+						<td>sets a custom renderer for the drop-down list</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void renderer(item_renderer* ir);</code></pre>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>ir</th></tr>
+								<tr>
+									<td><p>A pointer to a custom renderer object. The type <a href="https://github.com/cnjinhao/nana/blob/554c4fe87fc31b8ee104228e9117d545d34855b5/include/nana/gui/widgets/float_listbox.hpp#L46" target="_blank">item_renderer</a> is an abstract class with three pure virtual functions which must be implemented in a derived class in order to render the items of the drop-down list (see the example at the bottom of this page).</p><p>Since this parameter is a pointer, the object it points to must persist for the lifetime of the <code>combox</code> object. Passing <code>nullptr</code> unsets any currently set renderer object.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr> <th>Behaviors</th> </tr>
+					<tr>
+						<td>editable</td>
+						<td>sets or gets the editable status of the textbox</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  void editable(bool enable);<br>(1)  bool editable() const;</code></pre>
+							<ol>
+								<li>sets the editable status</li>
+								<li>gets the editable status</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>enable</th></tr>
+								<tr>
+									<td><p>A flag indicating whether the textbox should be editable (pass <code>true</code> to make it editable).</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p><code>true</code> if the textbox is editable, or <code>false</code> otherwise.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>set_accept</td>
+						<td>sets an input predicate that decides which keys the textbox responds to</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void set_accept(std::function&#60;bool(wchar_t)&#62; pred);</code></pre>
+							<p>This method sets a predicate that decides which keys are accepted as valid input by the textbox. The keys rejected by the predicate are filtered out of the input, causing the textbox to not respond to them.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>pred</th></tr>
+								<tr>
+									<td><p>A function that receives a key value as an argument, and that returns <code>true</code> if the textbox should respond to the key. The argument can be a character key (such as <code>'g'</code>), or a non-character key (such as <code>nana::keyboard::backspace</code> — see <a href="index.html#basic_types::4" target="_blank">nana::keyboard</a> for all possible non-character values).</p></td>
+								</tr>
+							</table>
+							<h4>Example</h4>
+							<pre><code>//Blocks characters 'a' and 'A'<br>combox.set_accept([](wchar_t key){<br>&#9;return !('a' == key || 'A' == key);<br>});<br></code></pre>
+						</td>
+					</tr>
+
+					<tr> <th>Observers</th> </tr>
+					<tr>
+						<td>the_number_of_options</td>
+						<td>returns the number of items in the drop-down list</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>std::size_t the_number_of_options() const;</code></pre>
+							<h4>Return value</h4>
+							<p>The number of items in the drop-down list.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>text</td>
+						<td>gets the text of a specified drop-down list item</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>std::string text(std::size_t pos) const;</code></pre>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>pos</th></tr>
+								<tr>
+									<td><p>The position of the drop-down list item whose text to get (index starts at zero).</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>The requested text.</p>
+							<h4>Exceptions</h4>
+							<p>An <code>std::out_of_range</code> exception is thrown if <code>pos</code> is out of bounds.</p>
+						</td>
+					</tr>
+
+					<tr> <th>Operations</th> </tr>
+					<tr>
+						<td>option</td>
+						<td>gets or sets the index of the selected item in the drop-down list</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  std::size_t option() const;<br>(1)  void option(std::size_t pos);</code></pre>
+							<ol>
+								<li>gets the position of the selected item</li>
+								<li>selects the item at the specified position</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>pos</th></tr>
+								<tr>
+									<td><p>The position of the item to select in the drop-down list. Nothing is changed if the position is out of range.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>The position of the item that is selected in the drop-down list, or <code>nana::npos</code> if no item is selected.</p>
+						</td>
+					</tr>
+
+					<tr> <th>Modifiers</th> </tr>
+					<tr>
+						<td>clear</td>
+						<td>clears all items from the drop-down list</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void clear();</code></pre>
+							<p>When this method is called, the drop-down list becomes empty.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>erase</td>
+						<td>removes an item from the drop-down list</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void erase(std::size_t pos);</code></pre>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>pos</th></tr>
+								<tr>
+									<td><p>The position of the item to remove from the drop-down list. If the position is out of bounds (<code>pos >= the_number_of_options()</code>), nothing is removed.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>push_back</td>
+						<td>adds a new item at the end of the drop-down list</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  combox&amp; push_back(std::string text);<br>(1)  combox&amp; push_back(std::u8string_view text); // C++20</code></pre>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>text</th></tr>
+								<tr>
+									<td><p>The text of the new item.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>A reference to <code>*this</code>.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>image</td>
+						<td>sets or gets the image of a drop-down list item</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  void image(std::size_t pos, const nana::paint::image&amp; img);<br>(1)  nana::paint::image image(std::size_t pos) const;</code></pre>
+							<ol>
+								<li>sets the image for an item</li>
+								<li>gets the image of an item</li>
+							</ol>
+							<p>The drop-down list items can have an icon displayed to the left of their text, this method allowing an image to be set for that purpose.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>pos</th></tr>
+								<tr>
+									<td><p>The position of the item to set an image for (position <code>0</code> refers to the first item in the list).</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<div><p>(1) A <a href="index.html#image" target="_blank">paint::image</a> object that represents the image of the specified item. If the item doesn't have an image set, the object is empty (test by calling <a href="index.html#image::empty" target="_blank">paint::image::empty</a>).</p></div>
+							<h4>Exceptions</h4>
+							<div><p>An <code>std::out_of_range</code> exception is thrown if <code>pos</code> is out of bounds.</p></div>
+						</td>
+					</tr>
+					<tr>
+						<td>image_pixels</td>
+						<td>sets the width of the image area</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>void image_pixels(unsigned width);</code></pre>
+							<p>This method sets the width of the image area (it doesn't affect the width of the images, but rather controls the spacing around the images).</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>width</th></tr>
+								<tr>
+									<td><p>The desired width for the image area, in pixels (default is 16).</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr> <th>Associative element access</th> </tr>
+
+					<tr>
+						<td>operator[]</td>
+						<td>creates a new drop-down list item or accesses an existing item using an associated key</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>template&#60;typename Key&#62; item_proxy operator[](const Key&amp; key);</code></pre>
+							<p>This operator allows a list item to be associated with a key of an arbitrary type.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>key</th></tr>
+								<tr>
+									<td><p>The key value associated with an existing item to access. If the value isn't associated with any existing item, a new item is created and associated with the value.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>An iterator to the requested item.</p>
+							<h4>Example</h4>
+							<pre><code>combox["first"].text("First item"); // create a new item and set its text<br>combox[2].text("Second item"); // create a new item and set its text<br>auto text_of_first = combox["first"].text(); // access existing item<br>auto text_of_second = combox[2].text(); // access existing item</code></pre>
+						</td>
+					</tr>
+
+					<tr>
+						<td>erase_key</td>
+						<td>erases a drop-down list item using its associated key</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>template&#60;typename Key&#62; void erase_key(Key&amp;&amp; key);</code></pre>
+							<p>This method removes an item from the drop-down list, using its associated key.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>key</th></tr>
+								<tr>
+									<td><p>The key value associated with the item to remove. If the value isn't associated with any item, nothing is removed.</p></td>
+								</tr>
+							</table>
+							<h4>Example</h4>
+							<pre><code>combox["first"].text("First item"); // create a new item and set its text<br>combox[2].text("Second item"); // create a new item and set its text<br><br>// remove the items added above<br>combox.erase_key("first");<br>combox.erase_key(2);</code></pre>
+						</td>
+					</tr>
+
+				</table>
+
+			</section>
+
+		</section>
+
+		<section>
+			<h1>Usage details and examples</h1>
+
+			<section>
+				<h2>Custom renderer for list items</h2>
+				<p>This example shows a simple implementation of an <a href="https://github.com/cnjinhao/nana/blob/554c4fe87fc31b8ee104228e9117d545d34855b5/include/nana/gui/widgets/float_listbox.hpp#L46" target="_blank">item renderer</a> for the drop-down list (for an example of a more complete implementation that handles all possible usage scenarios, see the library's <a href="https://github.com/cnjinhao/nana/blob/554c4fe87fc31b8ee104228e9117d545d34855b5/source/gui/widgets/float_listbox.cpp#L24" target="_blank">default renderer</a>).</p>
+				<div><pre><code>#include &#60;nana/gui.hpp&#62;<br>#include &#60;nana/gui/widgets/combox.hpp&#62;<br><br>class my_combox_renderer : public nana::combox::item_renderer<br>{<br>&#9;// gets called once, before the list is rendered (before `render` is called)<br>&#9;void image(bool enabled, unsigned pixels) override<br>&#9;{<br>&#9;&#9;// this renderer doesn't make use of the information conveyed by the arguments<br>&#9;}<br><br>&#9;// gets called multiple times (once for each item)<br>&#9;void render(widget_reference, graph_reference g, const nana::rectangle &amp;r, const item_interface *ii, state_t state) override<br>&#9;{<br>&#9;&#9;const unsigned margin {10};<br>&#9;&#9;const unsigned item_height {30};<br>&#9;&#9;const auto&amp; img {ii-&#62;image()};<br>&#9;&#9;const nana::color fg_normal {"#90999C"};<br>&#9;&#9;const nana::color fg_hilighted {"#DFE4E8"};<br>&#9;&#9;const nana::color bg_normal {"#3C4047"};<br>&#9;&#9;const nana::color bg_hilighted {"#3D5C73"};<br><br>&#9;&#9;g.rectangle(r, true, (state == StateNone ? bg_normal : bg_hilighted));<br>&#9;&#9;auto size {g.text_extent_size(ii-&#62;text())};<br>&#9;&#9;auto pos {r.position()};<br>&#9;&#9;pos.x += margin;<br>&#9;&#9;if(!img.empty())<br>&#9;&#9;{<br>&#9;&#9;&#9;int yoff {static_cast&#60;int&#62;(r.height/2) - 8};<br>&#9;&#9;&#9;// this renderer only supports a 16x16 image area<br>&#9;&#9;&#9;img.stretch(nana::rectangle {img.size()}, g, {pos.x, pos.y+yoff, 16, 16});<br>&#9;&#9;&#9;pos.x += 16 + margin;<br>&#9;&#9;}<br>&#9;&#9;pos.y += static_cast&#60;int&#62;(r.height/2 - size.height/2);<br>&#9;&#9;g.string(pos, ii-&#62;text(), (state == StateNone ? fg_normal : fg_hilighted));<br>&#9;}<br><br>&#9;// returns item height<br>&#9;unsigned item_pixels(graph_reference g) const override<br>&#9;{<br>&#9;&#9;const unsigned padding {8}; // empty space padding the top and bottom of the text area<br>&#9;&#9;unsigned ascent, descent, internal_leading; // font metrics<br>&#9;&#9;g.text_metrics(ascent, descent, internal_leading);<br>&#9;&#9;return ascent + descent + padding;<br>&#9;}<br>};<br><br>int main()<br>{<br>&#9;using namespace nana;<br><br>&#9;form fm;<br>&#9;fm.div("vert margin=15 &#60;&#62;&#60;cb weight=30&#62;&#60;&#62;");<br>&#9;fm.bgcolor(nana::color {"#303338"});<br><br>&#9;combox cb {fm, "Choose an option"};<br>&#9;fm["cb"] &#60;&#60; cb;<br>&#9;cb.push_back("option 0");<br>&#9;cb.push_back("option 1");<br>&#9;cb.push_back("option 2");<br>&#9;cb.bgcolor(nana::color {"#3C4047"});<br>&#9;cb.fgcolor(nana::color {"#DFE4E8"});<br><br>&#9;my_combox_renderer cbrend;<br>&#9;cb.renderer(&amp;cbrend);<br><br>&#9;fm.collocate();<br>&#9;fm.show();<br>&#9;nana::exec();<br>}</code></pre></div>
+				<hr />
+			</section>
+
+			<section expanded>
+				<h2>Associating values with list items</h2>
+				<p>This example adds three items to a <code>combox</code>, and associates a value of an arbitrary type with one of the items. Selecting an item prints to the console whether the item has an associated value.</p>
+				<div><pre><code>#include &#60;nana/gui.hpp&#62;<br>#include &#60;nana/gui/widgets/combox.hpp&#62;<br>#include &#60;iostream&#62;<br><br>int main()<br>{<br>&#9;using namespace nana;<br><br>&#9;struct item_data<br>&#9;{<br>&#9;&#9;int i {0};<br>&#9;&#9;std::string str;<br>&#9;};<br><br>&#9;form fm {API::make_center(432, 234)};<br>&#9;fm.div("vert margin=15 &#60;&#62;&#60;cb weight=30&#62;&#60;&#62;");<br><br>&#9;combox cb {fm, "Select an item to see if it has an associated value"};<br>&#9;fm["cb"] &#60;&#60; cb;<br>&#9;cb[0].text("option 0");<br>&#9;cb[1].text("option 1").value(item_data{138, "one hundred and thirty eight"});&#9;<br>&#9;cb[2].text("option 2");<br><br>&#9;cb.events().selected([](const arg_combox &amp;arg)<br>&#9;{<br>&#9;&#9;auto &amp;cb {arg.widget};<br>&#9;&#9;try<br>&#9;&#9;{<br>&#9;&#9;&#9;auto key {static_cast&#60;int&#62;(cb.option())};<br>&#9;&#9;&#9;auto &amp;value {cb[key].value&#60;item_data&#62;()};<br>&#9;&#9;&#9;std::cout &#60;&#60; "Data associated with the item at position " &#60;&#60; key &#60;&#60; ": ";<br>&#9;&#9;&#9;std::cout &#60;&#60; value.i &#60;&#60; " | " &#60;&#60; value.str &#60;&#60; '\n';<br>&#9;&#9;}<br>&#9;&#9;catch(std::runtime_error&amp;)<br>&#9;&#9;{<br>&#9;&#9;&#9;std::cout &#60;&#60; "The item at position " &#60;&#60; cb.option() &#60;&#60; " doesn't have an associated value.\n";<br>&#9;&#9;}<br>&#9;});<br><br>&#9;fm.collocate();<br>&#9;fm.show();<br>&#9;nana::exec();<br>}</code></pre></div>
+				<p>The example shown above uses <code>item_proxy::value</code> to access the value of an item when it is selected, and relies on exception handling to detect when the selected item doesn't have an associated value. However, an easier and more reliable way to access the value is by using <code>item_proxy::value_ptr</code>, since that method simply returns <code>nullptr</code> when an item doesn't have an associated value:</p>
+				<div><pre><code>#include &#60;nana/gui.hpp&#62;<br>#include &#60;nana/gui/widgets/combox.hpp&#62;<br>#include &#60;iostream&#62;<br><br>int main()<br>{<br>&#9;using namespace nana;<br><br>&#9;struct item_data<br>&#9;{<br>&#9;&#9;int i {0};<br>&#9;&#9;std::string str;<br>&#9;};<br><br>&#9;form fm {API::make_center(432, 234)};<br>&#9;fm.div("vert margin=15 &#60;&#62;&#60;cb weight=30&#62;&#60;&#62;");<br><br>&#9;combox cb {fm, "Select an item to see if it has an associated value"};<br>&#9;fm["cb"] &#60;&#60; cb;<br>&#9;cb[0].text("option 0");<br>&#9;cb[1].text("option 1").value(item_data{138, "one hundred and thirty eight"});&#9;<br>&#9;cb[2].text("option 2");<br><br>&#9;cb.events().selected([](const arg_combox &amp;arg)<br>&#9;{<br>&#9;&#9;auto &amp;cb {arg.widget};<br>&#9;&#9;auto key {static_cast&#60;int&#62;(cb.option())};<br>&#9;&#9;auto value_ptr {cb[key].value_ptr&#60;item_data&#62;()};<br>&#9;&#9;if(value_ptr)<br>&#9;&#9;{<br>&#9;&#9;&#9;std::cout &#60;&#60; "Data associated with the item at position " &#60;&#60; key &#60;&#60; ": ";<br>&#9;&#9;&#9;std::cout &#60;&#60; value_ptr-&#62;i &#60;&#60; " | " &#60;&#60; value_ptr-&#62;str &#60;&#60; '\n';<br>&#9;&#9;}<br>&#9;&#9;else std::cout &#60;&#60; "The item at position " &#60;&#60; cb.option() &#60;&#60; " doesn't have an associated value.\n";<br>&#9;});<br><br>&#9;fm.collocate();<br>&#9;fm.show();<br>&#9;nana::exec();<br>}</code></pre></div>
+			</section>
+
+		</section>
+
+	</main>
+
+</body>
+</html>
