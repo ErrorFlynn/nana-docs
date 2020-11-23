@@ -84,7 +84,7 @@
 							<table>
 								<tr><th>parent_wd</th></tr>
 								<tr>
-									<td><p>the handle of the parent widget (the window of this widget is positioned inside the window of the parent, which is usually a <code>nana::form</code>)</p></td>
+									<td><p>the handle of the parent widget (the window of this widget is positioned inside the window of the parent, which is usually a <a href="index.html#widget_form" target="_blank">nana::form</a>)</p></td>
 								</tr>
 								<tr><th>visible</th></tr>
 								<tr>
@@ -135,7 +135,7 @@
 				<h2>widget_object&lt;root_tag, ...&gt;</h2>
 
 				<p>
-					All the classes defined as a root window (most notably <code>nana::form</code>) are derived from a <a href="https://en.cppreference.com/w/cpp/language/partial_specialization" target="_blank">partial specialization</a> of the <code>widget_object</code> template, that uses the argument <code>nana::category::root_tag</code> for the <code>Category</code> parameter.
+					All the classes defined as a root window (most notably <a href="index.html#widget_form" target="_blank">nana::form</a>) are derived from a <a href="https://en.cppreference.com/w/cpp/language/partial_specialization" target="_blank">partial specialization</a> of the <code>widget_object</code> template, that uses the argument <code>nana::category::root_tag</code> for the <code>Category</code> parameter.
 				</p>
 				<pre><code>template&#60;typename DrawerTrigger, typename Events, typename Scheme&#62;<br>class widget_object&#60;category::root_tag, DrawerTrigger, Events, Scheme&#62; : public detail::widget_base</code></pre>
 				<p>
@@ -208,7 +208,7 @@
 								This method returns a reference to the internal events object, which allows callback functions to be registered as handlers for the events supported by the widget.
 							</p>
 							<h4>Return value</h4>
-							<div><p>The type of the events object depends on the template specialization that a class is derived from, specifically on the argument passed to the <code>Events</code> parameter. For the classes <code>nana::form</code> and <code>nana::nested_form</code>, the type is <code>nana::detail::events_root_extension</code>, which is a structure derived from <a href="index.html#general_events" target="_blank">nana::general_events</a>. This derived type only adds one additional specialized event, <code>basic_event&lt;arg_unload&gt; unload;</code> (triggered when the form closes).</p></div>
+							<div><p>The type of the events object depends on the template specialization that a class is derived from, specifically on the argument passed to the <code>Events</code> parameter. For the classes <a href="index.html#widget_form" target="_blank">nana::form</a> and <code>nana::nested_form</code>, the type is <code>nana::detail::events_root_extension</code>, which is a structure derived from <a href="index.html#general_events" target="_blank">nana::general_events</a>. This derived type only adds one additional specialized event, <code>basic_event&lt;arg_unload&gt; unload;</code> (triggered when the form closes).</p></div>
 						</td>
 					</tr>
 					<tr>
@@ -283,7 +283,7 @@
 								This method returns a reference to the internal scheme object, which contains configurable properties (data members) pertaining to widget appearance.
 							</p>
 							<h4>Return value</h4>
-							<div><p>The type of the scheme object depends on the template specialization that a class is derived from, specifically on the argument passed to the <code>Scheme</code> parameter. For the classes <code>nana::form</code> and <code>nana::nested_form</code>, the type is <code title="struct widget_geometrics&#10;{&#10;	virtual ~widget_geometrics() = default;&#10;	color_proxy activated{ static_cast<color_rgb>(0x60C8FD) };&#10;	color_proxy background{colors::button_face};&#10;	color_proxy foreground{colors::black};&#10;};">nana::widget_geometrics</code>.</p></div>
+							<div><p>The type of the scheme object depends on the template specialization that a class is derived from, specifically on the argument passed to the <code>Scheme</code> parameter. For the classes <a href="index.html#widget_form" target="_blank">nana::form</a> and <code>nana::nested_form</code>, the type is <code title="struct widget_geometrics&#10;{&#10;	virtual ~widget_geometrics() = default;&#10;	color_proxy activated{ static_cast<color_rgb>(0x60C8FD) };&#10;	color_proxy background{colors::button_face};&#10;	color_proxy foreground{colors::black};&#10;};">nana::widget_geometrics</code>.</p></div>
 						</td>
 					</tr>
 					<tr>

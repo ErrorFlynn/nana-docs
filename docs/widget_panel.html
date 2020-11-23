@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>nana::panel</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" href="page.css" media="all">
+	<link href="fonts/Oswald/Oswald.css" rel="stylesheet">
+	<link href="fonts/Arimo/Arimo.css" rel="stylesheet">
+	<link href="fonts/OxygenMono/OxygenMono.css" rel="stylesheet">
+	<link rel="stylesheet" href="highlight/default.css">
+	<script src="highlight/highlight.pack.js"></script>
+	<script>hljs.configure({ useBR: true }); hljs.initHighlightingOnLoad();</script>
+	<script src="page.js"></script>
+</head>
+
+<body>
+
+	<main>
+
+		<section>
+			<h1>Class nana::panel</h1>
+			<p>The class <code>nana::panel</code> implements a widget that acts as a window that contains other windows. The widgets whose windows would be contained by a <code>panel</code> must be constructed with the <code>panel</code> object as the parent, which causes their windows to be positioned relative the panel, and to be clipped to the panel's window. After that, a <a href="index.html#place" target="_blank">place</a> object can be optionally associated with the panel, and used to manage the layout of the panel's child widgets (see the example at the bottom of this page).</p>
+			<hr />
+			<p>The class is declared as follows:</p>
+			<pre><code>template&#60;bool HasBackground&#62; class panel : public widget_object&#60;typename std::conditional&#60;HasBackground, category::widget_tag, category::lite_widget_tag&#62;::type, drawerbase::panel::drawer&#62;</code></pre>
+			<p>The <code>bool</code> template parameter determines which specialization of the <a href="index.html#widget_object" target="_blank">widget_object</a> template is the base class, which determines whether the panel is a regular widget, or a lite widget (which lacks a graphics buffer). In practice, this only determines whether the panel has a background or not.</p>
+			<p>The class is defined in header <code>nana/gui/widgets/panel.hpp</code>.</p>
+
+			<section expanded>
+				<h2>Member functions</h2>
+				<p>In addition to the methods inherited from <a href="index.html#widget" target="_blank">nana::widget</a> and <a href="index.html#widget_object::0" target="_blank">nana::widget_object&lt;widget_tag, ...&gt;</a> (or <a href="index.html#widget_object::2" target="_blank">nana::widget_object&lt;lite_widget_tag, ...&gt;</a> if the <code>bool</code> template parameter is <code>false</code>), the class <code>nana::panel</code> defines the following methods:</p>
+				<table class="functions">
+					<tr>
+						<td>(constructors)</td>
+						<td>construct a <code>nana::panel</code> instance</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  panel();<br>(1)  panel(window parent, bool visible);<br>(2)  panel(window parent, const nana::rectangle&amp; r = rectangle(), bool visible = true);</code></pre>
+							<ol>
+								<li>Default constructor, constructs an "empty" <code>panel</code> object without a window. Since this constructor does not create a UI element, <a href="index.html#widget_object::create" target="_blank">widget_object::create</a> must be subsequently called before the object can be used as a widget.</li>
+								<li>Constructs a panel with a zero-size window.</li>
+								<li>Constructs a panel with the specified position and dimensions.</li>
+							</ol>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>parent</th></tr>
+								<tr>
+									<td><p>A handle to a parent widget (such as a <a href="index.html#widget_form" target="_blank">nana::form</a> or a <code>nana::panel</code>). Keep in mind that all widget objects have a <a href="https://en.cppreference.com/w/cpp/language/cast_operator" target="_blank">conversion operator</a> that returns a <code>nana::window</code>, making widget objects <a href="https://en.cppreference.com/w/cpp/language/implicit_conversion" target="_blank">implicitly convertible</a> to <code>nana::window</code>. That means you can pass a widget object directly to these constructors (no need to call <a href="index.html#widget::handle" target="_blank">widget::handle</a> to obtain the handle).</p></td>
+								</tr>
+								<tr><th>visible</th></tr>
+								<tr>
+									<td><p>Indicates whether the panel should be visible when created (pass <code>false</code> if the panel should be hidden).</p></td>
+								</tr>
+								<tr><th>r</th></tr>
+								<tr>
+									<td><p>A <a href="index.html#basic_types::2" target="_blank">nana::rectangle</a> structure indicating the desired size and position of the panel inside the parent widget's window.</p></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>transparent</td>
+						<td>sets or gets the transparency state of the background</td>
+					</tr>
+					<tr>
+						<td>
+							<pre><code>(0)  void transparent(bool enable);<br>(1)  bool transparent() const;</code></pre>
+							<p>This method can enable transparency for the panel background, which can be useful if the containing form has an image as background, for example.</p>
+							<h4>Parameters</h4>
+							<table>
+								<tr><th>enable</th></tr>
+								<tr>
+									<td><p>Specifies whether to enable a transparent background or not. Passing a <code>true</code> argument to this parameter is equivalent to:</p><pre><code>API::effects_bground(*this, effects::bground_transparent(0), 0);</code></pre><p>For more about <code>API::effects_bground</code>, see <a href="http://qpcr4vir.github.io/nana-doxy/html/d5/d9f/background-effects_8cpp-example.html" target="_blank">this example</a>.</p></td>
+								</tr>
+							</table>
+							<h4>Return value</h4>
+							<p>(1) <code>true</code> if the  background is transparent, or <code>false</code> otherwise</p>
+						</td>
+					</tr>
+
+				</table>
+
+			</section>
+
+		</section>
+
+		<section>
+			<h1>Usage details and examples</h1>
+
+			<section>
+				<h2>Basic example</h2>
+				<p>This example places two buttons inside the window of a <code>panel</code> widget with yellow background, and places the window of the <code>panel</code> inside the window of a <code>form</code> widget, along with two other buttons:</p>
+				<img class="no-shadow" src="img/panel1.png" alt="panel example" />
+				<div><pre><code>#include &#60;nana/gui.hpp&#62;<br>#include &#60;nana/gui/widgets/panel.hpp&#62;<br>#include &#60;nana/gui/widgets/button.hpp&#62;<br><br>int main()<br>{<br>&#9;nana::form fm {nana::API::make_center(640, 480)};<br>&#9;fm.div("\<br>&#9;&#9;vert margin=15 \<br>&#9;&#9;&#9;&#60;buttons_in_form gap=15&#62; \<br>&#9;&#9;&#9;&#60;weight=15&#62; \<br>&#9;&#9;&#9;&#60;panel&#62; \<br>&#9;");<br><br>&#9;nana::button btn1 {fm, "Button 1"}, btn2 {fm, "Button 2"};<br>&#9;fm["buttons_in_form"] &#60;&#60; btn1 &#60;&#60; btn2;<br><br>&#9;// construct a panel with `fm` as the parent widget<br>&#9;// the template bool argument indicates whether the panel has background<br>&#9;// the constructor bool argument indicates the window visibility when created<br>&#9;nana::panel&#60;true&#62; pnl {fm, true};<br>&#9;fm["panel"] &#60;&#60; pnl;<br>&#9;pnl.bgcolor(nana::colors::light_goldenrod_yellow); // yellow background<br>&#9;<br>&#9;// layout management for the panel<br>&#9;nana::place plc {pnl};<br>&#9;plc.div("buttons_in_panel gap=15 margin=15");<br><br>&#9;// these buttons have the panel as parent, and are displayed inside the panel<br>&#9;nana::button btn3 {pnl, "Button 3"}, btn4 {pnl, "Button 4"};<br>&#9;plc["buttons_in_panel"] &#60;&#60; btn3 &#60;&#60; btn4;<br><br>&#9;// enact the layout rules immediately<br>&#9;fm.collocate();<br><br>&#9;fm.show();<br>&#9;nana::exec();<br>}</code></pre></div><hr />
+			</section>
+			<section expanded>
+				<h2>Grid panel</h2>
+				<p>The following example derives a class from <code>nana::panel</code> that acts as a container of widgets, and displays the widgets in a grid pattern of up to nine cells. The max number of cells can be easily modified in the code, as well as the type of the contained widgets (either by simply changing the hard-coded type insided the class, or the class could be made into a template that takes a type argument representing the type of the widgets).</p>
+				<img class="no-shadow" src="img/panel2.png" alt="panel example" />
+				<pre><code>#include &#60;nana/gui.hpp&#62;<br>#include &#60;nana/gui/widgets/button.hpp&#62;<br>#include &#60;nana/gui/widgets/panel.hpp&#62;<br><br>class grid_panel : public nana::panel&#60;false&#62;<br>{<br>&#9;using cell = std::unique_ptr&#60;nana::button&#62;;<br><br>&#9;std::vector&#60;cell&#62; cells;<br>&#9;nana::place plc;<br>&#9;unsigned gap_ {15};<br><br>&#9;const std::vector&#60;std::string&#62; grid_configs<br>&#9;{<br>&#9;&#9;"",<br>&#9;&#9;"grid=[2,1]",<br>&#9;&#9;"grid=[2,2] collapse(0,1,2,1)",<br>&#9;&#9;"grid=[2,2]",<br>&#9;&#9;"grid=[3,2]",<br>&#9;&#9;"grid=[3,2]",<br>&#9;&#9;"grid=[3,3]",<br>&#9;&#9;"grid=[3,3]",<br>&#9;&#9;"grid=[3,3]"<br>&#9;};<br><br>public:<br><br>&#9;grid_panel() = delete;<br><br>&#9;grid_panel(nana::window w, bool visible = true)<br>&#9;{<br>&#9;&#9;create(w, {}, visible);<br>&#9;&#9;plc.bind(*this);<br>&#9;}<br><br>&#9;bool add_cell(const std::string &amp;name)<br>&#9;{<br>&#9;&#9;if(cells.size() &#60; grid_configs.size())<br>&#9;&#9;{<br>&#9;&#9;&#9;cells.push_back(std::make_unique&#60;nana::button&#62;(*this, name));<br>&#9;&#9;&#9;plc.div("&#60;cells " + grid_configs[cells.size()-1] + " gap=" + std::to_string(gap_) + '&#62;');<br>&#9;&#9;&#9;plc["cells"] &#60;&#60; *cells.back();<br>&#9;&#9;&#9;plc.collocate();<br>&#9;&#9;&#9;return true;<br>&#9;&#9;}<br>&#9;&#9;return false;<br>&#9;}<br><br>&#9;bool remove_cell(const cell &amp;cell)<br>&#9;{<br>&#9;&#9;if(!cells.empty())<br>&#9;&#9;{<br>&#9;&#9;&#9;auto i {std::find(cells.begin(), cells.end(), cell)};<br>&#9;&#9;&#9;if(i != cells.end())<br>&#9;&#9;&#9;{<br>&#9;&#9;&#9;&#9;for(auto &amp;cell : cells)<br>&#9;&#9;&#9;&#9;&#9;plc.erase(*cell);<br>&#9;&#9;&#9;&#9;cells.erase(i);<br>&#9;&#9;&#9;&#9;if(!cells.empty())<br>&#9;&#9;&#9;&#9;{<br>&#9;&#9;&#9;&#9;&#9;plc.div("&#60;cells " + grid_configs[cells.size()-1] + " gap=" + std::to_string(gap_) + '&#62;');<br>&#9;&#9;&#9;&#9;&#9;for(auto &amp;cell : cells)<br>&#9;&#9;&#9;&#9;&#9;&#9;plc["cells"] &#60;&#60; *cell;<br>&#9;&#9;&#9;&#9;&#9;plc.collocate();<br>&#9;&#9;&#9;&#9;}<br>&#9;&#9;&#9;&#9;return true;<br>&#9;&#9;&#9;}<br>&#9;&#9;}<br>&#9;&#9;return false;<br>&#9;}<br><br>&#9;void gap(unsigned px)<br>&#9;{<br>&#9;&#9;gap_ = px;<br>&#9;&#9;auto divtext {plc.div()};<br>&#9;&#9;auto pos0 {divtext.find("gap=")+4};<br>&#9;&#9;if(pos0 != std::string::npos)<br>&#9;&#9;{<br>&#9;&#9;&#9;auto pos1 {pos0};<br>&#9;&#9;&#9;while(isdigit(divtext[pos1]))<br>&#9;&#9;&#9;&#9;pos1++;<br>&#9;&#9;&#9;divtext.replace(pos0, pos1-pos0, std::to_string(gap_));<br>&#9;&#9;&#9;plc.div(divtext);<br>&#9;&#9;&#9;plc.collocate();<br>&#9;&#9;}<br>&#9;}<br><br>&#9;auto gap() const noexcept { return gap_; }<br><br>&#9;auto widget_size() const noexcept { return widget::size(); }<br>&#9;auto size() const noexcept { return cells.size(); }<br>&#9;auto&amp; front() noexcept { return cells.front(); }<br>&#9;auto&amp; back() noexcept { return cells.back(); }<br>&#9;auto&amp; operator[](size_t pos) noexcept {return cells[pos]; }<br>&#9;const auto&amp; operator[](size_t pos) const noexcept { return cells[pos]; }<br>&#9;auto&amp; at(size_t pos) { return cells.at(pos); }<br>&#9;const auto&amp; at(size_t pos) const { return cells.at(pos); }<br>};<br><br>int main()<br>{<br>&#9;using namespace nana;<br><br>&#9;form fm {API::make_center(543, 345)};<br>&#9;fm.div("\<br>&#9;&#9;vert margin=15 \<br>&#9;&#9;&#9;&#60;grid_panel&#62; \<br>&#9;&#9;&#9;&#60;weight=15&#62; \<br>&#9;&#9;&#9;&#60;buttons weight=30 gap=15&#62; \<br>&#9;");<br>&#9;fm.bgcolor(colors::white);<br><br>&#9;grid_panel grid {fm};<br>&#9;fm["grid_panel"] &#60;&#60; grid;<br><br>&#9;button btnadd {fm, "Add cell"}, btndel {fm, "Remove cell"};<br>&#9;fm["buttons"] &#60;&#60; btnadd &#60;&#60; btndel;<br><br>&#9;btnadd.events().click([&amp;]<br>&#9;{<br>&#9;&#9;grid.add_cell("Cell " + std::to_string(grid.size()));<br>&#9;});<br><br>&#9;btndel.events().click([&amp;]<br>&#9;{<br>&#9;&#9;if(!grid.empty())<br>&#9;&#9;&#9;grid.remove_cell(grid.back());<br>&#9;});<br><br>&#9;fm.collocate();<br>&#9;fm.show();<br>&#9;nana::exec();<br>}</code></pre>
+			</section>
+
+		</section>
+	</main>
+
+</body>
+</html>

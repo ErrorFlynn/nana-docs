@@ -421,7 +421,7 @@
 											<table class="normal">
 												<tr> <th>Data member</th> <th>Type</th> <th>Description</th> </tr>
 												<tr> <td>window_handle</td> <td><code>nana::window</code></td> <td>the window handle of the widget for which the event is triggered</td> </tr>
-												<tr> <td>receiver</td> <td><code>nana::native_window_type</code></td> <td>The handle of the native window that receives the focus. This can be useful when the focus is transfered from one nana root window (such as a <code>nana::form</code>) to another.</td> </tr>
+												<tr> <td>receiver</td> <td><code>nana::native_window_type</code></td> <td>The handle of the native window that receives the focus. This can be useful when the focus is transfered from one nana root window (such as a <a href="index.html#widget_form" target="_blank">nana::form</a>) to another.</td> </tr>
 												<tr> <td>getting</td> <td><code>bool</code></td> <td>indicates whether the window receives the focus (<code>true</code>) or loses it (<code>false</code>).</td> </tr>
 												<tr> <td>focus_reason</td> <td><code title="enum class reason&#10;{&#10;	general,			// the focus was received by the OS window manager&#10;	tabstop,			// the focus is received because Tab was pressed&#10;	mouse_press		// the focus is received because the window was clicked&#10;};">nana::arg_focus::reason</code></td> <td>indicates the reason why the window receives the focus (this member is not used when the focus is lost)</td> </tr>
 											</table>
@@ -439,7 +439,7 @@
 					<tr>
 						<td>
 							<pre><code>basic_event&lt;arg_move&gt; move;</code></pre>
-							<p>This event occurs when the window is moved (a widget changes position when <a href="index.html#widget::move" target="_blank">widget::move</a> is called, and in the case of <code>nana::form</code> widgets, when the user moves the window). The handlers registered for this event are optionally passed an argument of type <code>arg_move</code>.</p>
+							<p>This event occurs when the window is moved (a widget changes position when <a href="index.html#widget::move" target="_blank">widget::move</a> is called, and in the case of <a href="index.html#widget_form" target="_blank">nana::form</a> widgets, when the user moves the window). The handlers registered for this event are optionally passed an argument of type <code>arg_move</code>.</p>
 							<h4>Template type parameter</h4>
 							<table>
 								<tr><th>arg_move</th></tr>
@@ -467,7 +467,7 @@
 					<tr>
 						<td>
 							<pre><code>basic_event&lt;arg_resizing&gt; resizing;</code></pre>
-							<p>This event occurs when the window is about to be resized (a widget changes size when <a href="index.html#widget_intro::size" target="_blank">widget::size</a> is called, and in the case of <code>nana::form</code> widgets, when the user resizes the window). The handlers registered for this event are optionally passed an argument of type <code>arg_resizing</code>.</p>
+							<p>This event occurs when the window is about to be resized (a widget changes size when <a href="index.html#widget_intro::size" target="_blank">widget::size</a> is called, and in the case of <a href="index.html#widget_form" target="_blank">nana::form</a> widgets, when the user resizes the window). The handlers registered for this event are optionally passed an argument of type <code>arg_resizing</code>.</p>
 							<h4>Template type parameter</h4>
 							<table>
 								<tr><th>arg_resizing</th></tr>
@@ -478,7 +478,7 @@
 											<table class="normal">
 												<tr> <th>Data member</th> <th>Type</th> <th>Description</th> </tr>
 												<tr> <td>window_handle</td> <td><code>nana::window</code></td> <td>the window handle of the widget for which the event is triggered</td> </tr>
-												<tr> <td>border</td> <td><code title="enum class window_border&#10;{&#10;	none,&#10;	left, right, top, bottom,&#10;	top_left, top_right, bottom_left, bottom_right&#10;};">nana::window_border</code></td> <td>indicates which window border was used to initiate the resizing event (in the case of <code>nana::form</code> widgets)</td> </tr>
+												<tr> <td>border</td> <td><code title="enum class window_border&#10;{&#10;	none,&#10;	left, right, top, bottom,&#10;	top_left, top_right, bottom_left, bottom_right&#10;};">nana::window_border</code></td> <td>indicates which window border was used to initiate the resizing event (in the case of <a href="index.html#widget_form" target="_blank">nana::form</a> widgets)</td> </tr>
 												<tr> <td>width</td> <td><code>mutable unsigned</code></td> <td>the new width to which the window is resizing, in pixels</td> </tr>
 												<tr> <td>height</td> <td><code>mutable unsigned</code></td> <td>the new height to which the window is resizing, in pixels</td> </tr>
 											</table>
@@ -496,7 +496,7 @@
 					<tr>
 						<td>
 							<pre><code>basic_event&lt;arg_resized&gt; resized;</code></pre>
-							<p>This event occurs after the window has been resized (a widget changes size when <a href="index.html#widget_intro::size" target="_blank">widget::size</a> is called, and in the case of <code>nana::form</code> widgets, when the user resizes the window). The handlers registered for this event are optionally passed an argument of type <code>arg_resized</code>.</p>
+							<p>This event occurs after the window has been resized (a widget changes size when <a href="index.html#widget_intro::size" target="_blank">widget::size</a> is called, and in the case of <a href="index.html#widget_form" target="_blank">nana::form</a> widgets, when the user resizes the window). The handlers registered for this event are optionally passed an argument of type <code>arg_resized</code>.</p>
 							<h4>Template type parameter</h4>
 							<table>
 								<tr><th>arg_resized</th></tr>

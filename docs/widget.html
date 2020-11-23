@@ -151,7 +151,7 @@
 								<li>moves the widget and resizes it</li>
 							</ol>
 							<p>
-								A widget is positioned inside the window of its parent widget, with the exception of <code>nana::form</code> widgets, whose position is relative to the desktop window (or root window on X11 platforms).
+								A widget is positioned inside the window of its parent widget, with the exception of <a href="index.html#widget_form" target="_blank">nana::form</a> widgets, whose position is relative to the desktop window (or root window on X11 platforms).
 							</p>
 							<h4>Parameters</h4>
 							<table>
@@ -175,7 +175,7 @@
 						<td>
 							<pre><code>window parent() const;</code></pre>
 							<p>
-								Most widgets have a parent, with very few exceptions (like <code>nana::menu</code>). A parent widget acts (visually) as a container for its children, displaying the children in its window. Typical parent widgets are <code>nana::form</code>, <code>nana::group</code>, and <code>nana::panel</code>.
+								Most widgets have a parent, with very few exceptions (like <code>nana::menu</code>). A parent widget acts (visually) as a container for its children, displaying the children in its window. Typical parent widgets are <a href="index.html#widget_form" target="_blank">nana::form</a>, <code>nana::group</code>, and <a href="index.html#widget_panel" target="_blank">nana::panel</a>.
 							</p>
 							<h4>Return value</h4>
 							<p>The window handle of the parent widget. To obtain a pointer to the widget represented by the window handle, call <code>API::get_widget</code>.</p>
@@ -190,7 +190,7 @@
 						<td>
 							<pre><code>point pos() const;</code></pre>
 							<p>
-								Returns the position of the widget, which is relative to the upper-left corner of the parent widget's window. For <code>nana::form</code> widgets, the position is relative to the upper-left corner of the desktop window (or root window on X11 platforms).
+								Returns the position of the widget, which is relative to the upper-left corner of the parent widget's window. For <a href="index.html#widget_form" target="_blank">nana::form</a> widgets, the position is relative to the upper-left corner of the desktop window (or root window on X11 platforms).
 							</p>
 							<h4>Return value</h4>
 							<p>The widget position, in the form of a <a href="index.html#basic_types::0" target="_blank">nana::point</a> structure.</p>
@@ -446,12 +446,24 @@
 					</tr>
 					<tr>
 						<td>
-							<pre><code>(0)  void typeface(const nana::paint::font& font);<br>(1)  nana::paint::font typeface() const;</code></pre>
+							<pre><code>(0)  void typeface(const nana::paint::font& font);<br>(1)  void typeface(const nana::paint::font_info& fi);<br>(2)  nana::paint::font typeface() const;</code></pre>
+							<ol>
+								<li>sets the font</li>
+								<li>like (0), but the font is scaled with the DPI of the window</li>
+								<li>gets the font</li>
+							</ol>
 							<h4>Parameters</h4>
 							<table>
 								<tr><th>font</th></tr>
 								<tr>
 									<td><p>A <a href="index.html#font" target="_blank">paint::font</a> object representing the desired font for the widget to use.</p></td>
+								</tr>
+								<tr><th>fi</th></tr>
+								<tr>
+									<td>
+										<p>A <code>paint::font_info</code> structure, which is defined as follows:</p>
+										<pre><code>struct font_info<br>{<br>&#9;std::string font_family;<br>&#9;double size_pt;<br>&#9;unsigned weight{ 400 };&#9;//normal<br>&#9;bool italic{ false };<br>&#9;bool underline{ false };<br>&#9;bool strike_out{ false };<br>};</code></pre>
+									</td>
 								</tr>
 							</table>
 							<h4>Return value</h4>
@@ -494,7 +506,7 @@
 						<td>
 							<pre><code>general_events& events() const;</code></pre>
 							<h4>Return value</h4>
-							<p>A reference to the internal events object (see <a href="general_events.html" target="_blank">general_events</a>).</p>
+							<p>A reference to the internal events object (see <a href="index.html#general_events" target="_blank">general_events</a>).</p>
 						</td>
 					</tr>
 					<tr>
